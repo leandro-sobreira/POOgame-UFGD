@@ -3,4 +3,4 @@ import numpy as np
 
 class Deck:
     def __init__(self, cards, numCards):
-        self.__cards = + -
+        self.__cards =
