@@ -1,4 +1,5 @@
 from src.classes.deck import Deck, Card
+from src.classes.player import Hand
 
 class StandardCard(Card):
     def __init__(self, suit:str, value:str, frontSprite:str = '', backSprite:str = ''):
@@ -26,3 +27,25 @@ class StandardDeck(Deck):
         for suit in suits:
             for value in values:
                 self.add(StandardCard(suit=suit, value=value))
+
+class StandardHand(Hand):
+    
+    def __init__(self):
+        super().__init__()
+
+    def sumValues(self):
+        acc = 0
+        aceAppeared = False
+        for card in self.__cards:
+            if card.getFace() and card.getValue != 'undefined':
+                strValue = card.getValue
+                if strValue == 'jack' or strValue == 'queen' or strValue == 'king':
+                    acc += 10
+                elif strValue == 'ace':
+                    acc += 1
+                    aceAppeared = True
+                else:
+                    acc += int(strValue)
+        if aceAppeared and acc < 12:
+            acc += 10
+        return acc

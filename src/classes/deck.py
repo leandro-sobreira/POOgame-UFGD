@@ -17,7 +17,7 @@ class Card(ABC):
     def getFace(self):
         return self.__face
 
-    def Flip(self):
+    def flip(self):
         self.__face = self.__face == False
         if self.__face:
             self.__sprite = self.__frontSprite
@@ -25,42 +25,32 @@ class Card(ABC):
             self.__sprite = self.__backSprite
 
 
-class Deck:
+class Deck(ABC):
     def __init__(self):
         self.__numCards:int = 0
-        self.__deck = []
+        self.__cards = []
 
     def getNumCards(self):
         return self.__numCards
+    def getCards(self):
+        return self.__cards
 
     def add(self, card):
-        self.__deck.append(card)
+        self.__cards.append(card)
         self.__numCards += 1
-
-    def __add__(self, card):
-        self.add(card)
 
     def discard(self):
         if self.__numCards > 0:
-            self.__deck.pop()
+            self.__cards.pop()
             self.__numCards -= 1
 
-    def give(self, flip:bool = True):
+    def give(self):
         if self.__numCards > 0:
-            card = self.__deck[self.__numCards -1]
-            if flip:
-                card.Flip()
+            card = self.__cards[self.__numCards -1]
+            card.flip()
             self.discard()
             return card
         return None
 
     def suffle(self):
-        random.shuffle(self.__deck)
-
-    def flipAll(self, stat): #True to front up
-        for card in self.__deck:
-            if card.getFace() != stat:
-                card.Flip()
-
-    def __getitem__(self, item):
-        return self.__deck[item]
+        random.shuffle(self.__cards)
