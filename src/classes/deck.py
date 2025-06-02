@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 
-#implementar o deck de descarte
+#implementar o deck de descarte, usar 2 decks
 class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
         self.__frontSprite = frontSprite
@@ -28,15 +28,11 @@ class Card(ABC):
 
 class Deck(ABC):
     def __init__(self):
-        self.__numCards:int = 0
         self.__cards = []
-
-    def getNumCards(self):
-        return self.__numCards
+        self.__lastCard
 
     def add(self, card):
         self.__cards.append(card)
-        self.__numCards += 1
 
     def __add__(self, card):
         self.add(card)
