@@ -1,5 +1,5 @@
 import pygame
-import src.game_intro
+import src.game_intro, src.game_sprites
 from src.config import cores, tela_altura, tela_largura, clock, FPS
 
 
@@ -29,12 +29,33 @@ def main():
     screen = pygame.display.set_mode(screen_size)  # Cria a janela com esse tamanho
     pygame.display.set_icon(pygame.image.load("./src/images/icon.png").convert_alpha())# Define o ícone da janela com uma imagem (com transparência)
     pygame.display.set_caption("Card Game")# Define o nome da janela (barra de título)
-    screen.fill(cores["preto"])  # Desenhar a tela de fundo preta
+    #screen.fill(cores["preto"])  # Desenhar a tela de fundo preta
     
  
 
 
-    
+    '''
+    intro_obj = src.game_sprites.intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
+    intro_time = 0
+    intro_duration = 10000  # milissegundos (10 segundos)
+    intro_running = True
+
+    while intro_running and intro_time < intro_duration:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                return
+            elif evento.type == pygame.KEYDOWN:
+                intro_running = False  # permite pular a intro com qualquer tecla
+
+        intro_obj.desenhar()
+        pygame.display.flip()
+        clock.tick(FPS)
+        intro_time += clock.get_time()
+ 
+    '''
+
+
     opcao = src.game_intro.game_intro(screen)
     print(opcao)
     if opcao == 0:

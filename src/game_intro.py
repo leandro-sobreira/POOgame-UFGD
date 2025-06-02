@@ -1,7 +1,12 @@
 import pygame
 import src.game_sprites
 from src.config import clock, FPS, buttom_size, title_size, cores, escala, buttom_font
+from src.game_sprites import Button
 
+
+
+def game_intro2(screen):
+    pass
 
 def game_intro(screen):
     
@@ -35,10 +40,11 @@ def game_intro(screen):
 
 
     #🖲️🖲️ Botões
-    start_button = src.game_sprites.Button((screen.get_width()/2, screen.get_height() - (150 * escala)),"Start", cores["preto"], buttom_font, buttom_size)
-    erase_button = src.game_sprites.Button((screen.get_width()/2, screen.get_height() - (110 * escala)),"Erase Data", cores["preto"], buttom_font, buttom_size)
-    config_button = src.game_sprites.Button((screen.get_width()/2, screen.get_height() - (70 * escala)),"Config", cores["preto"], buttom_font, buttom_size)
-    quit_button = src.game_sprites.Button((screen.get_width()/2, screen.get_height() - (30 * escala)),"Quit", cores["preto"], buttom_font, buttom_size)
+    
+    start_button = Button((screen.get_width()/2, screen.get_height() - (150 * escala)),"Start", cores["preto"], buttom_font, buttom_size)
+    erase_button = Button((screen.get_width()/2, screen.get_height() - (110 * escala)),"Erase Data", cores["preto"], buttom_font, buttom_size)
+    config_button = Button((screen.get_width()/2, screen.get_height() - (70 * escala)),"Config", cores["preto"], buttom_font, buttom_size)
+    quit_button = Button((screen.get_width()/2, screen.get_height() - (30 * escala)),"Quit", cores["preto"], buttom_font, buttom_size)
 
 
     buttons = [start_button, erase_button, config_button, quit_button]# Botões em ordem
