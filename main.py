@@ -1,6 +1,7 @@
 import pygame
 import src.game_intro, src.game_sprites
 from src.config import cores, tela_altura, tela_largura, clock, FPS
+from src.game_sprites import intro, Telacartas
 
 
 
@@ -34,28 +35,29 @@ def main():
  
 
 
-    '''
-    intro_obj = src.game_sprites.intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
-    intro_time = 0
-    intro_duration = 10000  # milissegundos (10 segundos)
-    intro_running = True
+    
+    #intro_obj = src.game_sprites.intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
+    #intro_time = 0
+    #intro_duration = 10000  # milissegundos (10 segundos)
+    #intro_running = True
 
-    while intro_running and intro_time < intro_duration:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                return
-            elif evento.type == pygame.KEYDOWN:
-                intro_running = False  # permite pular a intro com qualquer tecla
+    tela_intro = intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
+    jogo_selecionado = tela_intro.loop()
+    print("Jogo selecionado:", jogo_selecionado)
+    del tela_intro  # libera referência para coletor de lixo
 
-        intro_obj.desenhar()
-        pygame.display.flip()
-        clock.tick(FPS)
-        intro_time += clock.get_time()
+    if jogo_selecionado == 3:
+
+        Telacartas(screen).loop();
+
+
+    
+
+
  
+
+
     '''
-
-
     opcao = src.game_intro.game_intro(screen)
     print(opcao)
     if opcao == 0:
@@ -85,7 +87,7 @@ def main():
 
 
         pygame.display.flip() # autualiza a tela
-        
+        '''
 
     
     
