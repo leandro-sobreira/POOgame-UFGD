@@ -50,10 +50,13 @@ class Tela(ABC):
         pass
 
 
+
+
+
 class Telacartas(Tela):
     def __init__(self, screen):
         super().__init__(screen)
-        #self.background = "src/images/Shrek.jpg"
+        self.background = "src/images/Shrek.jpg"
 
         self.carta1 = ImageButton((150, 300), "src/images/Cards/cardSpades4.png")
         self.carta2 = ImageButton((350, 300), "src/images/Cards/cardBack_red2.png")

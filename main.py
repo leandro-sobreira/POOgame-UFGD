@@ -2,7 +2,7 @@ import pygame
 import src.game_intro, src.game_sprites
 from src.config import cores, tela_altura, tela_largura, clock, FPS
 from src.game_sprites import intro, Telacartas
-
+from src.games.blackjack import blackjackGame
 
 
 
@@ -12,9 +12,6 @@ pygame.mixer.init()# Inicializa o mixer de áudio com os parâmetros acima
 
 #🎮🕹️ Inicialização do Pygame
 pygame.init()# Inicializa todos os módulos do pygame (gráfico, som, etc)
-
-
-
 
 
 
@@ -88,6 +85,12 @@ def main():
 
         pygame.display.flip() # autualiza a tela
         '''
+    
+    
+
+    
+    game = blackjackGame('Lepanto')
+    game.play()
 
     
     
@@ -96,12 +99,6 @@ def main():
     pygame.time.delay(1000)# Espera 1 segundo para garantir que o som finalize
     
     pygame.quit()# Fecha o pygame corretamente
-
-
-
-
-
-
 
 
 main()
