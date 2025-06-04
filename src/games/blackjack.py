@@ -1,45 +1,46 @@
-from src.classes.standard import StandardDeck, StandardCard, StandardHand
-from src.classes.player import Player
+from src.classes.standard import StandardDeck, StandardHand, StardardPlayer
 
-def getCardValue(card:StandardCard):
-    return card.getValue()
+class blackjackGame:
+    def __init__(self, player_name):
+        self.player = StardardPlayer(player_name)
+        self.table:StandardHand = StandardHand()
+        self.gameDeck = StandardDeck()
+        self.discardDeck = StandardDeck()
 
-def printGame(tabble, player1):
-    print(f'Tabble: ({tabble.sumValues()})', end="")
-    for card in tabble.getCards():
-        print(f' [{card}]', end="")
-    print('')
-    print(f'Player: ({player1().getHand().sumValues()})', end="")
-    for card in player1.getHand().getCards():
-        print(f' [{card}]', end="")
-    print('')
+        self.gameDeck.createDeck()
+        self.gameDeck.shuffle()
 
-def game():
-    reset = True
-    while reset:
-        gameDeck = StandardDeck()
-        gameDeck.createDeck()
-        gameDeck.suffle()
-        player1 = Player('Lepanto', 1000, StandardHand())
-        tabble = StandardHand()
+    def play(self):
+        reset = True
+        while reset:
+            self.table.add(self.gameDeck.give())
+            self.player.add(self.gameDeck.give())
+            self.table.add(self.gameDeck.give(False))
+            self.player.add(self.gameDeck.give())
 
-        tabble.add(gameDeck.give())
-        player1._hand.add(gameDeck.give())
-        tabble.add(gameDeck.give().flip())
-        player1._hand.add(gameDeck.give())
+            while True:
+                self.printCmd()
+                opc = input('Hit? [Y/N]: ')
+                if opc == 'Y' or opc == 'y':
+                    self.player.add(self.gameDeck.give())
+                else:
+                    self.table.flipAll(True)
+                    self.printCmd()
+                    input("Press Enter to continue")
+                    while self.table.sumValues() < 17:
+                        self.table.add(self.gameDeck.give())
+                    self.printCmd()
+                    break
 
-        while True:
-            printGame(tabble, player1)
-            opc = input('Hit? [Y/N]: ')
-            if opc == 'Y' or opc == 'y':
-                player1 += gameDeck.give()
-            else:
-                tabble.flipAll(True)
-                printGame(tabble, player1)
-                input("Press Enter to continue")
-                #while sumDeck(tabble) < 17:
-                #    tabble += gameDeck.give()
-                #printGame(tabble, player1)
-                break
+            reset = input("Again? ") == 'y'
 
-        reset = input("Again? ") == 'y'
+
+    def printCmd(self):
+        print(f'Tabble: ({self.table.sumValues()})', end='')
+        for card in self.table:
+            print(f' [{card}]', end='')
+        print('')
+        print(f'{self.player.getName()}: ({self.player.sumValues()})', end='')
+        for card in self.player:
+            print(f' [{card}]', end='')
+        print('')

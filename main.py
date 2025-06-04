@@ -1,3 +1,3 @@
-from src.games.blackjack import game
-
-game()
+from src.games.blackjack import blackjackGame
+game = blackjackGame('Lepanto')
+game.play()

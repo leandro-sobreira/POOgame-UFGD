@@ -1,13 +1,12 @@
 import random
 from abc import ABC, abstractmethod
 
-#implementar o deck de descarte, usar 2 decks
 class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
         self.__frontSprite = frontSprite
         self.__backSprite = backSprite
         self.__sprite = frontSprite
-        self.__faceUP:bool = False
+        self.__faceUp:bool = False
 
     def getFrontSprite(self):
         return self.__frontSprite
@@ -16,11 +15,11 @@ class Card(ABC):
     def getSprite(self):
         return self.__sprite
     def getFace(self):
-        return self.__face
+        return self.__faceUp
 
     def flip(self):
-        self.__face = self.__faceUP == False
-        if self.__face:
+        self.__faceUp = self.__faceUp == False
+        if self.__faceUp:
             self.__sprite = self.__frontSprite
         else:
             self.__sprite = self.__backSprite
@@ -29,29 +28,35 @@ class Card(ABC):
 class Deck(ABC):
     def __init__(self):
         self.__cards = []
-        self.__lastCard
+
+    def isEmpty(self):
+        return self.__cards == []
 
     def add(self, card):
         self.__cards.append(card)
 
-    def __add__(self, card):
+    def __iadd__(self, card):
         self.add(card)
 
     def discard(self):
-        if self.__numCards > 0:
-            self.__cards.pop()
-            self.__numCards -= 1
+        self.__cards.pop()
+
+    def clear(self):
+        self.__cards.clear()
+
+    def size(self):
+        return len(self.__cards)
 
     def give(self, flip:bool = True):
-        if self.__numCards > 0:
-            card = self.__cards[self.__numCards -1]
+        if not self.isEmpty() :
+            card = self.__cards[self.size() -1]
             if flip:
-                card.Flip()
+                card.flip()
             self.discard()
             return card
         return None
 
-    def suffle(self):
+    def shuffle(self):
         random.shuffle(self.__cards)
 
     @abstractmethod
@@ -71,8 +76,11 @@ class Hand(ABC):
     def __getitem__(self, item):
         return self.__cards[item]
 
-    def discard(self, item):
-        self.__cards.remove(item)
+    def getCards(self):
+        return self.__cards
+
+    def size(self):
+        return len(self.__cards)
 
     def give(self, item):
         card = self[item]
@@ -86,7 +94,7 @@ class Hand(ABC):
 
 
 class Player(ABC):
-    def __init__(self, name: str, points: int):
+    def __init__(self, name: str, points: int = 0):
         super().__init__()
         self.__name = name
         self.__points = points
