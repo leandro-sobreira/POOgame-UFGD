@@ -1,0 +1,55 @@
+from src.classes.deck import Card, Deck, Hand, Player
+
+class UnoCard(Card):
+
+    def getColor(self):
+        return self.__color
+    def getValue(self):
+        return  self.__value
+
+class UnoCard(Card):
+    def __init__(self, value:str, color:str = '', frontSprite:str = '', backSprite:str = ''):
+            super().__init__(frontSprite, backSprite)
+            self.__value = value if value in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+2', 'block', 'reverse', '+4', 'wild') else 'undefined'
+            self.__color = color if color in ('red', 'yellow', 'green', 'blue', '') else 'undefined'
+
+    def getColor(self):
+        return self.__color
+    def getValue(self):
+        return  self.__value
+    
+    def match(self, card:UnoCard):
+        if self.__color == '':
+            return True
+        return self.__color == card.getColor() or self.__value == card.getValue()
+
+    def __str__(self):
+        if self.getFace():
+            if self.__color == '':
+                return f'{self.__value}'
+            else:
+                return f'{self.__color} {self.__value}'
+        else:
+            return 'XXXXXXXXXX'
+        
+class UnoDeck(Deck):
+    def createDeck(self):
+        colors = ['red', 'yellow', 'green', 'blue']
+        values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+2', 'block', 'reverse']
+        for color in colors:
+            for value in values:
+                self.add(UnoCard(value=value, color=color))
+                if value != '0':
+                    self.add(UnoCard(value=value, color=color))
+        for i in range(4):
+            self.add(UnoCard('wild'))
+        for i in range(4):
+            self.add(UnoCard('+4'))
+
+class UnoHand(Hand):
+    def __init__(self):
+        super().__init__()
+
+class UnoPlayer(Player, UnoHand):
+    def __init__(self, name, points = 0):
+        super().__init__(name, points)

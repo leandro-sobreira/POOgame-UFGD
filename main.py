@@ -2,7 +2,9 @@ import pygame
 import src.game_intro, src.game_sprites
 from src.config import cores, tela_altura, tela_largura, clock, FPS
 from src.game_sprites import intro, Telacartas
-from src.games.blackjack import blackjackGame
+from src.games.blackjack import BlackjackGame
+from src.games.uno import UnoGame
+
 
 
 
@@ -25,7 +27,7 @@ def main():
     # 🖥️🖥️ DISPLAY – define a resolução da janela, titulo e icone
     screen_size = (tela_largura, tela_altura)  # Largura x Altura da janela
     screen = pygame.display.set_mode(screen_size)  # Cria a janela com esse tamanho
-    pygame.display.set_icon(pygame.image.load("./src/images/icon.png").convert_alpha())# Define o ícone da janela com uma imagem (com transparência)
+    pygame.display.set_icon(pygame.image.load("Assets/icon.png").convert_alpha())# Define o ícone da janela com uma imagem (com transparência)
     pygame.display.set_caption("Card Game")# Define o nome da janela (barra de título)
     #screen.fill(cores["preto"])  # Desenhar a tela de fundo preta
     
@@ -38,7 +40,7 @@ def main():
     #intro_duration = 10000  # milissegundos (10 segundos)
     #intro_running = True
 
-    tela_intro = intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
+    tela_intro = intro(screen, "CARD GAME", "Assets/fonts/Ghost Shadow.ttf", 64, 1)
     jogo_selecionado = tela_intro.loop()
     print("Jogo selecionado:", jogo_selecionado)
     del tela_intro  # libera referência para coletor de lixo
@@ -89,7 +91,13 @@ def main():
     
 
     
-    game = blackjackGame('Lepanto')
+    #game = BlackjackGame('Lepanto')
+    #game.play()
+
+
+
+
+    game = UnoGame()
     game.play()
 
     

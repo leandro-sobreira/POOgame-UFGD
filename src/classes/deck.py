@@ -29,6 +29,9 @@ class Deck(ABC):
     def __init__(self):
         self.__cards = []
 
+    def viewTop(self):
+        return self.__cards[self.size()-1]
+
     def isEmpty(self):
         return self.__cards == []
 
@@ -67,6 +70,9 @@ class Hand(ABC):
     def __init__(self):
         self.__cards = []
 
+    def isEmpty(self):
+        return self.__cards == []
+
     def add(self, card):
         self.__cards.append(card)
 
@@ -82,10 +88,12 @@ class Hand(ABC):
     def size(self):
         return len(self.__cards)
 
-    def give(self, item):
-        card = self[item]
-        self.__cards.remove(item)
+    def give(self, card):
+        self.__cards.remove(card)
         return card
+    
+    def clear(self):
+        self.__cards.clear()
 
     def flipAll(self, stat): #True to front up
         for card in self.__cards:
@@ -103,11 +111,15 @@ class Player(ABC):
         return self.__name
 
     def getPoints(self):
-        return self.__name
+        return self.__points
 
     def addPoints(self, amount: int):
         self.__points += amount
 
     def remPoints(self, amount: int):
+        #Adicionar tratamento de erro
         self.__points -= amount
 
+    def givePoints(self, amount:int):
+        self.remPoints(amount)
+        return amount

@@ -3,13 +3,13 @@ import pygame
 
 clock = pygame.time.Clock()
 
-escala = 1
+escala = 2
 
 
 
 FPS = 30
 buttom_size = 25 * escala
-buttom_font = "src/fonts/Segoe Script Bold.ttf"
+buttom_font = "Assets/fonts/Segoe Script Bold.ttf"
 title_size = 50 * escala
 
 tela_altura = 480 * escala
