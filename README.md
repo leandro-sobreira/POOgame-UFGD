@@ -1,5 +1,8 @@
 # POOgame-UFGD
 
+![Versão em Desenvolvimento](Assets/Apresentation1.gif)
+
+
 
 ## Marcos - 
 A minha parte está sendo desenvolver a interface gráfica, fiz uma tela inicial, uma de seleção de jogos, agora estou implementando uma tela pro BlackJack.  

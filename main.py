@@ -97,8 +97,8 @@ def main():
 
 
 
-    game = UnoGame()
-    game.play()
+    #game = UnoGame()
+    #game.play()
 
     
     
