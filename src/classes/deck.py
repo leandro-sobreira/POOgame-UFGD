@@ -29,14 +29,14 @@ class Deck(ABC):
     def __init__(self):
         self.__cards = []
 
+    def viewTop(self):
+        return self.__cards[-1]
+
     def isEmpty(self):
         return self.__cards == []
 
     def add(self, card):
         self.__cards.append(card)
-
-    def __iadd__(self, card):
-        self.add(card)
 
     def discard(self):
         self.__cards.pop()
@@ -49,7 +49,7 @@ class Deck(ABC):
 
     def give(self, flip:bool = True):
         if not self.isEmpty() :
-            card = self.__cards[self.size() -1]
+            card = self.__cards[-1]
             if flip:
                 card.flip()
             self.discard()
@@ -70,9 +70,6 @@ class Hand(ABC):
     def add(self, card):
         self.__cards.append(card)
 
-    def __iadd__(self, card):
-        self.add(card)
-
     def __getitem__(self, item):
         return self.__cards[item]
 
@@ -91,6 +88,7 @@ class Hand(ABC):
         for card in self.__cards:
             if card.getFace() != stat:
                 card.flip()
+    
 
 
 class Player(ABC):
