@@ -95,12 +95,21 @@ def main():
 
     
 """    
-game = BlackjackGame('Lepanto')
+#BLACK JACK
+#game = BlackjackGame('Lepanto')
+#game.play()
+
+#UNO
+game = UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
 game.play()
 
+#Simulação de 1000 partidas de UNO com 4 jogadores
+#count = [0,0,0,0]# Contador de vitórias dos jogadores
+#for i in range(1000):
+#    game = UnoGame(['BotLepanto', 'Bot1', 'Bot2', 'Bot3'])
+#    count[game.play()] += 1
+#print(f'Vitórias dos jogadores em 1000 partidas: {count[0]} BotLepanto, {count[1]} Bot1, {count[2]} Bot2, {count[3]} Bot3')
 
-game = UnoGame()
-game.play()
 """
 
     

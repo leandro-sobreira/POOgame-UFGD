@@ -18,7 +18,7 @@ class UnoCard(Card):
     def getValue(self):
         return  self.__value
     def setColor(self, color:str):
-        if color in ('red', 'yellow', 'green', 'blue') and self.__color == '':
+        if color in ('red', 'yellow', 'green', 'blue', '') and self.__value in ('wild', '+4'):
             self.__color = color
         else:
             print('Invalid color!')

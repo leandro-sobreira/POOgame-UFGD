@@ -67,8 +67,14 @@ class Hand(ABC):
     def __init__(self):
         self.__cards = []
 
+    def isEmpty(self):
+        return self.__cards == []
+
     def add(self, card):
         self.__cards.append(card)
+
+    def __iadd__(self, card):
+        self.add(card)
 
     def __getitem__(self, item):
         return self.__cards[item]
@@ -79,16 +85,17 @@ class Hand(ABC):
     def size(self):
         return len(self.__cards)
 
-    def give(self, item):
-        card = self[item]
-        self.__cards.remove(item)
+    def give(self, card):
+        self.__cards.remove(card)
         return card
+    
+    def clear(self):
+        self.__cards.clear()
 
     def flipAll(self, stat): #True to front up
         for card in self.__cards:
             if card.getFace() != stat:
                 card.flip()
-    
 
 
 class Player(ABC):
@@ -101,11 +108,15 @@ class Player(ABC):
         return self.__name
 
     def getPoints(self):
-        return self.__name
+        return self.__points
 
     def addPoints(self, amount: int):
         self.__points += amount
 
     def remPoints(self, amount: int):
+        #Adicionar tratamento de erro
         self.__points -= amount
 
+    def givePoints(self, amount:int):
+        self.remPoints(amount)
+        return amount

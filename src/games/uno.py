@@ -3,8 +3,10 @@ import random
 from src.classes.uno import UnoCard, UnoDeck, UnoPlayer
 
 class UnoGame:
-    def __init__(self):
-        self.players = [UnoPlayer('Lepanto'), UnoPlayer('Bot1'), UnoPlayer('Bot2'), UnoPlayer('Bot3')]
+    def __init__(self, playersName = []):
+        self.players = []
+        for playerName in playersName:
+            self.players.append(UnoPlayer(playerName))
         self.playerTurn = 0
         self.rotation = 1
         self.buyDeck = UnoDeck()
@@ -14,11 +16,17 @@ class UnoGame:
     def reshuffleBuyDeck(self):
         if self.buyDeck.isEmpty():
             print('Reshuffling buy deck...')
-            topCard = self.discardDeck.give()
-            self.buyDeck = self.discardDeck
+            topCard:UnoCard = self.discardDeck.give()
+            if topCard.getValue() in ['+4', 'wild']:
+                topCard.setColor('')
+            topCard.flip() 
+            while not self.discardDeck.isEmpty():
+                if self.discardDeck.viewTop().getValue() in ['+4', 'wild']:
+                    self.discardDeck.viewTop().setColor('')
+                self.buyDeck.add(self.discardDeck.give())
             self.discardDeck.clear()
-            self.buyDeck.shuffle()
             self.discardDeck.add(topCard)
+            self.buyDeck.shuffle()
 
     def buyCard(self, player):
         if self.buyDeck.isEmpty():
@@ -133,4 +141,5 @@ class UnoGame:
             self.playerTurn = (self.playerTurn+self.rotation)%len(self.players) #Passa a vez do jogador
         
         print(f'{self.players[self.playerTurn].getName()}: WIN!')
+        return self.playerTurn
 
