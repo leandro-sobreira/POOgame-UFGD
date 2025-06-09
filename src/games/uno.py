@@ -1,14 +1,10 @@
 import os
 import random
-from src.classes.uno import UnoCard, UnoDeck, UnoPlayer
+from src.classes.uno import UnoCard, UnoDeck, UnoPlayer, UnoPlayers
 
 class UnoGame:
     def __init__(self, playersName = []):
-        self.players = []
-        for playerName in playersName:
-            self.players.append(UnoPlayer(playerName))
-        self.playerTurn = 0
-        self.rotation = 1
+        self.players = UnoPlayers(playersName)
         self.buyDeck = UnoDeck()
         self.discardDeck = UnoDeck()
         self.specialCards = ['+2', 'block', 'reverse', '+4', 'wild']
@@ -16,95 +12,104 @@ class UnoGame:
     def reshuffleBuyDeck(self):
         if self.buyDeck.isEmpty():
             print('Reshuffling buy deck...')
-            topCard:UnoCard = self.discardDeck.give()
-            if topCard.getValue() in ['+4', 'wild']:
+            topCard:UnoCard = self.discardDeck.give() #Guarda a carta do topo do baralho de descarte
+            if topCard.getValue() in ['+4', 'wild']: #Se a carta do topo for um +4 ou wild, remove a cor dela
                 topCard.setColor('')
             topCard.flip() 
-            while not self.discardDeck.isEmpty():
-                if self.discardDeck.viewTop().getValue() in ['+4', 'wild']:
+            while not self.discardDeck.isEmpty(): #Passa as cartas do baralho de descarte para o baralho de compra uma por uma
+                if self.discardDeck.viewTop().getValue() in ['+4', 'wild']: #Se a carta do topo for um +4 ou wild, remove a cor dela
                     self.discardDeck.viewTop().setColor('')
                 self.buyDeck.add(self.discardDeck.give())
-            self.discardDeck.clear()
-            self.discardDeck.add(topCard)
-            self.buyDeck.shuffle()
+            self.discardDeck.add(topCard) #Adiciona a carta do topo do baralho de descarte de volta ao baralho de descarte
+            self.buyDeck.shuffle() #Embaralha o baralho de compra
 
     def buyCard(self, player):
-        if self.buyDeck.isEmpty():
+        if self.buyDeck.isEmpty(): #Se o baralho de compra estiver vazio, embaralha o baralho de descarte
             self.reshuffleBuyDeck()
         player.add(self.buyDeck.give())
 
-    def playCard(self, player:UnoPlayer, card:UnoCard):
-        if card.match(self.discardDeck.viewTop()): #Ve se a carta é valida
-            if card.getValue() in self.specialCards: #Se a carta é valida, ve se a carta é especial
-                if card.getColor() == '': #Se for uma carta preta, faz a seleção de cor
-                    color = input('Select color [red, yellow, green, blue]: ').lower()
-                    while color not in ('red', 'yellow', 'green', 'blue'):
-                        print('Invalid color!')
-                        color = input('Select color [red, yellow, green, blue]: ').lower()
-                    card.setColor(color)
-                if card.getValue() == 'reverse': #Se a carta é um reverse muda a rotação do jogo
-                    self.rotation = self.rotation * -1
-                if card.getValue() in ['+2', '+4']:#Se for uma carta de compra, o proximo player compra a quantidade da carta
-                    for i in range(int(card.getValue())):#Transforma o texto '+4' e '+2' nos numeros 4 e 2 respectivamente
-                        self.buyCard(self.players[(self.playerTurn+self.rotation)%len(self.players)])
-                if card.getValue() in ['+2', 'block', '+4']:#Se a carta for um bloqueio ou uma carta de compra, pula o proximo player
-                    self.playerTurn = (self.playerTurn+self.rotation)%len(self.players)
-            self.discardDeck.add(player.give(card))#Descarta a carta no baralho de descarte
+    def playCard(self,player:UnoPlayer, card:UnoCard):
+        if not self.discardDeck.viewTop().match(card): #Verifica se a carta jogada combina com a carta do topo do baralho de descarte
+            raise ValueError('Card does not match the top of the discard deck!')
         else:
-            print('Invalid card!')
-            self.playerPlay(player)#Se a carta selecionada não é valida, faz uma nova requisição de jogada
-
-                    
+            if card.getValue() in self.specialCards: #Se a carta for uma carta especial, executa as ações correspondentes
+                if card.getColor() == '': #Se a carta não tiver cor, pede ao jogador para escolher uma cor
+                    while True:
+                        color = input('Select a color [red, yellow, green, blue]: ').lower()
+                        if color in ['red', 'yellow', 'green', 'blue']:
+                            card.setColor(color)
+                            break
+                        else:
+                            print('Invalid color selected!')
+                if card.getValue() in ['+2', '+4']: #Se a carta for um +2 ou +4, o próximo jogador compra as cartas correspondentes
+                    for i in range(int(card.getValue())): 
+                        self.buyCard(self.players.getNextPlayer())
+                if card.getValue() in ['+2', '+4', 'block']: #Se a carta for um +2, +4 ou block, o próximo jogador não joga
+                    self.players.setNextTurn()
+                if card.getValue() == 'reverse': #Se a carta for um reverse, inverte a ordem dos jogadores
+                    self.players.flipRotation()
+            self.discardDeck.add(player.give(card)) #Adiciona a carta jogada ao baralho de descarte
+     
     def playerPlay(self, player:UnoPlayer):
-        player.sort()
-        print(f'Top card [{self.discardDeck.viewTop()}]')
-        for othersPlayres in self.players:
-            if(self.rotation == 1):
-                end = ' -> '
-            else:
-                end = ' <- '
-            if othersPlayres == player:
-                print(f'{othersPlayres.getName()}: (you)', end=end)
-            else:
-                print(f'{othersPlayres.getName()}: ({othersPlayres.size()})', end=end)
-        print('')
-        for i in range(player.size()):
-            print(f'[{i+1}|{player[i]}] ', end='')
-        print('')
-        while True:
-            try: 
-                selec = int(input('Select card(0 to draw): '))-1 #Tenta denovo até ter uma opção válida
-                break
-            except ValueError:
-                print('Incorrect value! Please enter a number.')
-        if not selec == -1: #Ve se o player não selecionou a opção de comprar carta
-            self.playCard(player, player[selec]) #Joga uma carta
+        if self.players.getRotation() == 1:
+            end = ' -> '
         else:
-            self.buyCard(player) #Compra uma carta
-            if player.getCards()[-1].match(self.discardDeck.viewTop()): #Ve se a carta comprada pode ser jogada
-                opc = input(f'Do you want to play the card you just drew [{player.getCards()[-1]}]? [Y/N]: ').lower() #Pergunta para o jogador se ele quer jogar a carta comprada
-                if opc == 'y':
-                    self.playCard(player, player.getCards()[-1])
-        os.system('cls' if os.name == 'nt' else 'clear')
+            end = ' <- '
+        for plyer in self.players:
+            print(f'{plyer.getName()}: ({plyer.size()})', end=end)
+        print('')
+        print(f'{player.getName()}\'s turn')
+        player.sort()
+        print(f'Discard deck top: [{self.discardDeck.viewTop()}]')
+        i = 1
+        for card in player:
+            print(f'{i}-[{card}] ',end='')
+            i += 1
+        print('')
+        
+        while True:
+            try:
+                selec = int(input("Selec a card or 0 to draw: "))-1
+                if selec == -1:
+                    self.buyCard(player)
+                    if player.getCards()[-1].match(self.discardDeck.viewTop()):
+                        opc = input(f'Do you want to play the card you just drew [{player.getCards()[-1]}]? [Y/N]: ').lower()
+                        if opc == 'y':
+                            self.playCard(player, player.getCards()[-1])
+                else:
+                    self.playCard(player, player[selec])
+                break
+            
+            except ValueError:
+                print('Invalid input! Please enter a number.')
+                continue
+            except IndexError:
+                print('Invalid selection! Please select a valid card number or 0.')
+                continue
+        print('-----------------------------------------------------')
 
     def botPlayCard(self, bot:UnoPlayer, playCard:UnoCard):
-        if playCard.getValue() in self.specialCards: #Se a carta é valida, ve se a carta é especial
-            if playCard.getColor() == '': #Se for uma carta preta, faz a seleção de cor
-                for card in bot.getCards(): #Tenta encontrar uma carta que tenha cor para selecionar esse cor
-                    if card.getColor() != '': 
-                        playCard.setColor(card.getColor())
-                        break
+        if playCard.getValue() in self.specialCards:
+                if playCard.getColor() == '':
+                    for card in bot.getCards():
+                        if card.getColor() != '': 
+                            playCard.setColor(card.getColor())
+                            break
+                    else:
+                        playCard.setColor(random.choice(['red', 'yellow', 'green', 'blue']))
+                if playCard.getValue() in ['+2', '+4']:
+                    for i in range(int(playCard.getValue())):
+                        self.buyCard(self.players.getNextPlayer())
+                if playCard.getValue() in ['+2', '+4', 'block']:
+                    print(f'{bot.getName()}: played [{playCard}] in {self.players.getNextPlayer().getName()}')
+                    self.players.setNextTurn()
                 else:
-                    playCard.setColor(random.choice(['red', 'yellow', 'green', 'blue'])) #Se não tiver nenhuma carta com cor, escolhe uma cor aleatória
-            if playCard.getValue() == 'reverse': #Se a carta é um reverse muda a rotação do jogo
-                self.rotation = self.rotation * -1
-            if playCard.getValue() in ['+2', '+4']:#Se for uma carta de compra, o proximo player compra a quantidade da carta
-                for i in range(int(playCard.getValue())):#Transforma o texto '+4' e '+2' nos numeros 4 e 2 respectivamente
-                    self.buyCard(self.players[(self.playerTurn+self.rotation)%len(self.players)])
-            if playCard.getValue() in ['+2', 'block', '+4']:#Se a carta for um bloqueio ou uma carta de compra, pula o proximo player
-                self.playerTurn = (self.playerTurn+self.rotation)%len(self.players)
-        print(f'{bot.getName()}: played [{playCard}]')
-        self.discardDeck.add(bot.give(playCard))#Descarta a carta no baralho de descarte
+                    print(f'{bot.getName()}: played [{playCard}]')
+                if playCard.getValue() == 'reverse':
+                    self.players.flipRotation()
+        else:
+            print(f'{bot.getName()}: played [{playCard}]')
+        self.discardDeck.add(bot.give(playCard))
 
     def botPlay(self, bot:UnoPlayer):
         random.shuffle(bot.getCards())
@@ -131,15 +136,18 @@ class UnoGame:
         
         os.system('cls' if os.name == 'nt' else 'clear')
         while (True):
-            if self.players[self.playerTurn].getName().startswith('Bot'):
-                self.botPlay(self.players[self.playerTurn])
+            if self.players.getCurrentPlayer().getName().startswith('Bot'):
+                self.botPlay(self.players.getCurrentPlayer())
             else:
-                self.playerPlay(self.players[self.playerTurn])
+                self.playerPlay(self.players.getCurrentPlayer())
             
-            if self.players[self.playerTurn].isEmpty():
+            if self.players.getCurrentPlayer().isEmpty():
                 break #Se o jogador que acabou de jogar ficar sem cartas termina o jogo;
-            self.playerTurn = (self.playerTurn+self.rotation)%len(self.players) #Passa a vez do jogador
+            self.players.setNextTurn()#Passa a vez do jogador
+        for player in self.players:
+            if not player == self.players.getCurrentPlayer():
+                self.players.getCurrentPlayer().addPoints(player.sumValues()) #Adiciona os pontos das cartas dos outros jogadores ao jogador que ganhou
         
-        print(f'{self.players[self.playerTurn].getName()}: WIN!')
-        return self.playerTurn
+        print(f'{self.players.getCurrentPlayer().getName()}: WIN! {self.players.getCurrentPlayer().getPoints()} points')
+        return self.players.getTurn()
 
