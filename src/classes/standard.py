@@ -1,4 +1,4 @@
-from src.classes.deck import Deck, Card, Hand, Player
+from classes.deck import Deck, Card, Hand, Player
 
 class StandardCard(Card):
     def __init__(self, suit:str, value:str, frontSprite:str = '', backSprite:str = ''):

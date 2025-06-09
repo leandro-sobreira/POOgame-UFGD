@@ -30,14 +30,15 @@ class Deck(ABC):
         self.__cards = []
 
     def viewTop(self):
-        return self.__cards[self.size()-1]
+        return self.__cards[-1]
 
     def isEmpty(self):
-        return self.__cards == []
+        return not self.__cards
 
     def add(self, card):
         self.__cards.append(card)
 
+    #SOBRECARGA
     def __iadd__(self, card):
         self.add(card)
 
@@ -52,7 +53,7 @@ class Deck(ABC):
 
     def give(self, flip:bool = True):
         if not self.isEmpty() :
-            card = self.__cards[self.size() -1]
+            card = self.__cards[-1]
             if flip:
                 card.flip()
             self.discard()
@@ -71,11 +72,12 @@ class Hand(ABC):
         self.__cards = []
 
     def isEmpty(self):
-        return self.__cards == []
+        return not self.__cards
 
     def add(self, card):
         self.__cards.append(card)
-
+    
+    #SOBRECARGA
     def __iadd__(self, card):
         self.add(card)
 
@@ -90,6 +92,7 @@ class Hand(ABC):
 
     def give(self, card):
         self.__cards.remove(card)
+
         return card
     
     def clear(self):
@@ -116,10 +119,21 @@ class Player(ABC):
     def addPoints(self, amount: int):
         self.__points += amount
 
+    #SOBRECARGA
+
+    def __iadd__(self, amount: int):
+        self.addPoints(amount)
+
     def remPoints(self, amount: int):
         #Adicionar tratamento de erro
         self.__points -= amount
 
+    #SOBRECARGA
+
+    def __isub__(self, amount: int):
+        self.remPoints(amount)
+
     def givePoints(self, amount:int):
         self.remPoints(amount)
+        
         return amount

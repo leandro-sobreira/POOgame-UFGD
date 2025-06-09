@@ -1,4 +1,4 @@
-from src.classes.standard import StandardDeck, StandardHand, StardardPlayer
+from classes.standard import StandardDeck, StandardHand, StardardPlayer
 
 class BlackjackGame:
     def __init__(self, player_name):
@@ -9,6 +9,7 @@ class BlackjackGame:
     def play(self):
 
         reset = True
+        
         while reset:
             print(f'{self.player.getName()}: {self.player.getPoints()}$')
             betAmount = int(input('Bet amount (min 10$)? '))

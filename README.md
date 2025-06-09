@@ -1,6 +1,6 @@
 # POOgame-UFGD
 
-![Versão em Desenvolvimento](Assets/Apresentation1.gif)
+![Versão em Desenvolvimento](Apresentation1.gif)
 
 
 
