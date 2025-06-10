@@ -13,8 +13,6 @@ class UnoGame:
         if self.buyDeck.isEmpty():
             print('Reshuffling buy deck...')
             topCard:UnoCard = self.discardDeck.give() #Guarda a carta do topo do baralho de descarte
-            if topCard.getValue() in ['+4', 'wild']: #Se a carta do topo for um +4 ou wild, remove a cor dela
-                topCard.setColor('')
             topCard.flip() 
             while not self.discardDeck.isEmpty(): #Passa as cartas do baralho de descarte para o baralho de compra uma por uma
                 if self.discardDeck.viewTop().getValue() in ['+4', 'wild']: #Se a carta do topo for um +4 ou wild, remove a cor dela

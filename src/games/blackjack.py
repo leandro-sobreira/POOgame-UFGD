@@ -60,7 +60,9 @@ class BlackjackGame:
                     print('Does not have the min points ;-;')
                     reset = False
                 else:
-                    reset = input("Again? ").lower() != 'n'
+                    reset = input("Again? [Y/N]: ").lower() != 'n'
+
+                return self.player.getPoints()
 
 
     def printCmd(self):

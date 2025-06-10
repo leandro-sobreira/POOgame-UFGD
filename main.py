@@ -100,15 +100,15 @@ def main():
 #game.play()
 
 #UNO
-game = UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
-game.play()
+#game = UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3', 'Bot4', 'Bot5', 'Bot6', 'Bot7', 'Bot8'])
+#game.play()
 
-#Simulação de 1000 partidas de UNO com 4 jogadores
-#count = [0,0,0,0]# Contador de vitórias dos jogadores
+#Simulação de 1000 partidas de UNO com 9 jogadores
+#count = [0,0,0,0,0,0,0,0,0]# Contador de vitórias dos jogadores
 #for i in range(1000):
-#    game = UnoGame(['BotLepanto', 'Bot1', 'Bot2', 'Bot3'])
+#    game = UnoGame(['BotLepanto', 'Bot1', 'Bot2', 'Bot3', 'Bot4', 'Bot5', 'Bot6', 'Bot7', 'Bot8'])
 #    count[game.play()] += 1
-#print(f'Vitórias dos jogadores em 1000 partidas: {count[0]} BotLepanto, {count[1]} Bot1, {count[2]} Bot2, {count[3]} Bot3')
+#print(f'Vitórias dos jogadores em 1000 partidas: {count[0]} BotLepanto, {count[1]} Bot1, {count[2]} Bot2, {count[3]} Bot3, {count[4]} Bot4, {count[5]} Bot5, {count[6]} Bot6, {count[7]} Bot7, {count[8]} Bot8')
 
 """
 
