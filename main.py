@@ -1,11 +1,10 @@
-"""Esse é o módulo principal, ele será executado para exibir o jogo.
-"""
+""" This is the main module, it will be executed to display the game. """
 
-# Importe as bibliotecas necessárias
+# Import the necessary libraries
 import sys
 sys.path.insert(0, "./src")
 
-from main_game import Game #arquivo principal do fluxo do jogo
+from main_game import Game # Main game stream file
 
-# Inicializa o jogo
+# Start the game
 Game()
