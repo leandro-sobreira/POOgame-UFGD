@@ -14,8 +14,14 @@ class BlackjackGame:
         reset = True
         
         while reset:
+
+            self.tela.loop(self.player.getCards(), self.table.getCards())
             print(f'{self.player.getName()}: {self.player.getPoints()}$')
-            betAmount = int(input('Bet amount (min 10$)? '))
+            #betAmount = int(input('Bet amount (min 10$)? '))
+            betAmount = int(self.tela.digitar())
+            print("retornado")
+            print(int(betAmount))
+
             if(betAmount < 10 or betAmount > self.player.getPoints()):
                 print('Invalid vaule!')
             else:
@@ -44,11 +50,13 @@ class BlackjackGame:
                             self.player.add(self.gameDeck.give())
                     else:
                         self.table.flipAll(True)
+                        self.tela.loop(self.player.getCards(), self.table.getCards())
                         self.printCmd()
                         #input("Press Enter to continue")
                         opc = self.tela.tecla()
                         while self.table.sumValues() < 17:
                             self.table.add(self.gameDeck.give())
+                            self.tela.loop(self.player.getCards(), self.table.getCards())
                             self.printCmd()
                             #input("Press Enter to continue") 
                             opc = self.tela.tecla()                  

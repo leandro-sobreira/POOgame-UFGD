@@ -2,9 +2,20 @@
 
 ![Versão em Desenvolvimento](Apresentation1.gif)
 
+# 11_06 Leandro e Marcos
+Implementação da interface no BlackJack, fizemos com que fosse posivel interligar o código do BlackJack com a Interface feita pra ele, podendo usar o botão z para coprar cartas e c para pular.
+
+## Precisa de 
+- Botão seleção hit/stand
+- Botão seleção quer ir de novo, sim ou n
+- Tela nome player
+- Ajeitar caixa de texto aposta
+- mudar nome do loop do BlackjackScreen para interface_BlackJack
 
 
-## Marcos - 
+
+
+# Marcos - 
 A minha parte está sendo desenvolver a interface gráfica, fiz uma tela inicial, uma de seleção de jogos, agora estou implementando uma tela pro BlackJack.  
 Meu arquivo principal é o `game_sprites`, que tem basicamente todas as minhas telas. Ele também usa o `config.py` pra acessar alguns dados.
 
