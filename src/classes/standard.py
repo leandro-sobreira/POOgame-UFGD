@@ -7,7 +7,6 @@ class StandardCard(Card):
         self.__value = value if value in ('ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king') else 'undefined'
         self.__frontSprite = frontSprite
         self.__backSprite = backSprite
-        print(self.__frontSprite)
         
 
     def getSuit(self):

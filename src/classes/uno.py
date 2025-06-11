@@ -1,4 +1,5 @@
 from src.classes.deck import Card, Deck, Hand, Player
+import random
 
 class UnoCard(Card):
 
@@ -74,7 +75,8 @@ class UnoPlayer(Player, UnoHand):
         super().__init__(name, points)
 
 class UnoPlayers:
-    def __init__(self, playersNames = []):
+    def __init__(self, playerName):
+        playersNames = [playerName, 'LuckyBot', 'MegaBot', 'DummyBot']
         self.__players = [UnoPlayer(name) for name in playersNames]
         self.__turn = 0
         self.__rotation = 1
@@ -102,6 +104,9 @@ class UnoPlayers:
     
     def getNextPlayer(self):
         return self.__players[self.getNextTurn()]
+    
+    def getHumanPlayer(self):
+        return self.__players[0]
     
     def __getitem__(self, index):
 

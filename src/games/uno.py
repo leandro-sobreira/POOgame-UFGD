@@ -3,8 +3,8 @@ import random
 from src.classes.uno import UnoCard, UnoDeck, UnoPlayer, UnoPlayers
 
 class UnoGame:
-    def __init__(self, playersName = []):
-        self.players = UnoPlayers(playersName)
+    def __init__(self, playerName):
+        self.players = UnoPlayers(playerName)
         self.buyDeck = UnoDeck()
         self.discardDeck = UnoDeck()
         self.specialCards = ['+2', 'block', 'reverse', '+4', 'wild']
@@ -17,14 +17,16 @@ class UnoGame:
             while not self.discardDeck.isEmpty(): #Passa as cartas do baralho de descarte para o baralho de compra uma por uma
                 if self.discardDeck.viewTop().getValue() in ['+4', 'wild']: #Se a carta do topo for um +4 ou wild, remove a cor dela
                     self.discardDeck.viewTop().setColor('')
-                self.buyDeck.add(self.discardDeck.give())
+                card = self.discardDeck.give()
+                card.flip() 
+                self.buyDeck.add(card)
             self.discardDeck.add(topCard) #Adiciona a carta do topo do baralho de descarte de volta ao baralho de descarte
             self.buyDeck.shuffle() #Embaralha o baralho de compra
 
     def buyCard(self, player):
         if self.buyDeck.isEmpty(): #Se o baralho de compra estiver vazio, embaralha o baralho de descarte
             self.reshuffleBuyDeck()
-        player.add(self.buyDeck.give())
+        player.add(self.buyDeck.give(player==self.players.getHumanPlayer())) #Os bots recebem as cartas viradas para baixo
 
     def playCard(self,player:UnoPlayer, card:UnoCard):
         if not self.discardDeck.viewTop().match(card): #Verifica se a carta jogada combina com a carta do topo do baralho de descarte
@@ -47,7 +49,7 @@ class UnoGame:
                 if card.getValue() == 'reverse': #Se a carta for um reverse, inverte a ordem dos jogadores
                     self.players.flipRotation()
             self.discardDeck.add(player.give(card)) #Adiciona a carta jogada ao baralho de descarte
-     
+
     def playerPlay(self, player:UnoPlayer):
         if self.players.getRotation() == 1:
             end = ' -> '
@@ -87,6 +89,8 @@ class UnoGame:
         print('-----------------------------------------------------')
 
     def botPlayCard(self, bot:UnoPlayer, playCard:UnoCard):
+        playedCard = bot.give(playCard) #Remove a carta jogada da mão do bot
+        playedCard.flip() #Vira a carta jogada para cima
         if playCard.getValue() in self.specialCards:
                 if playCard.getColor() == '':
                     for card in bot.getCards():
@@ -107,7 +111,7 @@ class UnoGame:
                     self.players.flipRotation()
         else:
             print(f'{bot.getName()}: played [{playCard}]')
-        self.discardDeck.add(bot.give(playCard))
+        self.discardDeck.add(playedCard)
 
     def botPlay(self, bot:UnoPlayer):
         random.shuffle(bot.getCards())
@@ -127,17 +131,20 @@ class UnoGame:
         self.buyDeck.shuffle()
         for i in range(7):
             for player in self.players:
-                player.add(self.buyDeck.give())
+                if player == self.players.getHumanPlayer():
+                    player.add(self.buyDeck.give())
+                else:
+                    player.add(self.buyDeck.give(False)) #Os bots recebem as cartas viradas para baixo
         self.discardDeck.add(self.buyDeck.give())
         while self.discardDeck.viewTop().getValue() in self.specialCards: #Não permite que a primeira carta do baralho de descarte seja uma carta especial
             self.discardDeck.add(self.buyDeck.give())
         
         os.system('cls' if os.name == 'nt' else 'clear')
         while (True):
-            if self.players.getCurrentPlayer().getName().startswith('Bot'):
-                self.botPlay(self.players.getCurrentPlayer())
-            else:
+            if self.players.getTurn() == 0:
                 self.playerPlay(self.players.getCurrentPlayer())
+            else:
+                self.botPlay(self.players.getCurrentPlayer())
             
             if self.players.getCurrentPlayer().isEmpty():
                 break #Se o jogador que acabou de jogar ficar sem cartas termina o jogo;
@@ -147,4 +154,6 @@ class UnoGame:
                 self.players.getCurrentPlayer().addPoints(player.sumValues()) #Adiciona os pontos das cartas dos outros jogadores ao jogador que ganhou
         
         print(f'{self.players.getCurrentPlayer().getName()}: WIN! {self.players.getCurrentPlayer().getPoints()} points')
-        return self.players.getTurn()
+        if self.players.getHumanPlayer().getPoints() == 0:
+            return -1
+        return self.players.getHumanPlayer().getPoints()

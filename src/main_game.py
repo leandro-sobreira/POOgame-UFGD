@@ -11,7 +11,6 @@ import interface as it
 
 from games import blackjack, game_intro, uno
 
- 
 
 #Inicialização do Pygame
 pygame.init()

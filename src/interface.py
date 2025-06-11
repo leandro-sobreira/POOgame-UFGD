@@ -73,7 +73,7 @@ class BlackjackScreen(Screen):
         
 
 
-    def loop(self, player_cards = [], table_cards = []):
+    def loop(self, player_cards = [], table_cards = [], waitTime = 0):
 
         is_running = True
         clock = pygame.time.Clock()
@@ -81,20 +81,17 @@ class BlackjackScreen(Screen):
         self.__cardd = []
         
         #Acessa o objeto carta e pega o nome do arquivo dela pra por na tela
-        
-
 
         if player_cards or table_cards:
+            cardSpacement = 25
             for i, card in enumerate(player_cards):    
                 #primeiro = player_cards[0]
-                cardSpacement = 32
-                wCenterHand = ((st.SCREEN_WIDTH)/2)-25*st.SCALE+cardSpacement*i
-                self.__cardd.append(Card((wCenterHand, 350*st.SCALE), os.path.join(st.img_folder, "cards", card.getSprite()), size=(70*st.SCALE, 98*st.SCALE)))
+                wCenterHand = ((st.SCREEN_WIDTH-(len(player_cards)-1)*cardSpacement)/2)+cardSpacement*i
+                self.__cardd.append(Card((wCenterHand, (350+i*10)*st.SCALE), os.path.join(st.img_folder, "cards", card.getSprite()), size=(70*st.SCALE, 98*st.SCALE)))
 
             for i, card in enumerate(table_cards):    
                 #primeiro = player_cards[0]
-                cardSpacement = 32
-                wCenterHand = ((st.SCREEN_WIDTH)/2)-25*st.SCALE+cardSpacement*i
+                wCenterHand = ((st.SCREEN_WIDTH-(len(table_cards)-1)*cardSpacement)/2)+cardSpacement*i
                 self.__cardd.append(Card((wCenterHand, 100*st.SCALE), os.path.join(st.img_folder, "cards", card.getSprite()), size=(70*st.SCALE, 98*st.SCALE)))
 
             self.buttons = pygame.sprite.Group(self.__cardd)
@@ -126,19 +123,23 @@ class BlackjackScreen(Screen):
                 self.result.draw_background()
 
             pygame.display.flip()
+            
+            #Espera um tempo atualizando a tela
+            pygame.time.delay(waitTime)
+
             is_running = False
 
-    def digitar(self):
+    def digitar(self, text='', only_numbers=False):
         is_running = True
         clock = pygame.time.Clock()
-        tb = textbox(100, 100, 300, 50, 32, "Manda Sua Aposta")
+        tb = textbox(100, 100, 300, 50, 32, text)
 
         while is_running:
             clock.tick(st.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     is_running = False
-                num = tb.event(event)
+                num = tb.event(event, only_numbers)
                 if num == 1:
                     is_running = False
             tb.draw(self.screen)
@@ -202,27 +203,32 @@ class BlackjackScreen(Screen):
 
 
 class textbox:
-    def __init__(self, x, y, width, height, font_size=32, title="Escreva"):
+    def __init__(self, x, y, width, height, font_size=24, title="Escreva"):
         self.__retangulo = pygame.Rect(x*st.SCALE, y*st.SCALE, width*st.SCALE, height*st.SCALE)
         self.__color = pygame.Color('black')
         self.__text = ''
-        self.__font = pygame.font.Font(os.path.join(st.font_folder, "Magofah.ttf"), font_size*st.SCALE)
+        self.__font = pygame.font.Font(os.path.join(st.font_folder, "Sono-Medium.ttf"), font_size*st.SCALE)
         self.__txt_surface = self.__font.render('', True, self.__color)
         self.__active = False
         self.__title = title
         self.__title_surface = self.__font.render(self.__title, True, self.__color)
 
 
-    def event(self, event):
+    def event(self, event, only_numbers=False):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
+            if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
                 print("Texto digitado:", self.__text)
                 return 1
                 
             elif event.key == pygame.K_BACKSPACE:
                 self.__text = self.__text[:-1]
             else:
-                self.__text += event.unicode
+                if only_numbers and event.unicode.isdigit():
+                    self.__text += event.unicode
+                elif not only_numbers:
+                    # Adiciona apenas se for um caractere válido
+                    if event.unicode.isprintable():
+                        self.__text += event.unicode
             # Atualiza o texto renderizado
             self.__txt_surface = self.__font.render(self.__text, True, self.__color)
 
@@ -377,7 +383,6 @@ class IntroScreen(pygame.sprite.Sprite):
                             pygame.mixer.music.pause()
 
                             self.game = GameSelect(self.screen, self.ok_sound, self.select_sound).loop()
-                           
                             
 
 
