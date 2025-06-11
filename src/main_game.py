@@ -50,7 +50,9 @@ def Game():
 
     if intro_screen.game == 3:
 
-        it.BlackjackScreen(screen).loop()
+        #it.BlackjackScreen(screen).loop()
+        game = blackjack.BlackjackGame('Lepanto', screen)
+        game.play()
 
 
     
@@ -94,14 +96,13 @@ def Game():
     
 
     
-    #game = blackjack.BlackjackGame('Lepanto')
+
+
+
+
+
+    #game = uno.UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
     #game.play()
-
-
-
-
-    game = uno.UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
-    game.play()
 
     
     

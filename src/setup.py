@@ -47,3 +47,8 @@ title_size = 50 * SCALE
 button_font = os.path.join(font_folder, "Segoe Script Bold.ttf")
 
 clock = pygame.time.Clock()
+
+
+
+
+

@@ -62,18 +62,34 @@ class BlackjackScreen(Screen):
         self.background = os.path.join(st.img_folder, "mesa.png")
         self.take = os.path.join(st.img_folder, "X.png")       
     
-        self.card1 = Card((400*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardSpades4.png"), size=(70*st.SCALE, 98*st.SCALE))
-        self.card2 = Card((425*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardSpades4.png"), size=(70*st.SCALE, 98*st.SCALE))
+        self.card1 = Card((700*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardBack_blue4.png"), size=(70*st.SCALE, 98*st.SCALE))
+        #self.card2 = Card((425*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardBack_blue4.png"), size=(70*st.SCALE, 98*st.SCALE))
 
         self.__takeX = pygame.image.load(self.take).convert_alpha()
         self.__takeX = pygame.transform.scale(self.__takeX, (30*st.SCALE, 30*st.SCALE))
-        self.buttons = pygame.sprite.Group(self.card1, self.card2)
+        self.buttons = pygame.sprite.Group(self.card1)
         self.result = None  # Começa sem a tela de resultado        
 
-    def loop(self):
+    def loop(self, player_cards, table_cards):
 
         is_running = True
         clock = pygame.time.Clock()
+        
+        #Acessa o objeto carta e pega o nome do arquivo dela pra por na tela
+        cardd = []
+
+        for i, card in enumerate(player_cards):    
+            #primeiro = player_cards[0]
+            print("Primeira carta jogador:", card.getfrontSprite())
+            cardd.append(Card((400+(i*75)*st.SCALE, 350*st.SCALE), os.path.join(st.img_folder, "cards", card.getfrontSprite()), size=(70*st.SCALE, 98*st.SCALE)))
+
+        for i, card in enumerate(table_cards):    
+            #primeiro = player_cards[0]
+            print("Primeira carta mesa:", card.getfrontSprite())
+            cardd.append(Card((400+(i*75)*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards", card.getfrontSprite()), size=(70*st.SCALE, 98*st.SCALE)))
+
+
+        self.buttons = pygame.sprite.Group(cardd)
 
         while is_running:
 
@@ -86,7 +102,8 @@ class BlackjackScreen(Screen):
                 #Teclas
                 elif event.type == pygame.KEYDOWN: # evento de clique
                     if event.key == pygame.K_x:
-                        self.add_card()
+                        #self.add_card()
+                        pass
 
 
                     elif event.key == pygame.K_c:
@@ -101,6 +118,33 @@ class BlackjackScreen(Screen):
                 self.result.draw_background()
 
             pygame.display.flip()
+            is_running = False
+
+    def tecla(self):
+        is_running = True
+        clock = pygame.time.Clock()
+        option = ''
+
+        while is_running:
+            clock.tick(st.FPS)
+
+            #Z X Funções do teclado
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    is_running = False
+                #Teclas
+                elif event.type == pygame.KEYDOWN: # evento de clique
+                    if event.key == pygame.K_x:
+                        #self.add_card()
+                        option = 'y'
+                        is_running = False
+
+
+                    elif event.key == pygame.K_c:
+                        #self.result = ResultScreen(self.screen, "Você perdeu, como sempre.")
+                        option = 'n'
+                        is_running = False
+        return option
 
 
     def add_card(self):

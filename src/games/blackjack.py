@@ -1,10 +1,13 @@
 from classes.standard import StandardDeck, StandardHand, StardardPlayer
+from src.interface import BlackjackScreen
 
 class BlackjackGame:
-    def __init__(self, player_name):
+    def __init__(self, player_name, screen):
         self.player = StardardPlayer(player_name)
         self.table:StandardHand = StandardHand()
         self.gameDeck = StandardDeck()
+        self.tela = BlackjackScreen(screen)
+        
 
     def play(self):
 
@@ -30,21 +33,28 @@ class BlackjackGame:
                 opc = 'y'
 
                 while True:
-                    
+
+                    self.tela.loop(self.player.getCards(), self.table.getCards())
                     if self.player.sumValues() < 21 and opc != 'n':
                         self.printCmd()
-                        opc = input('Hit? [Y/N]: ').lower()
+                        #opc = input('Hit? [Y/N]: ').lower()
+                        opc = self.tela.tecla()
+                        print(opc)
                         if opc == 'y':
                             self.player.add(self.gameDeck.give())
                     else:
                         self.table.flipAll(True)
                         self.printCmd()
-                        input("Press Enter to continue")
+                        #input("Press Enter to continue")
+                        opc = self.tela.tecla()
                         while self.table.sumValues() < 17:
                             self.table.add(self.gameDeck.give())
                             self.printCmd()
-                            input("Press Enter to continue")                   
+                            #input("Press Enter to continue") 
+                            opc = self.tela.tecla()                  
                         break
+
+
                 tableHandValue = self.table.sumValues()
                 playerHandValue = self.player.sumValues()
 
