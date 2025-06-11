@@ -148,4 +148,3 @@ class UnoGame:
         
         print(f'{self.players.getCurrentPlayer().getName()}: WIN! {self.players.getCurrentPlayer().getPoints()} points')
         return self.players.getTurn()
-

@@ -5,7 +5,7 @@ class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
         self.__frontSprite = frontSprite
         self.__backSprite = backSprite
-        self.__sprite = frontSprite
+        self.__sprite = backSprite
         self.__faceUp:bool = False
 
     def getFrontSprite(self):
@@ -33,10 +33,14 @@ class Deck(ABC):
         return self.__cards[-1]
 
     def isEmpty(self):
-        return self.__cards == []
+        return not self.__cards
 
     def add(self, card):
         self.__cards.append(card)
+
+    #SOBRECARGA
+    def __iadd__(self, card):
+        self.add(card)
 
     def discard(self):
         self.__cards.pop()
@@ -68,11 +72,12 @@ class Hand(ABC):
         self.__cards = []
 
     def isEmpty(self):
-        return self.__cards == []
+        return not self.__cards
 
     def add(self, card):
         self.__cards.append(card)
-
+    
+    #SOBRECARGA
     def __iadd__(self, card):
         self.add(card)
 
@@ -113,10 +118,21 @@ class Player(ABC):
     def addPoints(self, amount: int):
         self.__points += amount
 
+    #SOBRECARGA
+
+    def __iadd__(self, amount: int):
+        self.addPoints(amount)
+
     def remPoints(self, amount: int):
         #Adicionar tratamento de erro
         self.__points -= amount
 
+    #SOBRECARGA
+
+    def __isub__(self, amount: int):
+        self.remPoints(amount)
+
     def givePoints(self, amount:int):
         self.remPoints(amount)
+        
         return amount

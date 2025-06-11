@@ -1,17 +1,28 @@
-from src.classes.standard import StandardDeck, StandardHand, StardardPlayer
+from classes.standard import StandardDeck, StandardHand, StardardPlayer
+from src.interface import BlackjackScreen
 
 class BlackjackGame:
-    def __init__(self, player_name):
+
+    def __init__(self, player_name, screen):
         self.player = StardardPlayer(player_name)
         self.table:StandardHand = StandardHand()
         self.gameDeck = StandardDeck()
+        self.tela = BlackjackScreen(screen)
+        
 
     def play(self):
 
         reset = True
+        
         while reset:
+
+            self.tela.loop(self.player.getCards(), self.table.getCards())
             print(f'{self.player.getName()}: {self.player.getPoints()}$')
-            betAmount = int(input('Bet amount (min 10$)? '))
+            #betAmount = int(input('Bet amount (min 10$)? '))
+            betAmount = int(self.tela.digitar())
+            print("retornado")
+            print(int(betAmount))
+
             if(betAmount < 10 or betAmount > self.player.getPoints()):
                 print('Invalid vaule!')
             else:
@@ -29,21 +40,29 @@ class BlackjackGame:
                 opc = 'y'
 
                 while True:
-                    
+
+                    self.tela.loop(self.player.getCards(), self.table.getCards())
                     if self.player.sumValues() < 21 and opc != 'n':
                         self.printCmd()
-                        opc = input('Hit? [Y/N]: ').lower()
+                        #opc = input('Hit? [Y/N]: ').lower()
+                        opc = self.tela.tecla()
+                        print(opc)
                         if opc == 'y':
                             self.player.add(self.gameDeck.give())
                     else:
                         self.table.flipAll(True)
+                        self.tela.loop(self.player.getCards(), self.table.getCards())
                         self.printCmd()
-                        input("Press Enter to continue")
+                        #input("Press Enter to continue")
+                        opc = self.tela.tecla()
                         while self.table.sumValues() < 17:
                             self.table.add(self.gameDeck.give())
+                            self.tela.loop(self.player.getCards(), self.table.getCards())
                             self.printCmd()
-                            input("Press Enter to continue")                   
+                            #input("Press Enter to continue") 
+                            opc = self.tela.tecla()                  
                         break
+
                 tableHandValue = self.table.sumValues()
                 playerHandValue = self.player.sumValues()
 
@@ -60,6 +79,7 @@ class BlackjackGame:
                     print('Does not have the min points ;-;')
                     reset = False
                 else:
+
                     reset = input("Again? [Y/N]: ").lower() != 'n'
 
                 return self.player.getPoints()

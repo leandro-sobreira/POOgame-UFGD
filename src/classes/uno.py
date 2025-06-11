@@ -104,9 +104,5 @@ class UnoPlayers:
         return self.__players[self.getNextTurn()]
     
     def __getitem__(self, index):
+
         return self.__players[index]
-    
-
-
-    
-        
