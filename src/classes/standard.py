@@ -5,20 +5,11 @@ class StandardCard(Card):
         super().__init__(frontSprite, backSprite)
         self.__suit = suit if suit in ('heart', 'diamond', 'club', 'spade') else 'undefined'
         self.__value = value if value in ('ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king') else 'undefined'
-        self.__frontSprite = frontSprite
-        self.__backSprite = backSprite
-        print(self.__frontSprite)
-        
 
     def getSuit(self):
         return self.__suit
     def getValue(self):
         return  self.__value
-    def getfrontSprite(self):
-        return self.__frontSprite
-    def getbackSprite(self):
-        return self.__backSprite
-    
 
     def __str__(self):
         if self.getFace():
@@ -32,7 +23,7 @@ class StandardDeck(Deck):
         values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king']
         for suit in suits:
             for value in values:
-                self.add(StandardCard(suit=suit, value=value, frontSprite=f"{value}of{suit}.png", backSprite="cardBack_blue4.png"))
+                self.add(StandardCard(suit=suit, value=value))
 
 class StandardHand(Hand):
     def __init__(self):
@@ -54,8 +45,6 @@ class StandardHand(Hand):
         if aceAppeared and acc < 12:
             acc += 10
         return acc
-    
-    #def print_Hand
 
 class StardardPlayer(Player, StandardHand):
     def __init__(self, name, points = 1000):

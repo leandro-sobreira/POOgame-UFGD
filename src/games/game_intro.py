@@ -199,7 +199,3 @@ def game_select(screen, ok_sound, select_sound):
         all_sprites.update()
         all_sprites.draw(screen)
         pygame.display.update()
-
-
-                    
-            

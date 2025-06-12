@@ -5,13 +5,11 @@ import os
 import pygame
 import random
 import sys
-
 import setup as st
 import interface as it
+import database_manager as db # <--- ADD THIS LINE
 
 from games import blackjack, game_intro, uno
-
- 
 
 #Inicialização do Pygame
 pygame.init()
@@ -34,80 +32,59 @@ screen = pygame.display.set_mode(screen_size)  # Cria a janela com esse tamanho
 def Game():
     game_over = False
 
-
-    #screen.fill(cores["preto"])  # Desenhar a tela de fundo preta  
-    #intro_obj = src.game_sprites.intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
-    #intro_time = 0
-    #intro_duration = 10000  # milissegundos (10 segundos)
-    #intro_running = True
-
     intro_screen = it.IntroScreen(screen, "CARD GAME", os.path.join(st.font_folder, "Ghost Shadow.ttf"), 64, 1)
 
-    select_game = intro_screen.loop()
+    # The intro loop now returns the selected game (e.g., 3 for Blackjack)
+    intro_screen.loop()
+    selected_game = intro_screen.selected_game
 
-    print("Jogo selecionado:", intro_screen.game)
-    #del intro_screen  # libera referência para coletor de lixo
+    print("Game selected:", selected_game)
 
-    if intro_screen.game == 3:
+    # --- Player and Game Session Logic ---
+    curret_player_data = None
 
-        #it.BlackjackScreen(screen).loop()
-        game = blackjack.BlackjackGame('Lepanto', screen)
-        game.play()
-
-
-    
-
-
- 
-
-
-    '''
-    opcao = src.game_intro.game_intro(screen)
-    print(opcao)
-    if opcao == 0:
-        fim_jogo = True
-    
-    
-
-    # Loop principal do menu inicial
-    while not fim_jogo:
-        # ⏱️ Temporizador para controlar a taxa de quadros
-        clock.tick(FPS)
+    # Proceed only if a game was chosen (not quit)
+    if selected_game and selected_game > 0:
+        # Step 1: Get player name. For now, we use a fixed name.
+        # Later, we can create a Pygame screen to ask for the player's name.
+        player_name = "Lepanto"
+        curret_player_data = db.get_player(player_name)
         
+        print(f"Welcome, {curret_player_data['name']}!")
+        print(f"Your blackjack points: {curret_player_data['blackjack_points']}")
+        print(f"Your UNO wins: {curret_player_data['uno_wins']}")
 
-        
-        # 🎮🎮✨------------------ Adicionar o loop do jogo aqui----------------✨🎮🎮
-        # opcao == 3 significa BlackJack
+    # -- Game Launch Logic --
+    if selected_game == 3: # Blackjack
+        """ This is where the integration between logic and UI happens.
+        The BlackjackScreen needs to be modified to run the game logic instead of its own loop.
 
+        PSEUDO-CODE FOR MY DUMBASS TEAMMATES, or for future integrations:
+        blackjack_instance = blackjack.BlackjackGame(current_player_data)
+        blackjack_instance.play_graphical(screen) # A new method in our game class
+        current_player_data = blackjack_instance.get_player_data() # Get updated data
 
+        And for now we just call our existing screen
+        """
+        it.BlackjackScreem(screen).loop()
 
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                fim_jogo = True
-            elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_ESCAPE:
-                    fim_jogo = True
+        """ The uno game is currently not connected to the menu, but here's how Marcos ou Abner could do it:
+        elif selected_game == 4: # Assuming 4 is for Uno
+        uno_game = uno.UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
+        winner_name = uno_game.play()
+        if winner_name == current_player_data['name']:
+            current_player_data['uno_wins'] += 1
+        """
 
-
-
-        pygame.display.flip() # autualiza a tela
-    '''
+    # --- Save Data After Game ---
+    if curret_player_data:
+        # This is where the score should be updated after a game ends.
+        # Example: current_player_data['blackjack_points'] = final_score_from_game
+        db.update_player(curret_player_data)
     
-    
+    # The rest of the shitty cleaning code:
+    pygame.mouse.set_visible(True)
+    pygame.mixer.music.fadeout(1000)
+    pygame.time.delay(1000)
 
-    
-
-
-
-
-
-    #game = uno.UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
-    #game.play()
-
-    
-    
-    pygame.mouse.set_visible(True)# Ao final, mostra novamente o cursor do mouse (caso tenha sido escondido)
-    pygame.mixer.music.fadeout(1000)# Encerra a música suavemente (1 segundo de fade)
-    pygame.time.delay(1000)# Espera 1 segundo para garantir que o som finalize
-    
-    pygame.quit()# Fecha o pygame corretamente
+    pygame.quit()
