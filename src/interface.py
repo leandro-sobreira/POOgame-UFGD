@@ -5,7 +5,7 @@ from . import setup as st
 from abc import ABC, abstractmethod
 
 # --- HELPER FUNCTIONS ---
-
+#TODO: MAKE THIS A METHOD
 def draw_text_with_outline(surface, text, font, pos, text_color, outline_color, outline_width=2): #
     """Renders text with a simple outline.""" #
     x, y = pos #
@@ -48,6 +48,7 @@ class Screen(ABC): #
         pygame.mixer.music.set_volume(volume) #
         pygame.mixer.music.play(-1) #
 
+
     @abstractmethod
     def handle_event(self, event): #
         """Abstract method to handle screen-specific events.""" #
@@ -87,8 +88,8 @@ class PlayerNameScreen(Screen): #
     def __init__(self, screen): #
         super().__init__(screen) #
         self.set_background(os.path.join(st.img_folder, "title.png")) #
-        self.font = pygame.font.Font(st.button_font, 32) #
-        self.input_font = pygame.font.Font(st.button_font, 28) #
+        self.font = pygame.font.Font(st.text_font, 32) #
+        self.input_font = pygame.font.Font(st.text_font, 28) #
         self.player_name = "" #
         self.prompt_text = "Enter Your Name and Press Enter" #
 
@@ -117,7 +118,7 @@ class MenuScreen(Screen): #
         super().__init__(screen, player_data) #
         self.set_background(os.path.join(st.img_folder, "title.png")) #
         self.set_music(os.path.join(st.sound_folder, "1197551_Butterflies.ogg")) #
-        self.title_font = pygame.font.Font(os.path.join(st.font_folder, "Ghost Shadow.ttf"), st.title_size) #
+        self.title_font = pygame.font.Font(os.path.join(st.font_folder, st.title_font), st.title_size) #
         
         self.buttons = [ #
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 200), "Start", "GAME_SELECT"), #
@@ -196,7 +197,7 @@ class BlackjackScreen(Screen): #
         super().__init__(screen) #
         self.game = game_instance  # This is the Model #
         self.set_background(os.path.join(st.img_folder, "mesa.png")) #
-        self.font = pygame.font.Font(st.button_font, 24) #
+        self.font = pygame.font.Font(st.text_font, 24) #
         self.card_sprites = pygame.sprite.Group() #
         self.load_card_images() #
 
@@ -206,13 +207,9 @@ class BlackjackScreen(Screen): #
         cards_path = os.path.join(st.img_folder, "cards") #
         for filename in os.listdir(cards_path): #
             if filename.endswith(".png"): #
-                key = filename.replace(".png", "") # e.g., "cardSpadesK" #
+                key = filename.replace(".png", "") # e.g., "king_of_spade" #
                 image = pygame.image.load(os.path.join(cards_path, filename)).convert_alpha() #
                 self.card_images[key] = pygame.transform.scale(image, (70 * st.SCALE, 98 * st.SCALE)) #
-        # Add back of card image #
-        back_image = pygame.image.load(os.path.join(st.img_folder, "cards/cardBack_blue2.png")).convert_alpha() #
-        self.card_images["back"] = pygame.transform.scale(back_image, (70 * st.SCALE, 98 * st.SCALE)) #
-
 
     def handle_event(self, event): #
         if self.game.state == "PLAYER_TURN": #
@@ -223,6 +220,9 @@ class BlackjackScreen(Screen): #
                 elif event.key in (pygame.K_x, pygame.K_s): # 'X' or 'S' to Stand #
                     self.ok_sound.play() #
                     self.game.player_stand() #
+
+        elif self.game.state == "DEALER_TURN":
+            self.game._dealer_buy_loop()
         
         elif self.game.state == "ROUND_OVER": #
             if event.type == pygame.KEYDOWN: #
@@ -239,12 +239,12 @@ class BlackjackScreen(Screen): #
         # Sync dealer's hand #
         for i, card in enumerate(self.game.table.getCards()): #
             pos = ((450 - (len(self.game.table.getCards())*20)/2 + i * 20)*st.SCALE, 120) #
-            image_key = card.get_image_path() if card.getFace() else "back" #
+            image_key = card.getSprite()
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
         # Sync player's hand #
         for i, card in enumerate(self.game.player.getCards()): #
             pos = ((450 - (len(self.game.player.getCards())*20)/2 + i * 20)*st.SCALE, (350+i*10)*st.SCALE) #
-            image_key = card.get_image_path() #
+            image_key = card.getSprite() #
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
     def draw(self): #
@@ -253,7 +253,7 @@ class BlackjackScreen(Screen): #
         self.card_sprites.draw(self.screen) #
         
         # Draw scores #
-        dealer_score_text = f"Dealer's Hand: {self.game.table.sumValues() if self.game.state != 'PLAYER_TURN' else '?'}" #
+        dealer_score_text = f"Dealer's Hand: {self.game.table.sumValues()}" #
         player_score_text = f"{self.game.player.getName()}'s Hand: {self.game.player.sumValues()}" #
         draw_text_with_outline(self.screen, dealer_score_text, self.font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) #
         draw_text_with_outline(self.screen, player_score_text, self.font, (st.SCREEN_WIDTH/2, 450), st.WHITE, st.BLACK) #
@@ -265,7 +265,7 @@ class BlackjackScreen(Screen): #
         elif self.game.state == "ROUND_OVER": #
             result_text = f"Result: {self.game.result}" #
             prompt = "Press [Z] to play again." if self.game.player.getPoints() >= 10 else "Not enough points. Press [Z] to exit." #
-            draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.button_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
+            draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
             draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
 
     def get_player_data(self): #

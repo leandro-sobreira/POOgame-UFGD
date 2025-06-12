@@ -49,7 +49,7 @@ class UnoGame:
                 if card.getValue() == 'reverse': #Se a carta for um reverse, inverte a ordem dos jogadores
                     self.players.flipRotation()
             self.discardDeck.add(player.give(card)) #Adiciona a carta jogada ao baralho de descarte
-     
+
     def playerPlay(self, player:UnoPlayer):
         if self.players.getRotation() == 1:
             end = ' -> '

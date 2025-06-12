@@ -56,11 +56,16 @@ class BlackjackGame:
     def _dealer_play(self): #
         """The dealer's automated turn logic.""" #
         self.table.flipAll(True) # Reveal the dealer's hole card #
-        
-        while self.table.sumValues() < 17: #
+        while self.table.sumValues() < 12:
             self.table.add(self.gameDeck.give()) #
-        
         self._determine_winner() #
+
+    def _dealer_buy_loop(self):
+            if self.table.sumValues() < 50:
+                self.table.add(self.gameDeck.give()) #
+            else:
+                self._determine_winner() #
+            
 
     def _determine_winner(self): #
         """Compares hands and sets the final result and payout.""" #

@@ -20,7 +20,7 @@ def Game():
     # Screen and window settings
     screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)
     screen = pygame.display.set_mode(screen_size)
-    pygame.display.set_caption("UFGD Online Casino")
+    pygame.display.set_caption("CardGame HUB")
     icon_path = os.path.join(st.img_folder, "icon.png")
     pygame.display.set_icon(pygame.image.load(icon_path))
 

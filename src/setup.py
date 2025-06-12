@@ -33,6 +33,8 @@ button_size = 30 * SCALE #
 title_size = 50 * SCALE #
 
 # Font path
+title_font = os.path.join(font_folder, "Ghost Shadow.ttf") #
+text_font = os.path.join(font_folder, "Typori.ttf") #
 button_font = os.path.join(font_folder, "Segoe Script Bold.ttf") #
 
 # Global clock
