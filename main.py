@@ -4,11 +4,11 @@
 import sys
 sys.path.insert(0, "./src")
 
-#from main_game import Game # Main game stream file
+from main_game import Game # Main game stream file
 
 # Start the game
-#Game()
+Game()
 
-from games.uno import UnoGame
-game = UnoGame('Lepanto')
-print(game.play())
+#from games.uno import UnoGame
+#game = UnoGame('Lepanto')
+#print(game.play())

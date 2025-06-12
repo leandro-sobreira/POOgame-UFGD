@@ -132,7 +132,7 @@ class BlackjackScreen(Screen):
     def digitar(self, text='', only_numbers=False):
         is_running = True
         clock = pygame.time.Clock()
-        tb = textbox(100, 100, 300, 50, 32, text)
+        tb = textbox(st.SCREEN_WIDTH/2-150, st.SCREEN_HEIGHT/2-25, 300, 50, 32, text)
 
         while is_running:
             clock.tick(st.FPS)
@@ -206,10 +206,11 @@ class textbox:
     def __init__(self, x, y, width, height, font_size=24, title="Escreva"):
         self.__retangulo = pygame.Rect(x*st.SCALE, y*st.SCALE, width*st.SCALE, height*st.SCALE)
         self.__color = pygame.Color('black')
+        self.__width = width 
+        self.__height = height 
         self.__text = ''
         self.__font = pygame.font.Font(os.path.join(st.font_folder, "Sono-Medium.ttf"), font_size*st.SCALE)
         self.__txt_surface = self.__font.render('', True, self.__color)
-        self.__active = False
         self.__title = title
         self.__title_surface = self.__font.render(self.__title, True, self.__color)
 
@@ -223,20 +224,19 @@ class textbox:
             elif event.key == pygame.K_BACKSPACE:
                 self.__text = self.__text[:-1]
             else:
-                if only_numbers and event.unicode.isdigit():
-                    self.__text += event.unicode
-                elif not only_numbers:
-                    # Adiciona apenas se for um caractere válido
-                    if event.unicode.isprintable():
+                if event.unicode.isprintable() and len(self.__text) < self.__width/20:
+                    if only_numbers and event.unicode.isdigit():
+                        self.__text += event.unicode
+                    elif not only_numbers:
                         self.__text += event.unicode
             # Atualiza o texto renderizado
             self.__txt_surface = self.__font.render(self.__text, True, self.__color)
 
     def draw(self, tela):
-        tela.blit(self.__title_surface, (self.__retangulo.x, self.__retangulo.y - self.__font.get_height()))
+        tela.blit(self.__title_surface, (self.__retangulo.x+(self.__width-(len(self.__title)*20))/2, self.__retangulo.y - self.__font.get_height()))
         pygame.draw.rect(tela, st.WHITE, self.__retangulo)  # Fundo da caixa
         
-        tela.blit(self.__txt_surface, (self.__retangulo.x + 5, self.__retangulo.y + 5))  # Texto digitado
+        tela.blit(self.__txt_surface, (self.__retangulo.x+ (self.__width-(len(self.__text)*20))/2, self.__retangulo.y + 5))  # Texto digitado
 
 
     def get_text(self):
