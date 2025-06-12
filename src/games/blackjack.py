@@ -1,5 +1,4 @@
 from classes.standard import StandardDeck, StandardHand, StardardPlayer
-from src.interface import BlackjackScreen
 
 class BlackjackGame:
 
@@ -7,8 +6,6 @@ class BlackjackGame:
         self.player = StardardPlayer(player_name)
         self.table:StandardHand = StandardHand()
         self.gameDeck = StandardDeck()
-        self.tela = BlackjackScreen(screen)
-        
 
     def play(self):
 
@@ -49,13 +46,10 @@ class BlackjackGame:
                 opc = 'y'
 
                 while True:
-
-                    self.tela.loop(self.player.getCards(), self.table.getCards())
+                    
                     if self.player.sumValues() < 21 and opc != 'n':
                         self.printCmd()
-                        #opc = input('Hit? [Y/N]: ').lower()
-                        opc = self.tela.tecla()
-                        print(opc)
+                        opc = input('Hit? [Y/N]: ').lower()
                         if opc == 'y':
                             self.player.add(self.gameDeck.give())
                     else:

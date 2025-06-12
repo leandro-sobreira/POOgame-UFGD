@@ -5,7 +5,7 @@ class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
         self.__frontSprite = frontSprite
         self.__backSprite = backSprite
-        self.__sprite = backSprite
+        self.__sprite = frontSprite
         self.__faceUp:bool = False
 
     def getFrontSprite(self):

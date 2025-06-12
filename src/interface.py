@@ -2,6 +2,7 @@ import pygame
 import os
 import random
 import setup as st
+import database_manager as db # <--- ADD THIS LINE
 
 from abc import ABC, abstractmethod
 
@@ -62,15 +63,13 @@ class BlackjackScreen(Screen):
         self.background = os.path.join(st.img_folder, "mesa.png")
         self.take = os.path.join(st.img_folder, "X.png")       
     
-        self.__cardd = []
-        self.__cardd.append(Card((700*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardBack_blue4.png"), size=(70*st.SCALE, 98*st.SCALE)))
-        #self.card2 = Card((425*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardBack_blue4.png"), size=(70*st.SCALE, 98*st.SCALE))
+        self.card1 = Card((400*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardSpades4.png"), size=(70*st.SCALE, 98*st.SCALE))
+        self.card2 = Card((425*st.SCALE, 100*st.SCALE), os.path.join(st.img_folder, "cards/cardSpades4.png"), size=(70*st.SCALE, 98*st.SCALE))
 
         self.__takeX = pygame.image.load(self.take).convert_alpha()
         self.__takeX = pygame.transform.scale(self.__takeX, (30*st.SCALE, 30*st.SCALE))
-        #self.buttons = pygame.sprite.Group(self.card1)
-        self.result = None  # Começa sem a tela de resultado
-        
+        self.buttons = pygame.sprite.Group(self.card1, self.card2)
+        self.result = None  # Começa sem a tela de resultado        
 
 
     def loop(self, player_cards = [], table_cards = [], waitTime = 0):
@@ -107,8 +106,7 @@ class BlackjackScreen(Screen):
                 #Teclas
                 elif event.type == pygame.KEYDOWN: # evento de clique
                     if event.key == pygame.K_x:
-                        #self.add_card()
-                        pass
+                        self.add_card()
 
 
                     elif event.key == pygame.K_c:
@@ -377,7 +375,24 @@ class IntroScreen(pygame.sprite.Sprite):
                     elif event.key == pygame.K_z:
                         self.ok_sound.play()
                         button = selected[0]
-                        keep_going = False
+                        
+                        # This logic is slightly adjusted to prevente the menu from closing after ereasing data.
+                        if button == self.erase_button:
+                            self.reset_sound.play()
+                            db.erease_data() # <--- THIS IS THE IMPLEMENTATION.
+                            # TODO: You, my loved teammate of this POO project, could add a visual confirmation on user screen here.
+                        else:
+                            keep_going = False  # Exit the loop for other options
+                            if button == self.start_button:
+                                pygame.mixer.music.pause()
+                                self.game = GameSelect(self.screen, self.ok_sound, self.select_sound).loop()
+                                if self.game == 0:
+                                    pygame.mixer.music.unpause()
+                                    keep_going = True  # Return to menu.
+                            elif button == self.quit_button:
+                                self.game = 0
+                            elif button == self.config_button:
+                                self.game = 2 # Placeholder for config screen
 
                         if button == self.start_button:
                             pygame.mixer.music.pause()
