@@ -1,51 +1,98 @@
-# POOgame-UFGD
+# UFGD Online Casino
 
-![Versão em Desenvolvimento](Apresentation1.gif)
+![Gameplay GIF](Apresentation1.gif)
 
-# 11_06 Leandro e Marcos
-Implementação da interface no BlackJack, fizemos com que fosse posivel interligar o código do BlackJack com a Interface feita pra ele, podendo usar o botão z para coprar cartas e c para pular.
+A suite of casino-style card games developed as a final project for an Object-Oriented Programming course at UFGD. The project showcases core OOP principles, architectural patterns like Model-View-Controller, and game development with Pygame.
 
-## Precisa de 
-- Botão seleção hit/stand
-- Botão seleção quer ir de novo, sim ou n
-- Tela nome player
-- Ajeitar caixa de texto aposta
-- mudar nome do loop do BlackjackScreen para interface_BlackJack
+---
 
+## Features
 
+- **Standardized UI:** A robust screen management system ensures a consistent user experience.
+- **Persistent Player Data:** Player names and scores are automatically saved and loaded.
+- **Blackjack:** A fully playable Blackjack game with betting, hitting, and standing mechanics.
+- **UNO:** The complete game logic for UNO is implemented (UI pending).
+- **Sound Effects & Music:** Background music and UI sound effects for an immersive experience.
 
+---
 
-# Marcos - 
-A minha parte está sendo desenvolver a interface gráfica, fiz uma tela inicial, uma de seleção de jogos, agora estou implementando uma tela pro BlackJack.  
-Meu arquivo principal é o `game_sprites`, que tem basicamente todas as minhas telas. Ele também usa o `config.py` pra acessar alguns dados.
+## Architectural Pattern: Model-View-Controller (MVC)
 
-## Classes principais
+This project was refactored to follow a design pattern similar to MVC, promoting a clean separation of concerns and making the codebase more modular and scalable.
 
-- O `Main` cria uma classe chamada `Intro` pra iniciar o jogo.  
-  Ela inicia o background, sons, desenha toda a tela, usando também objetos de botões controláveis pelas setas.
+-   **Model:** (`src/games/`, `src/classes/`)
+    -   Contains the "brains" of the application. It manages the rules, state, and logic of the games (e.g., `BlackjackGame`). It is completely independent of the user interface.
 
-```python
-  tela_intro = intro(screen, "CARD GAME", "Assets/fonts/Ghost Shadow.ttf", 64, 1)
-  jogo_selecionado = tela_intro.loop()
-  print("Jogo selecionado:", jogo_selecionado)
-  del tela_intro  # libera referência para coletor de lixo
-  ```
+-   **View:** (`src/interface.py`)
+    -   Responsible for all things visual. It renders the user interface, the game board, and the cards based on the data provided by the Model. It does not contain any game logic.
 
-- A `Intro` cria outro objeto pra seleção de jogos que funciona de forma parecida e devolve pra `Intro`.  
-  Em geral, o objetivo desses dois é devolver um número que representa o jogo pra `Main`.
+-   **Controller:** (`src/main_game.py`)
+    -   Acts as the orchestrator. It listens for user input (keyboard presses), tells the Model to update its state accordingly, and instructs the View on which screen to display.
 
+---
 
-```python
-  self.jogo = GameSelect(self.screen, self.ok, self.select_sound).loop()
+## Project Structure
+
+```
+POOgame-UFGD/
+│
+├── main.py             # Main entry point for the game
+└── src/
+    ├── main_game.py    # The Controller: manages game flow and screens
+    ├── interface.py    # The Views: contains all UI screen classes
+    ├── setup.py        # Global constants (colors, screen size, fonts)
+    ├── database_manager.py # Handles saving and loading player data
+    │
+    ├── games/
+    │   ├── blackjack.py  # Blackjack game logic (Model)
+    │   └── uno.py        # UNO game logic (Model)
+    │
+    ├── classes/
+    │   ├── deck.py       # Abstract classes for Deck, Hand, Player
+    │   ├── standard.py   # Classes for a standard 52-card deck
+    │   └── uno.py        # Classes specific to the game of UNO
+    │
+    ├── img/              # Game assets (images, icons, cards)
+    ├── sounds/           # Game audio (music, sound effects)
+    └── fonts/            # Font files
 ```
 
+---
 
+## How to Run
 
-- O `Main` então chama a `TelaCartas`, que usa uma classe abstrata pra criar toda a tela.  
-  Nela contém botões de adição de cartas e uma tela de resultado.
+1.  **Prerequisites:**
+    -   Python 3.x
+    -   Pygame library (`pip install pygame`)
 
+2.  **Execution:**
+    -   Navigate to the root directory of the project and run:
+        ```bash
+        python main.py
+        ```
 
-```python
-  if jogo_selecionado == 3:
-    Telacartas(screen).loop();
-```
+---
+
+## Gameplay Controls
+
+-   **Arrow Keys (Up/Down):** Navigate through menu options.
+-   **Z / Enter:** Confirm a selection or action (e.g., Hit in Blackjack).
+-   **X:** Secondary action (e.g., Stand in Blackjack).
+
+---
+
+## Future Improvements
+
+-   [ ] Implement the graphical user interface for the UNO game.
+-   [ ] Create a "Config" screen to allow users to adjust audio volume.
+-   [ ] Add more casino games (e.g., Poker).
+
+---
+
+## Authors
+
+Developed with dedication by:
+- **[Eduardo Rizzi]**
+- **[Leandro Peres Sobreira]**
+- **[Marcos Henrique Almeida Lima]**
+- **[Abner Lucas Pereira Cardoso Vera]**

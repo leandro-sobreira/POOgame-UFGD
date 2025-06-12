@@ -1,42 +1,35 @@
-from src.classes.deck import Card, Deck, Hand, Player
+from classes.deck import Card, Deck, Hand, Player
+import random
 
+# CORRECTED: Removed the first, incomplete definition of UnoCard
 class UnoCard(Card):
+    def __init__(self, value:str, color:str = ''):
+        super().__init__()
+        self.__value = value
+        self.__color = color
 
     def getColor(self):
         return self.__color
+        
     def getValue(self):
-        return  self.__value
-
-class UnoCard(Card):
-    def __init__(self, value:str, color:str = '', frontSprite:str = '', backSprite:str = ''):
-            super().__init__(frontSprite, backSprite)
-            self.__value = value if value in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+2', 'block', 'reverse', '+4', 'wild') else 'undefined'
-            self.__color = color if color in ('red', 'yellow', 'green', 'blue', '') else 'undefined'
-
-    def getColor(self):
-        return self.__color
-    def getValue(self):
-        return  self.__value
+        return self.__value
+        
     def setColor(self, color:str):
         if color in ('red', 'yellow', 'green', 'blue', '') and self.__value in ('wild', '+4'):
             self.__color = color
-        else:
-            print('Invalid color!')
     
-    def match(self, card:UnoCard):
+    def match(self, card):
         if self.__color == '' or card.getColor() == '':
             return True
         return self.__color == card.getColor() or self.__value == card.getValue()
 
     def __str__(self):
         if self.getFace():
-            if self.__color == '':
-                return f'{self.__value}'
-            else:
-                return f'{self.__color} {self.__value}'
+            return f'{self.__color} {self.__value}' if self.__color else f'{self.__value}'
         else:
-            return 'XXXXXXXXXX'
-        
+            return 'Face Down'
+
+# ... (rest of the file is the same)
 class UnoDeck(Deck):
     def createDeck(self):
         colors = ['red', 'yellow', 'green', 'blue']

@@ -1,90 +1,79 @@
-# Importe as bibliotecas necessárias
-import json
-import math
-import os
+# Import necessary libraries
 import pygame
-import random
-import sys
+import os
 import setup as st
 import interface as it
-import database_manager as db # <--- ADD THIS LINE
-
-from games import blackjack, game_intro, uno
-
-#Inicialização do Pygame
-pygame.init()
-
-# Crie o nome do jogo (exibido no superior da janela)
-pygame.display.set_caption("Cassino Online UFGD")
-pygame.display.set_icon(pygame.image.load(os.path.join(st.img_folder, "icon.png")))# Define o ícone da janela com uma imagem (com transparência)
-
-# Relógio para controlar o tempo das ações no jogo
-clock = pygame.time.Clock()
-
-#Pré-configura o mixer de áudio
-pygame.mixer.pre_init(44100, -16, 1, 512)# 44100 Hz de frequência, 16 bits (signed), mono, buffer de 512 bytes
-pygame.mixer.init()# Inicializa o mixer de áudio com os parâmetros acima
-
-#DISPLAY – define a resolução da janela, titulo e icone
-screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)  # Largura x Altura da janela
-screen = pygame.display.set_mode(screen_size)  # Cria a janela com esse tamanho
+import database_manager as db
+from games import blackjack
 
 def Game():
-    game_over = False
+    """
+    Main function that manages the game flow and transitions between screens.
+    """
+    # Pygame Initialization
+    pygame.init()
+    pygame.mixer.init()
 
-    intro_screen = it.IntroScreen(screen, "CARD GAME", os.path.join(st.font_folder, "Ghost Shadow.ttf"), 64, 1)
+    # Screen and window settings
+    screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)
+    screen = pygame.display.set_mode(screen_size)
+    pygame.display.set_caption("UFGD Online Casino")
+    icon_path = os.path.join(st.img_folder, "icon.png")
+    pygame.display.set_icon(pygame.image.load(icon_path))
 
-    # The intro loop now returns the selected game (e.g., 3 for Blackjack)
-    intro_screen.loop()
-    selected_game = intro_screen.selected_game
+    # Game control variables
+    current_player_data = None
+    running = True
 
-    print("Game selected:", selected_game)
+    # Screen Manager
+    # The first screen is now for entering the player's name.
+    current_screen = it.PlayerNameScreen(screen)
 
-    # --- Player and Game Session Logic ---
-    curret_player_data = None
+    while running:
+        # Each screen's loop method now returns the key for the next screen to be displayed,
+        # or None/QUIT to exit the game.
+        next_screen_key = current_screen.loop()
 
-    # Proceed only if a game was chosen (not quit)
-    if selected_game and selected_game > 0:
-        # Step 1: Get player name. For now, we use a fixed name.
-        # Later, we can create a Pygame screen to ask for the player's name.
-        player_name = "Lepanto"
-        curret_player_data = db.get_player(player_name)
+        if next_screen_key == "QUIT":
+            running = False
         
-        print(f"Welcome, {curret_player_data['name']}!")
-        print(f"Your blackjack points: {curret_player_data['blackjack_points']}")
-        print(f"Your UNO wins: {curret_player_data['uno_wins']}")
+        elif next_screen_key == "GET_PLAYER":
+            player_name = current_screen.player_name
+            if not player_name:  # If the name is empty, use a default
+                player_name = "Player 1"
+            current_player_data = db.get_player(player_name)
+            current_screen = it.MenuScreen(screen, current_player_data)
 
-    # -- Game Launch Logic --
-    if selected_game == 3: # Blackjack
-        """ This is where the integration between logic and UI happens.
-        The BlackjackScreen needs to be modified to run the game logic instead of its own loop.
+        elif next_screen_key == "MENU":
+            current_screen = it.MenuScreen(screen, current_player_data)
 
-        PSEUDO-CODE FOR MY DUMBASS TEAMMATES, or for future integrations:
-        blackjack_instance = blackjack.BlackjackGame(current_player_data)
-        blackjack_instance.play_graphical(screen) # A new method in our game class
-        current_player_data = blackjack_instance.get_player_data() # Get updated data
+        elif next_screen_key == "GAME_SELECT":
+            current_screen = it.GameSelectScreen(screen, current_player_data)
+        
+        elif next_screen_key == "ERASE_DATA":
+            db.erase_data()
+            # Shows a confirmation screen before returning to the menu
+            current_screen = it.NotificationScreen(screen, "Player data erased!", "MENU", current_player_data)
 
-        And for now we just call our existing screen
-        """
-        it.BlackjackScreem(screen).loop()
+        elif next_screen_key == "BLACKJACK":
+            # 1. Instantiate the game (Model)
+            blackjack_instance = blackjack.BlackjackGame(current_player_data)
+            # 2. Instantiate the game screen (View) and pass the model to it
+            current_screen = it.BlackjackScreen(screen, blackjack_instance)
+        
+        elif next_screen_key == "UPDATE_PLAYER_DATA":
+            # The game screen (e.g., BlackjackScreen) returns the updated data
+            updated_data = current_screen.get_player_data()
+            if updated_data:
+                db.update_player(updated_data)
+            # Reload data to reflect changes immediately
+            current_player_data = db.get_player(updated_data["name"]) 
+            current_screen = it.MenuScreen(screen, current_player_data)
+            
+        else: # Fallback for unknown screen keys or unimplemented features
+            message = f"Feature '{next_screen_key}' not implemented yet!"
+            current_screen = it.NotificationScreen(screen, message, "MENU", current_player_data)
 
-        """ The uno game is currently not connected to the menu, but here's how Marcos ou Abner could do it:
-        elif selected_game == 4: # Assuming 4 is for Uno
-        uno_game = uno.UnoGame(['Lepanto', 'Bot1', 'Bot2', 'Bot3'])
-        winner_name = uno_game.play()
-        if winner_name == current_player_data['name']:
-            current_player_data['uno_wins'] += 1
-        """
-
-    # --- Save Data After Game ---
-    if curret_player_data:
-        # This is where the score should be updated after a game ends.
-        # Example: current_player_data['blackjack_points'] = final_score_from_game
-        db.update_player(curret_player_data)
-    
-    # The rest of the shitty cleaning code:
-    pygame.mouse.set_visible(True)
-    pygame.mixer.music.fadeout(1000)
-    pygame.time.delay(1000)
-
+    # Quit Pygame
     pygame.quit()
+    sys.exit()
