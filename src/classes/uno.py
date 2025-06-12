@@ -1,4 +1,4 @@
-from classes.deck import Card, Deck, Hand, Player
+from .deck import Card, Deck, Hand, Player
 import random
 
 # CORRECTED: Removed the first, incomplete definition of UnoCard

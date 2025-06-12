@@ -1,6 +1,6 @@
 import os
 import random
-from src.classes.uno import UnoCard, UnoDeck, UnoPlayer, UnoPlayers
+from ..classes.uno import UnoCard, UnoDeck, UnoPlayer, UnoPlayers
 
 class UnoGame:
     def __init__(self, playersName = []):

@@ -1,12 +1,15 @@
 """
 This is the main module, it will be executed to display the game.
 """
-
-# Import the necessary libraries
 import sys
-sys.path.insert(0, "./src")
-
-from main_game import Game # main file for the game flow
+from src.main_game import Game
 
 # Initializes the game
-Game()
+if __name__ == "__main__":
+    try:
+        Game()
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        # Optionally, log the error to a file
+    finally:
+        sys.exit()

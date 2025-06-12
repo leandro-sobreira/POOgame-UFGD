@@ -1,10 +1,13 @@
 # Import necessary libraries
 import pygame
 import os
-import setup as st
-import interface as it
-import database_manager as db
-from games import blackjack
+import sys
+
+# CORREÇÃO: Use importações relativas para módulos no mesmo pacote (src)
+from . import setup as st
+from . import interface as it
+from . import database_manager as db
+from .games import blackjack
 
 def Game():
     """
