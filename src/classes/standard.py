@@ -13,14 +13,7 @@ class StandardCard(Card):
         return self.__value
 
     def get_image_path(self): #
-        """Maps card data to its image filename (e.g., cardSpadesK).""" #
-        suit_map = {'spade': 'Spades', 'heart': 'Hearts', 'club': 'Clubs', 'diamond': 'Diamonds'} #
-        value_map = {'ace': 'A', 'jack': 'J', 'queen': 'Q', 'king': 'K'} #
-        
-        value_str = value_map.get(self.__value, self.__value) #
-        suit_str = suit_map.get(self.__suit) #
-        
-        return f"card{suit_str}{value_str}" #
+        return f"{self.__value}of{self.__suit}" #
 
     def __str__(self): #
         if self.getFace(): #

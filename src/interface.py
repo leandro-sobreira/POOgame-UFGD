@@ -210,7 +210,7 @@ class BlackjackScreen(Screen): #
                 image = pygame.image.load(os.path.join(cards_path, filename)).convert_alpha() #
                 self.card_images[key] = pygame.transform.scale(image, (70 * st.SCALE, 98 * st.SCALE)) #
         # Add back of card image #
-        back_image = pygame.image.load(os.path.join(st.img_folder, "X.png")).convert_alpha() #
+        back_image = pygame.image.load(os.path.join(st.img_folder, "cards/cardBack_blue2.png")).convert_alpha() #
         self.card_images["back"] = pygame.transform.scale(back_image, (70 * st.SCALE, 98 * st.SCALE)) #
 
 
@@ -238,12 +238,12 @@ class BlackjackScreen(Screen): #
         self.card_sprites.empty() #
         # Sync dealer's hand #
         for i, card in enumerate(self.game.table.getCards()): #
-            pos = (400 + i * 80, 120) #
+            pos = ((450 - (len(self.game.table.getCards())*20)/2 + i * 20)*st.SCALE, 120) #
             image_key = card.get_image_path() if card.getFace() else "back" #
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
         # Sync player's hand #
         for i, card in enumerate(self.game.player.getCards()): #
-            pos = (400 + i * 80, 350) #
+            pos = ((450 - (len(self.game.player.getCards())*20)/2 + i * 20)*st.SCALE, (350+i*10)*st.SCALE) #
             image_key = card.get_image_path() #
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
