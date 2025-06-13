@@ -47,6 +47,8 @@ def Game():
             current_player_data = db.get_player(player_name)
             current_screen = it.MenuScreen(screen, current_player_data)
 
+        
+
         elif next_screen_key == "MENU":
             current_screen = it.MenuScreen(screen, current_player_data)
 
@@ -59,6 +61,13 @@ def Game():
             current_screen = it.NotificationScreen(screen, "Player data erased!", "MENU", current_player_data)
 
         elif next_screen_key == "BLACKJACK":
+        #while True
+
+            """current_screen = it.BetAmountScreen(screen:screen)
+            amount = it.BetAmountScreen.getAmount()"""
+            #bet_screen = it.BetAmountScreen(screen)
+            #bet_amount = bet_screen.loop()
+
             # 1. Instantiate the game (Model)
             blackjack_instance = blackjack.BlackjackGame(current_player_data)
             # 2. Instantiate the game screen (View) and pass the model to it

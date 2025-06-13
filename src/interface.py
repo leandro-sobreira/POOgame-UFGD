@@ -33,8 +33,16 @@ class Screen(ABC): #
         self._background = None #
 
         # Load common sounds #
-        self.select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "select.ogg")) #
-        self.ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "ok.ogg")) #
+        
+        
+        #self.select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "computer-processing-sound-effects-short-click-select-02-122133.ogg")) 
+        #self.ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "computer-processing-sound-effects-short-click-select-01-122134.ogg"))
+        #self.select_sound.set_volume(0.2)
+        #self.ok_sound.set_volume(0.2)
+        #self.reset_sound.set_volume(0.2)
+        
+        self.select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_02.ogg")) #
+        self.ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_01.ogg")) #
         self.reset_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "reset.ogg")) #
 
     def set_background(self, image_path): #
@@ -84,24 +92,75 @@ class Screen(ABC): #
 
 # --- SCREEN IMPLEMENTATIONS ---
 
+"""
+class BetAmountScreen(Screen):
+    def __init__(self, screen, prompt_text="Digite o valor da aposta:"):
+        super().__init__(screen)
+        self.prompt_text = prompt_text
+        self.input_value = ''
+        self.amount = 0
+        self.font = pygame.font.Font(st.text_font, 32)
+        self.done = False
+        self.__box_width = 400
+        self.__box_height = 150
+
+        self.__box_rect = pygame.Rect((st.SCREEN_WIDTH - self.__box_width) // 2,(st.SCREEN_HEIGHT - self.__box_height) // 2,self.__box_width, self.__box_height )
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
+                self.next_screen = "BLACKJACK"
+            elif event.key == pygame.K_BACKSPACE:
+                self.input_value = self.input_value[:-1]
+            elif event.unicode.isdigit():
+                self.input_value += event.unicode
+
+    def getAmount(self):
+        return self.amount
+
+    def draw(self):
+        #self.screen.fill(st.BLACK)  # Limpa a tela com fundo preto
+        pygame.draw.rect(self.screen, st.BLACK, self.__box_rect)  # fundo da caixa
+        pygame.draw.rect(self.screen, st.WHITE, self.__box_rect, 2)  # borda branca
+
+        # Renderiza o texto do prompt
+        prompt_surface = self.font.render(self.prompt_text, True, st.WHITE)
+        prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
+        self.screen.blit(prompt_surface, prompt_rect)
+
+        # Renderiza o valor digitado
+        input_surface = self.font.render(self.input_value, True, st.GREEN)
+        input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
+        self.screen.blit(input_surface, input_rect)
+
+    def loop(self):
+        while not self.done:
+            for event in pygame.event.get():
+                self.handle_event(event)
+            self.draw()
+            pygame.display.flip()
+        return int(self.input_value) if self.input_value else 0
+"""
+
+
 class PlayerNameScreen(Screen): #
-    def __init__(self, screen): #
+    def __init__(self, screen, prompt_text="Enter Your Name and Press Enter"): #
         super().__init__(screen) #
         self.set_background(os.path.join(st.img_folder, "title.png")) #
         self.font = pygame.font.Font(st.text_font, 32) #
         self.input_font = pygame.font.Font(st.text_font, 28) #
         self.player_name = "" #
-        self.prompt_text = "Enter Your Name and Press Enter" #
+        self.prompt_text = prompt_text #
 
     def handle_event(self, event): #
         if event.type == pygame.KEYDOWN: #
-            if event.key == pygame.K_RETURN: #
+            if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]: #
                 self.ok_sound.play() #
                 self.next_screen = "GET_PLAYER" #
             elif event.key == pygame.K_BACKSPACE: #
                 self.player_name = self.player_name[:-1] #
             else:
-                if len(self.player_name) < 15: # Limit name length #
+                if event.unicode.isprintable() and len(self.player_name) < 15: # Limit name length #
                     self.player_name += event.unicode #
     
     def draw(self): #
@@ -200,6 +259,15 @@ class BlackjackScreen(Screen): #
         self.font = pygame.font.Font(st.text_font, 24) #
         self.card_sprites = pygame.sprite.Group() #
         self.load_card_images() #
+        self.prompt_text = "Digite o valor da aposta:"
+        self.input_value = ''
+        self.amount = 0
+        self.font = pygame.font.Font(st.text_font, 32)
+        self.done = False
+        self.__box_width = 400
+        self.__box_height = 150
+
+        self.__box_rect = pygame.Rect((st.SCREEN_WIDTH - self.__box_width) // 2,(st.SCREEN_HEIGHT - self.__box_height) // 2,self.__box_width, self.__box_height )
 
     def load_card_images(self): #
         """Pre-loads all card images into a dictionary for quick access.""" #
@@ -212,7 +280,22 @@ class BlackjackScreen(Screen): #
                 self.card_images[key] = pygame.transform.scale(image, (70 * st.SCALE, 98 * st.SCALE)) #
 
     def handle_event(self, event): #
-        if self.game.state == "PLAYER_TURN": #
+
+
+        if self.game.state == "BET":
+            if event.type == pygame.KEYDOWN:
+                if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
+                    self.amount = int(self.input_value)
+                    self.game.bet_amount = self.amount
+                    self.game.state = "PLAYER_TURN"
+                elif event.key == pygame.K_BACKSPACE:
+                    self.input_value = self.input_value[:-1]
+                elif event.unicode.isdigit():
+                    self.input_value += event.unicode
+                    
+            self.game.setBetAmount()
+
+        elif self.game.state == "PLAYER_TURN": #
             if event.type == pygame.KEYDOWN: #
                 if event.key in (pygame.K_z, pygame.K_h): # 'Z' or 'H' to Hit #
                     self.ok_sound.play() #
@@ -221,8 +304,16 @@ class BlackjackScreen(Screen): #
                     self.ok_sound.play() #
                     self.game.player_stand() #
 
-        elif self.game.state == "DEALER_TURN":
-            self.game._dealer_buy_loop()
+                '''
+                    self.game._dealer_play()
+                    while self.game._dealer_play
+
+
+
+                '''
+
+            """elif self.game.state == "DEALER_TURN":
+                self.game._dealer_buy_loop()"""
         
         elif self.game.state == "ROUND_OVER": #
             if event.type == pygame.KEYDOWN: #
@@ -259,9 +350,24 @@ class BlackjackScreen(Screen): #
         draw_text_with_outline(self.screen, player_score_text, self.font, (st.SCREEN_WIDTH/2, 450), st.WHITE, st.BLACK) #
 
         # Draw prompts or results #
-        if self.game.state == "PLAYER_TURN": #
-            prompt = "Press [Z] to Hit, [X] to Stand" #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH/2, 250), st.GREEN, st.BLACK) #
+        if self.game.state == "BET":
+            pygame.draw.rect(self.screen, st.BLACK, self.__box_rect)  # fundo da caixa
+            pygame.draw.rect(self.screen, st.WHITE, self.__box_rect, 2)  # borda branca
+
+            # Renderiza o texto do prompt
+            prompt_surface = self.font.render(self.prompt_text, True, st.WHITE)
+            prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
+            self.screen.blit(prompt_surface, prompt_rect)
+
+            # Renderiza o valor digitado
+            input_surface = self.font.render(self.input_value, True, st.GREEN)
+            input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
+            self.screen.blit(input_surface, input_rect)
+        elif self.game.state == "PLAYER_TURN": #
+            prompt = "Z Hit" #
+            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*6/7, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
+            prompt = "X Stand" #
+            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*6/7, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
         elif self.game.state == "ROUND_OVER": #
             result_text = f"Result: {self.game.result}" #
             prompt = "Press [Z] to play again." if self.game.player.getPoints() >= 10 else "Not enough points. Press [Z] to exit." #

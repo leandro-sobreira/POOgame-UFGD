@@ -5,12 +5,23 @@ class BlackjackGame:
         self.player = StandardPlayer(player_data['name'], player_data['blackjack_points']) #
         self.table = StandardPlayer("Dealer") # The dealer can be represented as a player #
         self.gameDeck = StandardDeck() #
-        self.bet_amount = 10 # Fixed bet for simplicity #
+        #self.bet_amount = 10 # Fixed bet for simplicity # TODO
+        # Chame a tela de input de aposta aqui:
+        #bet_screen = 0 #bet_screen = amount
+        # Em vez de usar bet_screen.loop()
+        self.bet_amount = 0
+
         
-        self.state = "PLAYER_TURN" # Possible states: PLAYER_TURN, DEALER_TURN, ROUND_OVER #
+        self.state = "BET" # Possible states: PLAYER_TURN, DEALER_TURN, ROUND_OVER #
         self.result = "" # e.g., "Player Wins!", "Bust!", "Push!" #
 
-        self.start_round() #
+        self.setBetAmount()
+
+    def setBetAmount(self):
+        if self.bet_amount < 10 or self.bet_amount > self.player.getPoints():
+            self.state = "BET"
+        else:
+            self.start_round()
 
     def start_round(self): #
         """Resets hands and deals initial cards for a new round.""" #
@@ -52,19 +63,20 @@ class BlackjackGame:
         if self.state == "PLAYER_TURN": #
             self.state = "DEALER_TURN" #
             self._dealer_play() #
+            #self.table.flipAll(True)
 
     def _dealer_play(self): #
         """The dealer's automated turn logic.""" #
         self.table.flipAll(True) # Reveal the dealer's hole card #
-        while self.table.sumValues() < 17:
+        while self.table.sumValues() and self.table.sumValues() < 17:
             self.table.add(self.gameDeck.give()) #
         self._determine_winner() #
 
-    def _dealer_buy_loop(self):
+    """def _dealer_buy_loop(self):
             if self.table.sumValues() < 50:
                 self.table.add(self.gameDeck.give()) #
             else:
-                self._determine_winner() #
+                self._determine_winner() #"""
             
 
     def _determine_winner(self): #
