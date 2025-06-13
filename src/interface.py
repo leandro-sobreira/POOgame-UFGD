@@ -281,10 +281,9 @@ class BlackjackScreen(Screen): #
 
     def handle_event(self, event): #
 
-
         if self.game.state == "BET":
             if event.type == pygame.KEYDOWN:
-                if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
+                if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER] and self.input_value != '':
                     self.amount = int(self.input_value)
                     self.game.bet_amount = self.amount
                     self.game.state = "PLAYER_TURN"
@@ -320,7 +319,7 @@ class BlackjackScreen(Screen): #
                 if event.key in (pygame.K_z, pygame.K_RETURN): #
                     # Decide whether to start a new round or exit #
                     if self.game.player.getPoints() >= 10: #
-                        self.game.start_round() # Play again #
+                        self.game.setBetAmount() # Play again #
                     else:
                         self.next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu #
     
@@ -363,16 +362,23 @@ class BlackjackScreen(Screen): #
             input_surface = self.font.render(self.input_value, True, st.GREEN)
             input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
             self.screen.blit(input_surface, input_rect)
+    
         elif self.game.state == "PLAYER_TURN": #
+            prompt = f'{self.game.player.getPoints()}$' #
+            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) #
+
             prompt = "Z Hit" #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*6/7, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
+            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
             prompt = "X Stand" #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*6/7, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
+            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
+
         elif self.game.state == "ROUND_OVER": #
             result_text = f"Result: {self.game.result}" #
             prompt = "Press [Z] to play again." if self.game.player.getPoints() >= 10 else "Not enough points. Press [Z] to exit." #
             draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
             draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
+            
+            
 
     def get_player_data(self): #
         """Returns the updated player data when the game is over.""" #

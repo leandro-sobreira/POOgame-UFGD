@@ -98,6 +98,7 @@ class BlackjackGame:
             self.result = "Push (Draw)." #
             self.player.addPoints(self.bet_amount) # Return original bet #
         
+        self.bet_amount = 0
         self.state = "ROUND_OVER" #
 
     def get_player_data(self): #
