@@ -1,24 +1,75 @@
 import random
+import os
 from abc import ABC, abstractmethod
 
 class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
-        self.__frontSprite = frontSprite
-        self.__backSprite = backSprite
+        
+        if os.path.isfile(frontSprite) and os.path.isfile(backSprite):
+            self.__frontSprite = frontSprite
+            self.__backSprite = backSprite
+        else:
+            raise FileNotFoundError("Arquivos de sprites inicias para cartas não encontrados!")
+        
         self.__sprite = backSprite
         self.__faceUp:bool = False
 
-    def getFrontSprite(self):
+    @property
+    def frontSprite(self):
         return self.__frontSprite
-    def getBackSprite(self):
+    
+    @property
+    def backSprite(self):
         return self.__backSprite
-    def getSprite(self):
+    
+    @property
+    def sprite(self):
         return self.__sprite
-    def getFace(self):
+    
+    @property
+    def faceUp(self):
         return self.__faceUp
     
-    def setFaceUp(self, faceUp:bool):
+    @frontSprite.setter
+    def frontSprite(self, frontSprite):
+        newFrontSprite = frontSprite
+        oldFrontSprite = self.__frontSprite
+
+
+        if os.path.isfile(newFrontSprite):
+            self.__frontSprite = newFrontSprite
+        else:
+            print("Arquivo para frontSprite não encontrado!")
+            self.__frontSprite = oldFrontSprite
+
+    @backSprite.setter
+    def backSprite(self, backSprite):
+        newbackSprite = backSprite
+        oldbackSprite = self.__backSprite
+
+
+        if os.path.isfile(newbackSprite):
+            self.__backSprite = newbackSprite
+        else:
+            print("Arquivo para frontSprite não encontrado!")
+            self.__backSprite = oldbackSprite
+    
+    @sprite.setter
+    def sprite(self, sprite):
+        newSprite = sprite
+        oldSprite = self.__sprite
+
+
+        if os.path.isfile(newSprite):
+            self.__backSprite = newSprite
+        else:
+            print("Arquivo para frontSprite não encontrado!")
+            self.__backSprite = oldSprite
+    
+    @faceUp.setter    
+    def faceUp(self, faceUp:bool):
         self.__faceUp = faceUp
+
         if faceUp:
             self.__sprite = self.__frontSprite
         else:
