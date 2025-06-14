@@ -80,6 +80,12 @@ class UnoPlayers:
 
     def getTurn(self):
         return self.__turn
+
+    def clear(self):
+        self.__turn = 0
+        self.__rotation = 1
+        for player in self.__players:
+            player.clear()
     
     def getNextTurn(self):
         return (self.__turn + self.__rotation) % len(self.__players)
