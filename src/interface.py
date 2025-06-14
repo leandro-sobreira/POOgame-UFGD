@@ -327,14 +327,14 @@ class BlackjackScreen(Screen): #
         """Updates the card sprites on screen to match the game model.""" #
         self.card_sprites.empty() #
         # Sync dealer's hand #
-        for i, card in enumerate(self.game.table.getCards()): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.getCards())*20)/2 + i * 20)*st.SCALE, 120) #
-            image_key = card.getSprite()
+        for i, card in enumerate(self.game.table.cards): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.cards)*20)/2 + i * 20)*st.SCALE, 120) #
+            image_key = card.sprite()
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
         # Sync player's hand #
-        for i, card in enumerate(self.game.player.getCards()): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.getCards())*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
-            image_key = card.getSprite() #
+        for i, card in enumerate(self.game.player.cards): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.cards)*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
+            image_key = card.sprite() #
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
     def draw(self): #
@@ -344,7 +344,7 @@ class BlackjackScreen(Screen): #
         
         # Draw scores #
         dealer_score_text = f"Dealer's Hand: {self.game.table.sumValues()}" #
-        player_score_text = f"{self.game.player.getName()}'s Hand: {self.game.player.sumValues()}" #
+        player_score_text = f"{self.game.player.name}'s Hand: {self.game.player.sumValues()}" #
         draw_text_with_outline(self.screen, dealer_score_text, self.font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) #
         draw_text_with_outline(self.screen, player_score_text, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) #
 
@@ -364,7 +364,7 @@ class BlackjackScreen(Screen): #
             self.screen.blit(input_surface, input_rect)
     
         elif self.game.state == "PLAYER_TURN": #
-            prompt = f'{self.game.player.getPoints()}$' #
+            prompt = f'{self.game.player.points}$' #
             draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) #
 
             prompt = "Z Hit" #
