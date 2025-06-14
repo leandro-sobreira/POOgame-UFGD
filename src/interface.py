@@ -4,21 +4,6 @@ from . import setup as st
 
 from abc import ABC, abstractmethod
 
-# --- HELPER FUNCTIONS ---
-#TODO: MAKE THIS A METHOD
-def draw_text_with_outline(surface, text, font, pos, text_color, outline_color, outline_width=2): #
-    """Renders text with a simple outline.""" #
-    x, y = pos #
-    # Render outline #
-    for dx in range(-outline_width, outline_width + 1): #
-        for dy in range(-outline_width, outline_width + 1): #
-            if dx != 0 or dy != 0: #
-                outline_surf = font.render(text, True, outline_color) #
-                surface.blit(outline_surf, (x - outline_surf.get_width() // 2 + dx, y - outline_surf.get_height() // 2 + dy)) #
-    # Render main text #
-    text_surf = font.render(text, True, text_color) #
-    surface.blit(text_surf, (x - text_surf.get_width() // 2, y - text_surf.get_height() // 2)) #
-
 # --- ABSTRACT SCREEN CLASS (BASE FOR ALL SCREENS) ---
 
 class Screen(ABC): #
@@ -55,6 +40,19 @@ class Screen(ABC): #
         pygame.mixer.music.load(music_path) #
         pygame.mixer.music.set_volume(volume) #
         pygame.mixer.music.play(-1) #
+
+    def draw_text_with_outline(self, surface, text, font, pos, text_color, outline_color, outline_width=2): #
+        """Renders text with a simple outline.""" #
+        x, y = pos #
+        # Render outline #
+        for dx in range(-outline_width, outline_width + 1): #
+            for dy in range(-outline_width, outline_width + 1): #
+                if dx != 0 or dy != 0: #
+                    outline_surf = font.render(text, True, outline_color) #
+                    surface.blit(outline_surf, (x - outline_surf.get_width() // 2 + dx, y - outline_surf.get_height() // 2 + dy)) #
+        # Render main text #
+        text_surf = font.render(text, True, text_color) #
+        surface.blit(text_surf, (x - text_surf.get_width() // 2, y - text_surf.get_height() // 2)) #
 
 
     @abstractmethod
@@ -165,7 +163,7 @@ class PlayerNameScreen(Screen): #
     
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
-        draw_text_with_outline(self.screen, self.prompt_text, self.font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, self.prompt_text, self.font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) #
         
         input_rect = pygame.Rect(st.SCREEN_WIDTH / 2 - 150, st.SCREEN_HEIGHT / 2, 300, 50) #
         pygame.draw.rect(self.screen, st.WHITE, input_rect, 2) #
@@ -206,10 +204,10 @@ class MenuScreen(Screen): #
 
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
-        draw_text_with_outline(self.screen, "CARD GAME", self.title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE) #
+        self.draw_text_with_outline(self.screen, "CARD GAME", self.title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE) #
         
         welcome_text = f"Welcome, {self.player_data['name']}! Points: {self.player_data['blackjack_points']}" #
-        draw_text_with_outline(self.screen, welcome_text, pygame.font.Font(st.button_font, 22), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, welcome_text, pygame.font.Font(st.button_font, 22), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) #
 
         for i, button in enumerate(self.buttons): #
             button.set_selected(i == self.selected_index) #
@@ -244,7 +242,7 @@ class GameSelectScreen(Screen): #
     
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
-        draw_text_with_outline(self.screen, "Select a Game", self.title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, "Select a Game", self.title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK) #
         for i, button in enumerate(self.buttons): #
             button.set_selected(i == self.selected_index) #
         self.all_sprites.update() #
@@ -345,8 +343,8 @@ class BlackjackScreen(Screen): #
         # Draw scores #
         dealer_score_text = f"Dealer's Hand: {self.game.table.sumValues()}" #
         player_score_text = f"{self.game.player.name}'s Hand: {self.game.player.sumValues()}" #
-        draw_text_with_outline(self.screen, dealer_score_text, self.font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) #
-        draw_text_with_outline(self.screen, player_score_text, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, dealer_score_text, self.font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, player_score_text, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) #
 
         # Draw prompts or results #
         if self.game.state == "BET":
@@ -365,18 +363,18 @@ class BlackjackScreen(Screen): #
     
         elif self.game.state == "PLAYER_TURN": #
             prompt = f'{self.game.player.points}$' #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) #
 
             prompt = "Z Hit" #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
             prompt = "X Stand" #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
 
         elif self.game.state == "ROUND_OVER": #
             result_text = f"Result: {self.game.result}" #
             prompt = "Press [Z] to play again." if self.game.player.getPoints() >= 10 else "Not enough points. Press [Z] to exit." #
-            draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
-            draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
+            self.draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
             
             
 
@@ -486,7 +484,7 @@ class UnoScreen(Screen):
             self.__game.getDiscDeck().topCard().setColor(colors[self.__selected_color])
             color_sprite_group.update()
             color_sprite_group.draw(self.screen)
-            draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
                   
 
@@ -557,7 +555,7 @@ class NotificationScreen(Screen): #
             
     def draw(self): #
         self.screen.blit(self._background, (0,0)) #
-        draw_text_with_outline(self.screen, self.message, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, self.message, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) #
 
 # --- SPRITE CLASSES ---
 
