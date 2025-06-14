@@ -61,6 +61,14 @@ class Deck(ABC):
     def __init__(self):
         self.__cards = []
 
+    @property
+    def cards(self):
+        return self.__cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self.__cards = cards
+
     def topCard(self):
         return self.__cards[-1]
 
@@ -70,7 +78,7 @@ class Deck(ABC):
     def add(self, card):
         self.__cards.append(card)
 
-    #SOBRECARGA
+    #SOBRECARGA DE OPERADOR
     def __iadd__(self, card):
         self.add(card)
 
