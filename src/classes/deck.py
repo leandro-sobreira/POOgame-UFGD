@@ -2,15 +2,13 @@ import random
 import os
 from abc import ABC, abstractmethod
 
+import setup as st
+
 class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
         
-        if os.path.isfile(frontSprite) and os.path.isfile(backSprite):
-            self.__frontSprite = frontSprite
-            self.__backSprite = backSprite
-        else:
-            raise FileNotFoundError("Arquivos de sprites inicias para cartas não encontrados!")
-        
+        self.__frontSprite = frontSprite
+        self.__backSprite = backSprite
         self.__sprite = backSprite
         self.__faceUp:bool = False
 
@@ -32,39 +30,15 @@ class Card(ABC):
     
     @frontSprite.setter
     def frontSprite(self, frontSprite):
-        newFrontSprite = frontSprite
-        oldFrontSprite = self.__frontSprite
-
-
-        if os.path.isfile(newFrontSprite):
-            self.__frontSprite = newFrontSprite
-        else:
-            print("Arquivo para frontSprite não encontrado!")
-            self.__frontSprite = oldFrontSprite
+        self.__frontSprite = frontSprite
 
     @backSprite.setter
     def backSprite(self, backSprite):
-        newbackSprite = backSprite
-        oldbackSprite = self.__backSprite
-
-
-        if os.path.isfile(newbackSprite):
-            self.__backSprite = newbackSprite
-        else:
-            print("Arquivo para frontSprite não encontrado!")
-            self.__backSprite = oldbackSprite
+        self.__backSprite = backSprite
     
     @sprite.setter
     def sprite(self, sprite):
-        newSprite = sprite
-        oldSprite = self.__sprite
-
-
-        if os.path.isfile(newSprite):
-            self.__backSprite = newSprite
-        else:
-            print("Arquivo para frontSprite não encontrado!")
-            self.__backSprite = oldSprite
+        self.__sprite = sprite
     
     @faceUp.setter    
     def faceUp(self, faceUp:bool):
