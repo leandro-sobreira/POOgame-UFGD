@@ -1,75 +1,110 @@
-from classes.standard import StandardDeck, StandardHand, StardardPlayer
+from ..classes.standard import StandardDeck, StandardPlayer
 
 class BlackjackGame:
-    def __init__(self, player_name):
-        self.player = StardardPlayer(player_name)
-        self.table:StandardHand = StandardHand()
-        self.gameDeck = StandardDeck()
+    def __init__(self, player_data):
+        self.player = StandardPlayer(player_data['name'], player_data['blackjack_points']) #
+        self.table = StandardPlayer("Dealer") # The dealer can be represented as a player #
+        self.gameDeck = StandardDeck() #
+        #self.bet_amount = 10 # Fixed bet for simplicity # TODO
+        # Chame a tela de input de aposta aqui:
+        #bet_screen = 0 #bet_screen = amount
+        # Em vez de usar bet_screen.loop()
+        self.bet_amount = 0
 
-    def play(self):
-
-        reset = True
         
-        while reset:
-            print(f'{self.player.getName()}: {self.player.getPoints()}$')
-            betAmount = int(input('Bet amount (min 10$)? '))
-            if(betAmount < 10 or betAmount > self.player.getPoints()):
-                print('Invalid vaule!')
+        self.state = "BET" # Possible states: PLAYER_TURN, DEALER_TURN, ROUND_OVER #
+        self.result = "" # e.g., "Player Wins!", "Bust!", "Push!" #
+
+        self.setBetAmount()
+
+    def setBetAmount(self):
+        if self.bet_amount < 10 or self.bet_amount > self.player.getPoints():
+            self.state = "BET"
+        else:
+            self.start_round()
+
+    def start_round(self): #
+        """Resets hands and deals initial cards for a new round.""" #
+        self.state = "PLAYER_TURN" #
+        self.result = "" #
+
+        # Player pays the bet #
+        self.player.remPoints(self.bet_amount) #
+
+        # Clear hands and deck #
+        self.player.clear() #
+        self.table.clear() #
+        self.gameDeck.clear() #
+        self.gameDeck.createDeck() #
+        self.gameDeck.shuffle() #
+
+        # Deal initial cards #
+        self.player.add(self.gameDeck.give()) #
+        self.table.add(self.gameDeck.give()) # Dealer's first card (face up) #
+        self.player.add(self.gameDeck.give()) #
+        self.table.add(self.gameDeck.give(False)) # Dealer's second card (face down) #
+
+        # Check for immediate Blackjack #
+        if self.player.sumValues() == 21: #
+            self.player_stand() #
+
+    def player_hit(self): #
+        """Player requests another card.""" #
+        if self.state == "PLAYER_TURN": #
+            self.player.add(self.gameDeck.give()) #
+            if self.player.sumValues() > 21: #
+                self.result = "Player Busts! Dealer Wins." #
+                self.state = "ROUND_OVER" #
+            elif self.player.sumValues() == 21: #
+                self.player_stand() #
+
+    def player_stand(self): #
+        """Player finishes their turn, and the dealer plays.""" #
+        if self.state == "PLAYER_TURN": #
+            self.state = "DEALER_TURN" #
+            self._dealer_play() #
+            #self.table.flipAll(True)
+
+    def _dealer_play(self): #
+        """The dealer's automated turn logic.""" #
+        self.table.flipAll(True) # Reveal the dealer's hole card #
+        while self.table.sumValues() and self.table.sumValues() < 17:
+            self.table.add(self.gameDeck.give()) #
+        self._determine_winner() #
+
+    """def _dealer_buy_loop(self):
+            if self.table.sumValues() < 50:
+                self.table.add(self.gameDeck.give()) #
             else:
-                self.player.remPoints(betAmount)
-                print(f'-{betAmount}$ ({self.player.getPoints()})')
-                self.player.clear()
-                self.table.clear()
-                self.gameDeck.clear()
-                self.gameDeck.createDeck()
-                self.gameDeck.shuffle()
-                self.table.add(self.gameDeck.give())
-                self.player.add(self.gameDeck.give())
-                self.table.add(self.gameDeck.give(False))
-                self.player.add(self.gameDeck.give())
-                opc = 'y'
+                self._determine_winner() #"""
+            
 
-                while True:
-                    
-                    if self.player.sumValues() < 21 and opc != 'n':
-                        self.printCmd()
-                        opc = input('Hit? [Y/N]: ').lower()
-                        if opc == 'y':
-                            self.player.add(self.gameDeck.give())
-                    else:
-                        self.table.flipAll(True)
-                        self.printCmd()
-                        input("Press Enter to continue")
-                        while self.table.sumValues() < 17:
-                            self.table.add(self.gameDeck.give())
-                            self.printCmd()
-                            input("Press Enter to continue")                   
-                        break
-                tableHandValue = self.table.sumValues()
-                playerHandValue = self.player.sumValues()
+    def _determine_winner(self): #
+        """Compares hands and sets the final result and payout.""" #
+        player_score = self.player.sumValues() #
+        dealer_score = self.table.sumValues() #
 
-                if(playerHandValue == tableHandValue or playerHandValue > 21 and tableHandValue > 21):
-                    self.player.addPoints(betAmount)
-                    print(f'{self.player.getName()} DRAW!! +{betAmount}$ ({self.player.getPoints()}$)')
-                elif(playerHandValue > tableHandValue and playerHandValue <= 21 or tableHandValue > 21):
-                    self.player.addPoints(betAmount*2)
-                    print(f'{self.player.getName()} WIN!! +{betAmount*2}$ ({self.player.getPoints()}$)')
-                else:
-                    print(f'{self.player.getName()} LOSE! ({self.player.getPoints()}$)')
+        if player_score > 21: # This case is already handled but good for clarity #
+            self.result = "Player Busts! Dealer Wins." #
+        elif dealer_score > 21: #
+            self.result = "Dealer Busts! Player Wins." #
+            self.player.addPoints(self.bet_amount * 2) # Return bet + winnings #
+        elif player_score > dealer_score: #
+            self.result = "Player Wins!" #
+            self.player.addPoints(self.bet_amount * 2) #
+        elif dealer_score > player_score: #
+            self.result = "Dealer Wins." #
+        else: # Push #
+            self.result = "Push (Draw)." #
+            self.player.addPoints(self.bet_amount) # Return original bet #
+        
+        self.bet_amount = 0
+        self.state = "ROUND_OVER" #
 
-                if(self.player.getPoints() < 10):
-                    print('Does not have the min points ;-;')
-                    reset = False
-                else:
-                    reset = input("Again? ").lower() != 'n'
-
-
-    def printCmd(self):
-        print(f'Tabble: ({self.table.sumValues()})', end='')
-        for card in self.table:
-            print(f' [{card}]', end='')
-        print('')
-        print(f'{self.player.getName()}: ({self.player.sumValues()})', end='')
-        for card in self.player:
-            print(f' [{card}]', end='')
-        print('')
+    def get_player_data(self): #
+        """Returns the player's data in a dictionary format for saving.""" #
+        return { #
+            "name": self.player.getName(), #
+            "blackjack_points": self.player.getPoints(), #
+            # Include other game scores here if they were part of the original data #
+        }

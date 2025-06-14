@@ -1,110 +1,95 @@
-# Importe as bibliotecas necessárias
-import json
-import math
-import os
+# Import necessary libraries
 import pygame
-import random
+import os
 import sys
 
-import setup as st
-import interface as it
-
-from games import blackjack, game_intro, uno
- 
-
-#Inicialização do Pygame
-pygame.init()
-
-# Crie o nome do jogo (exibido no superior da janela)
-pygame.display.set_caption("Cassino Online UFGD")
-pygame.display.set_icon(pygame.image.load(os.path.join(st.img_folder, "icon.png")))# Define o ícone da janela com uma imagem (com transparência)
-
-# Relógio para controlar o tempo das ações no jogo
-clock = pygame.time.Clock()
-
-#Pré-configura o mixer de áudio
-pygame.mixer.pre_init(44100, -16, 1, 512)# 44100 Hz de frequência, 16 bits (signed), mono, buffer de 512 bytes
-pygame.mixer.init()# Inicializa o mixer de áudio com os parâmetros acima
-
-#DISPLAY – define a resolução da janela, titulo e icone
-screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)  # Largura x Altura da janela
-screen = pygame.display.set_mode(screen_size)  # Cria a janela com esse tamanho
+# CORREÇÃO: Use importações relativas para módulos no mesmo pacote (src)
+from . import setup as st
+from . import interface as it
+from . import database_manager as db
+from .games import blackjack, uno
 
 def Game():
-    game_over = False
+    """
+    Main function that manages the game flow and transitions between screens.
+    """
+    # Pygame Initialization
+    pygame.init()
+    pygame.mixer.init()
 
+    # Screen and window settings
+    screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)
+    screen = pygame.display.set_mode((screen_size))
+    pygame.display.set_caption("CardGame HUB")
+    icon_path = os.path.join(st.img_folder, "icon.png")
+    pygame.display.set_icon(pygame.image.load(icon_path))
 
-    #screen.fill(cores["preto"])  # Desenhar a tela de fundo preta  
-    #intro_obj = src.game_sprites.intro(screen, "CARD GAME", "src/fonts/Ghost Shadow.ttf", 64, 1)
-    #intro_time = 0
-    #intro_duration = 10000  # milissegundos (10 segundos)
-    #intro_running = True
+    # Game control variables
+    current_player_data = None
+    running = True
 
-    intro_screen = it.IntroScreen(screen, "CARD GAME", os.path.join(st.font_folder, "Ghost Shadow.ttf"), 64, 1)
-    select_game = intro_screen.loop()
+    # Screen Manager
+    # The first screen is now for entering the player's name.
+    current_screen = it.PlayerNameScreen(screen)
 
-    print("Jogo selecionado:", intro_screen)
-    #del intro_screen  # libera referência para coletor de lixo
+    while running:
+        # Each screen's loop method now returns the key for the next screen to be displayed,
+        # or None/QUIT to exit the game.
+        next_screen_key = current_screen.loop()
 
-    if intro_screen == 3:
+        if next_screen_key == "QUIT":
+            running = False
+        
+        elif next_screen_key == "GET_PLAYER":
+            player_name = current_screen.player_name
+            if not player_name:  # If the name is empty, use a default
+                player_name = "Player 1"
+            current_player_data = db.get_player(player_name)
+            current_screen = it.MenuScreen(screen, current_player_data)
 
-        it.BlackjackScreen(screen).loop()
-
-
-    
-
-
- 
-
-
-    '''
-    opcao = src.game_intro.game_intro(screen)
-    print(opcao)
-    if opcao == 0:
-        fim_jogo = True
-    
-    
-
-    # Loop principal do menu inicial
-    while not fim_jogo:
-        # ⏱️ Temporizador para controlar a taxa de quadros
-        clock.tick(FPS)
         
 
+        elif next_screen_key == "MENU":
+            current_screen = it.MenuScreen(screen, current_player_data)
+
+        elif next_screen_key == "GAME_SELECT":
+            current_screen = it.GameSelectScreen(screen, current_player_data)
         
-        # 🎮🎮✨------------------ Adicionar o loop do jogo aqui----------------✨🎮🎮
-        # opcao == 3 significa BlackJack
+        elif next_screen_key == "ERASE_DATA":
+            db.erase_data()
+            # Shows a confirmation screen before returning to the menu
+            current_screen = it.NotificationScreen(screen, "Player data erased!", "MENU", current_player_data)
 
+        elif next_screen_key == "BLACKJACK":
+        #while True
 
+            """current_screen = it.BetAmountScreen(screen:screen)
+            amount = it.BetAmountScreen.getAmount()"""
+            #bet_screen = it.BetAmountScreen(screen)
+            #bet_amount = bet_screen.loop()
 
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                fim_jogo = True
-            elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_ESCAPE:
-                    fim_jogo = True
+            # 1. Instantiate the game (Model)
+            blackjack_instance = blackjack.BlackjackGame(current_player_data)
+            # 2. Instantiate the game screen (View) and pass the model to it
+            current_screen = it.BlackjackScreen(screen, blackjack_instance)
 
+        elif next_screen_key == "UNO":
+            uno_instance = uno.UnoGame(current_player_data)
+            current_screen = it.UnoScreen(screen, uno_instance)
+        
+        elif next_screen_key == "UPDATE_PLAYER_DATA":
+            # The game screen (e.g., BlackjackScreen) returns the updated data
+            updated_data = current_screen.get_player_data()
+            if updated_data:
+                db.update_player(updated_data)
+            # Reload data to reflect changes immediately
+            current_player_data = db.get_player(updated_data["name"]) 
+            current_screen = it.MenuScreen(screen, current_player_data)
+            
+        else: # Fallback for unknown screen keys or unimplemented features
+            message = f"Feature '{next_screen_key}' not implemented yet!"
+            current_screen = it.NotificationScreen(screen, message, "MENU", current_player_data)
 
-
-        pygame.display.flip() # autualiza a tela
-    '''
-    
-    
-
-    
-    game = blackjack.BlackjackGame('Lepanto')
-    game.play()
-
-
-
-
-    #game = UnoGame()
-    #game.play()
-
-    
-    
-    pygame.mouse.set_visible(True)# Ao final, mostra novamente o cursor do mouse (caso tenha sido escondido)
-    pygame.mixer.music.fadeout(1000)# Encerra a música suavemente (1 segundo de fade)
-    pygame.time.delay(1000)# Espera 1 segundo para garantir que o som finalize
-    
-    pygame.quit()# Fecha o pygame corretamente
+    # Quit Pygame
+    pygame.quit()
+    sys.exit()
