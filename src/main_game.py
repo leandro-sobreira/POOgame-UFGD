@@ -74,7 +74,6 @@ class Game():
         else:
             pygame.display.set_icon(pygame.image.load(os.path.join(st.img_folder, new_path)))
             self.__icon_path = new_path
-
     
     def mainLoop(self):
         # Screen Manager
