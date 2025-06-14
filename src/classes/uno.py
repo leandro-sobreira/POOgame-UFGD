@@ -31,14 +31,14 @@ class UnoCard(Card):
             #TODO:Ver se essa forma está certa ou é melhor fazer um setSprite()
     
     def match(self, card):
-        if self.__color == '' or card.getColor() == '':
+        if self.__color == '' or card.color == '':
             return True
         
-        return self.__color == card.getColor() or self.__value == card.getValue()
+        return self.__color == card.color or self.__value == card.value
 
     #SOBRECARGA DE OPERADOR
     def __str__(self):
-        if self.getFace():
+        if self._Card__faceUp:
             return f'{self.__color} {self.__value}' if self.__color else f'{self.__value}'
         else:
             return 'Face Down'
@@ -69,7 +69,7 @@ class UnoHand(Hand):
 
     def sumValues(self):
         total = 0
-        for card in self.cards():
+        for card in self.cards:
             if card.value in ('+2', 'block', 'reverse'):
                 total += 20
             elif card.value in ('+4', 'wild'):
@@ -83,7 +83,8 @@ class UnoHand(Hand):
 
 class UnoPlayer(Player, UnoHand):
     def __init__(self, name, points = 0):
-        super().__init__(name, points)
+        Player.__init__(self, name, points)
+        UnoHand.__init__(self)
 
 class UnoPlayers:
     def __init__(self, playerName):

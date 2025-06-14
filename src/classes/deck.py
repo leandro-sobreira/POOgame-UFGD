@@ -74,7 +74,7 @@ class Deck(ABC):
 
     #POLIMORFISMO PARAMÉTRICO
     def add(self, card):
-        if(isinstance(Card, card)):
+        if(isinstance(card, Card)):
             self.__cards.append(card)
         else:
             #raise TypeError("Append de classe errada para o conteiner Hand!")
@@ -118,7 +118,8 @@ class Hand(ABC):
 
     #POLIMORFISMO PARAMÉTRICO
     def add(self, card):
-        if(isinstance(Card, card)):
+
+        if(isinstance(card, Card)):
             self.__cards.append(card)
         else:
             #raise TypeError("Append de classe errada para o conteiner Hand!")
