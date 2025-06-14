@@ -1,8 +1,5 @@
 import random
-import os
 from abc import ABC, abstractmethod
-
-import setup as st
 
 class Card(ABC):
     def __init__(self, frontSprite:str= '', backSprite:str= ''):
@@ -75,8 +72,13 @@ class Deck(ABC):
     def isEmpty(self):
         return not self.__cards
 
+    #POLIMORFISMO PARAMÉTRICO
     def add(self, card):
-        self.__cards.append(card)
+        if(isinstance(Card, card)):
+            self.__cards.append(card)
+        else:
+            #raise TypeError("Append de classe errada para o conteiner Hand!")
+            pass
 
     #SOBRECARGA DE OPERADOR
     def __iadd__(self, card):
@@ -114,18 +116,29 @@ class Hand(ABC):
     def isEmpty(self):
         return not self.__cards
 
+    #POLIMORFISMO PARAMÉTRICO
     def add(self, card):
-        self.__cards.append(card)
+        if(isinstance(Card, card)):
+            self.__cards.append(card)
+        else:
+            #raise TypeError("Append de classe errada para o conteiner Hand!")
+            pass
     
-    #SOBRECARGA
+    #SOBRECARGA DE OPERADOR
     def __iadd__(self, card):
         self.add(card)
 
+    #SOBRECARGA DE OPERADOR
     def __getitem__(self, item):
         return self.__cards[item]
 
-    def getCards(self):
+    @property
+    def cards(self):
         return self.__cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self.__cards = cards
 
     def size(self):
         return len(self.__cards)
@@ -140,27 +153,36 @@ class Hand(ABC):
 
     def flipAll(self, stat): #True to front up
         for card in self.__cards:
-            if card.getFace() != stat:
+            if card.faceUp != stat:
                 card.flip()
 
 
 class Player(ABC):
     def __init__(self, name: str, points: int = 0):
-        super().__init__()
+        #super().__init__()
         self.__name = name
         self.__points = points
 
-    def getName(self):
+    @property
+    def name(self):
         return self.__name
 
-    def getPoints(self):
+    @property
+    def points(self):
         return self.__points
+    
+    @name.setter
+    def name(self, name):
+        self.__name = name
+    
+    @points.setter
+    def points(self, points):
+        self.__points = points
 
     def addPoints(self, amount: int):
         self.__points += amount
 
-    #SOBRECARGA
-
+    #SOBRECARGA DE OPERADOR
     def __iadd__(self, amount: int):
         self.addPoints(amount)
 
@@ -168,8 +190,7 @@ class Player(ABC):
         #Adicionar tratamento de erro
         self.__points -= amount
 
-    #SOBRECARGA
-
+    #SOBRECARGA DE OPERADOR
     def __isub__(self, amount: int):
         self.remPoints(amount)
 
