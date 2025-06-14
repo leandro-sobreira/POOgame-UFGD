@@ -16,6 +16,13 @@ class Card(ABC):
         return self.__sprite
     def getFace(self):
         return self.__faceUp
+    
+    def setFaceUp(self, faceUp:bool):
+        self.__faceUp = faceUp
+        if faceUp:
+            self.__sprite = self.__frontSprite
+        else:
+            self.__sprite = self.__backSprite
 
     def flip(self):
         self.__faceUp = self.__faceUp == False
@@ -29,7 +36,7 @@ class Deck(ABC):
     def __init__(self):
         self.__cards = []
 
-    def viewTop(self):
+    def topCard(self):
         return self.__cards[-1]
 
     def isEmpty(self):

@@ -16,8 +16,14 @@ font_folder = os.path.join(source_folder, "fonts") #
 
 FPS = 30 #
 SCALE = 1 #
-SCREEN_HEIGHT = 480 * SCALE #
-SCREEN_WIDTH = 854 * SCALE #
+SCREEN_HEIGHT = 720 * SCALE #
+SCREEN_WIDTH = 1280 * SCALE #
+
+STANDARD_CARD_WIDTH = 140 * SCALE #
+STANDARD_CARD_HEIGHT = 190 * SCALE #
+
+UNO_CARD_WIDTH = 85 * SCALE #
+UNO_CARD_HEIGHT = 140 * SCALE #
 
 # Define colors 
 RED = (255, 0, 0) #

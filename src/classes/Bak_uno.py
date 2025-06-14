@@ -3,8 +3,8 @@ import random
 
 # CORRECTED: Removed the first, incomplete definition of UnoCard
 class UnoCard(Card):
-    def __init__(self, value:str, color:str = '', frontSprite:str = '', backSprite:str = ''):
-        super().__init__(frontSprite, backSprite)
+    def __init__(self, value:str, color:str = ''):
+        super().__init__()
         self.__value = value
         self.__color = color
 
@@ -17,11 +17,6 @@ class UnoCard(Card):
     def setColor(self, color:str):
         if color in ('red', 'yellow', 'green', 'blue', '') and self.__value in ('wild', '+4'):
             self.__color = color
-            if color == '':
-                self._Card__sprite = f'{self.__value}'
-            else:
-                self._Card__sprite = f'{color}_{self.__value}'
-            #TODO:Ver se essa forma está certa ou é melhor fazer um setSprite()
     
     def match(self, card):
         if self.__color == '' or card.getColor() == '':
@@ -41,13 +36,13 @@ class UnoDeck(Deck):
         values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+2', 'block', 'reverse']
         for color in colors:
             for value in values:
-                self.add(UnoCard(value=value, color=color, frontSprite=f'{color}_{value}', backSprite='back'))
+                self.add(UnoCard(value=value, color=color))
                 if value != '0':
-                    self.add(UnoCard(value=value, color=color, frontSprite=f'{color}_{value}', backSprite='back'))
+                    self.add(UnoCard(value=value, color=color))
         for i in range(4):
-            self.add(UnoCard(value='wild', frontSprite='wild', backSprite='back'))
+            self.add(UnoCard('wild'))
         for i in range(4):
-            self.add(UnoCard(value='+4', frontSprite='+4', backSprite='back'))
+            self.add(UnoCard('+4'))
 
 class UnoHand(Hand):
     def __init__(self):
@@ -72,8 +67,7 @@ class UnoPlayer(Player, UnoHand):
         super().__init__(name, points)
 
 class UnoPlayers:
-    def __init__(self, playerName):
-        playersNames = [playerName, 'Bot1', 'Bot2', 'Bot3']
+    def __init__(self, playersNames = []):
         self.__players = [UnoPlayer(name) for name in playersNames]
         self.__turn = 0
         self.__rotation = 1
@@ -101,9 +95,6 @@ class UnoPlayers:
     
     def getNextPlayer(self):
         return self.__players[self.getNextTurn()]
-    
-    def getHumanPlayer(self):
-        return self.__players[0]
     
     def __getitem__(self, index):
         return self.__players[index]

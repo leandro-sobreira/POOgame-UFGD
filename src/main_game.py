@@ -7,7 +7,7 @@ import sys
 from . import setup as st
 from . import interface as it
 from . import database_manager as db
-from .games import blackjack
+from .games import blackjack, uno
 
 def Game():
     """
@@ -19,7 +19,7 @@ def Game():
 
     # Screen and window settings
     screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)
-    screen = pygame.display.set_mode(screen_size)
+    screen = pygame.display.set_mode((screen_size))
     pygame.display.set_caption("CardGame HUB")
     icon_path = os.path.join(st.img_folder, "icon.png")
     pygame.display.set_icon(pygame.image.load(icon_path))
@@ -72,6 +72,10 @@ def Game():
             blackjack_instance = blackjack.BlackjackGame(current_player_data)
             # 2. Instantiate the game screen (View) and pass the model to it
             current_screen = it.BlackjackScreen(screen, blackjack_instance)
+
+        elif next_screen_key == "UNO":
+            uno_instance = uno.UnoGame(current_player_data)
+            current_screen = it.UnoScreen(screen, uno_instance)
         
         elif next_screen_key == "UPDATE_PLAYER_DATA":
             # The game screen (e.g., BlackjackScreen) returns the updated data
