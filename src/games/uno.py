@@ -30,6 +30,9 @@ class UnoGame:
         self.__state = state
 
     def start_round(self):
+        self.__disc_deck.clear()
+        self.__buy_deck.clear()
+        self.__players.clear()
         self.__buy_deck.createDeck()
         self.__buy_deck.shuffle()
         for i in range(7):
@@ -52,7 +55,6 @@ class UnoGame:
             self.setState('PLAYER_TURN')
         else:
             self.setState('BOT_TURN')
-            self.bot_play()
 
 
     def player_play_card(self, card_index):
