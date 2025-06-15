@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-br" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>blackjack_game module &mdash; POO Game Cassino UFGD (Grupo LEMA) 16/06/2025 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> POO Game Cassino UFGD (Grupo LEMA)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules1.html">games</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">POO Game Cassino UFGD (Grupo LEMA)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>blackjack_game module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/blackjack_game.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="blackjack-game-module">
+<h1>blackjack_game module<a class="headerlink" href="#blackjack-game-module" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-src.games.blackjack_game"></span><dl class="py class">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.games.blackjack_game.</span></span><span class="sig-name descname"><span class="pre">BlackjackGame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe BlackjackGame feita para ser uma mesa de jogo conforme as regras de um
+jogo de BlackJack clássico (ou 21), junto das ações e funções necessárias</p>
+<dl class="simple">
+<dt>Privados:</dt><dd><p>player : StandardPlayer
+table : StandardPlayer
+gameDeck : StandardDeck
+betAmount : int
+state : str
+result : str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>player():</dt><dd><p>Getter de player</p>
+</dd>
+<dt>table():</dt><dd><p>Getter de table</p>
+</dd>
+<dt>gameDeck():</dt><dd><p>Getter de gameDeck</p>
+</dd>
+<dt>betAmount():</dt><dd><p>Getter de betAmount</p>
+</dd>
+<dt>state():</dt><dd><p>Setter de state</p>
+</dd>
+<dt>state():</dt><dd><p>Setter de state</p>
+</dd>
+<dt>result():</dt><dd><p>Setter de result</p>
+</dd>
+<dt>player():</dt><dd><p>Setter de player</p>
+</dd>
+<dt>table():</dt><dd><p>Setter de table</p>
+</dd>
+<dt>gameDeck():</dt><dd><p>Setter de gameDeck</p>
+</dd>
+<dt>betAmount():</dt><dd><p>Setter de betAmount</p>
+</dd>
+<dt>state():</dt><dd><p>Setter de state</p>
+</dd>
+<dt>state():</dt><dd><p>Setter de state</p>
+</dd>
+<dt>result():</dt><dd><p>Setter de result</p>
+</dd>
+<dt>setBetAmount():</dt><dd><p>Método responsável por inicializar o jogo a partir de uma aposta</p>
+</dd>
+<dt>give_start_cards():</dt><dd><p>Método responsável por distribuir as cartas iniciais do jogo</p>
+</dd>
+<dt>start_round():</dt><dd><p>Método responsável por iniciar um novo round do jogo</p>
+</dd>
+<dt>player_hit():</dt><dd><p>Método responsável para a solicitação de uma nova carta</p>
+</dd>
+<dt>player_stand():</dt><dd><p>Método responsável pela mudança de turno no qual o jogador permanece e o bot joga</p>
+</dd>
+<dt>_dealer_play():</dt><dd><p>Método responsável por determinar as jogadas do bot</p>
+</dd>
+<dt>_determine_winner():</dt><dd><p>Método responsável por determinar o vencedor do jogo</p>
+</dd>
+<dt>get_player_data():</dt><dd><p>Método responsável por obter os dados do jogador</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.betAmount">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">betAmount</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.betAmount" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de betAmount</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Valor int atual sendo utilizado para representar a quantidade em aposta na mesa</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.gameDeck">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gameDeck</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.gameDeck" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de gameDeck</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>objeto StandardDeck atual sendo utilizado para representar um baralho convencional em mesa</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="standard.html#src.classes.standard.StandardDeck" title="src.classes.standard.StandardDeck">StandardDeck</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.get_player_data">
+<span class="sig-name descname"><span class="pre">get_player_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.get_player_data" title="Permalink to this definition"></a></dt>
+<dd><p>Método que irá obter os dados do jogador para operações necessárias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>str, key: str}: Dicionário python com as informações do jogador, sendo</dt><dd><p>estar o nome e a quantidade de pontos obtidos no blackjack</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict{key</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.give_start_cards">
+<span class="sig-name descname"><span class="pre">give_start_cards</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.give_start_cards" title="Permalink to this definition"></a></dt>
+<dd><p>Método que irá distribuir as cartas iniciais do jogo conforme as regras tradicionais do BlackJack (ou 21)
+para o jogador e o bot (dealer)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.player">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">player</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.player" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de player</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>objeto StandardPlayer atual sendo utilizado para representar o jogador em BlackjackGame</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="standard.html#src.classes.standard.StandardPlayer" title="src.classes.standard.StandardPlayer">StandardPlayer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.player_hit">
+<span class="sig-name descname"><span class="pre">player_hit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.player_hit" title="Permalink to this definition"></a></dt>
+<dd><p>Método que irá solicitar uma nova carta do baralho ao jogar e realizar as operações
+necessárias conforme as regras do BlackJack (ou 21)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.player_stand">
+<span class="sig-name descname"><span class="pre">player_stand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.player_stand" title="Permalink to this definition"></a></dt>
+<dd><p>Método que irá realizar a mudança de turno no qual o jogador permanece e o bot (dealer) joga</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.result">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.result" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de result</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>string atual sendo utilizada para representar o resultado final do jogo, sendo</dt><dd><p>estes os possíveis estados:  “Player Wins!”, “Bust!”, “Push!</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.setBetAmount">
+<span class="sig-name descname"><span class="pre">setBetAmount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.setBetAmount" title="Permalink to this definition"></a></dt>
+<dd><p>Método que irá inicializar o jogo e irá começar o jogo em estado inicial a partir de uma determinada aposta</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.start_round">
+<span class="sig-name descname"><span class="pre">start_round</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.start_round" title="Permalink to this definition"></a></dt>
+<dd><p>Método responsável por iniciar um novo round do jogo, além de remover os pontos a partir da aposta realizada, resetar
+os atributos utilizados plea classe BlackjackGame e começar um novo jogo</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.state" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>string atual sendo utilizada para representar o estado no qual o jogo se encontra, sendo</dt><dd><p>estes os possíveis estados:  “BET”, “PLAYER_TURN”, “DEALER_TURN”, “ROUND_OVER”</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.table">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">table</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.table" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>objeto StandardPlayer atual sendo utilizado para representar a table, ou seja,</dt><dd><p>o outro jogador em BlackjackGame</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="standard.html#src.classes.standard.StandardPlayer" title="src.classes.standard.StandardPlayer">StandardPlayer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Leandro Peres Sobreira, Abner Lucas Pereira Cardoso Vera, Eduardo Rodrigues Rizzi, Marcos Henrique Almeida Lima.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

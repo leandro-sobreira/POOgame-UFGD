@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-br" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database_manager &mdash; POO Game Cassino UFGD (Grupo LEMA) 16/06/2025 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> POO Game Cassino UFGD (Grupo LEMA)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules1.html">games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main_game.html">main_game module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">interface module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">POO Game Cassino UFGD (Grupo LEMA)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>database_manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/database_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.database_manager">
+<span id="database-manager"></span><h1>database_manager<a class="headerlink" href="#module-src.database_manager" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.database_manager.erase_data">
+<span class="sig-prename descclassname"><span class="pre">src.database_manager.</span></span><span class="sig-name descname"><span class="pre">erase_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.database_manager.erase_data" title="Permalink to this definition"></a></dt>
+<dd><p>Deletes the database file to reset all saved progress.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.database_manager.get_player">
+<span class="sig-prename descclassname"><span class="pre">src.database_manager.</span></span><span class="sig-name descname"><span class="pre">get_player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.database_manager.get_player" title="Permalink to this definition"></a></dt>
+<dd><p>Searches for a player by name. If not found, it creates a new
+player profile with default scores and returns it.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.database_manager.load_data">
+<span class="sig-prename descclassname"><span class="pre">src.database_manager.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.database_manager.load_data" title="Permalink to this definition"></a></dt>
+<dd><p>Loads data from the pickle file. If the file doesn’t exist or is corrupt,
+it returns a default, empty data structure.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.database_manager.save_data">
+<span class="sig-prename descclassname"><span class="pre">src.database_manager.</span></span><span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.database_manager.save_data" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the provided data structure to the pickle file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.database_manager.update_player">
+<span class="sig-prename descclassname"><span class="pre">src.database_manager.</span></span><span class="sig-name descname"><span class="pre">update_player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.database_manager.update_player" title="Permalink to this definition"></a></dt>
+<dd><p>Finds a player in the database by name and updates their record
+with the provided player_data dictionary.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Leandro Peres Sobreira, Abner Lucas Pereira Cardoso Vera, Eduardo Rodrigues Rizzi, Marcos Henrique Almeida Lima.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

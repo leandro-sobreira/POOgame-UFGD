@@ -1,0 +1,7 @@
+blackjack module
+================
+
+.. automodule:: src.games.blackjack
+   :members:
+   :undoc-members:
+   :show-inheritance:
