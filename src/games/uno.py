@@ -1,10 +1,6 @@
-from ..classes.uno import UnoDeck, UnoPlayer, UnoPlayers, UnoCard
 import random
 
-SPECIAL_CARDS = ['+4', 'wild', '+2', 'reverse', 'block']
-UNO_COLORS = ['red','yellow','green','blue']
 from ..classes.uno import UnoDeck, UnoPlayer, UnoPlayers, UnoCard
-import random
 
 SPECIAL_CARDS = ['+4', 'wild', '+2', 'reverse', 'block']
 UNO_COLORS = ['red','yellow','green','blue']
