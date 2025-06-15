@@ -141,8 +141,8 @@ class MenuScreen(Screen): #
         self.buttons = [ #
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 200), "Start", "GAME_SELECT"), #
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 150), "Erase Data", "ERASE_DATA"), #
-            #Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Config", "CONFIG"), #
-            Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Quit", "QUIT") #
+            Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Scores", "SCORES"), #
+            Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 50), "Quit", "QUIT") #
         ]
         self.selected_index = 0 #
         self.all_sprites = pygame.sprite.Group(self.buttons) #
@@ -157,10 +157,7 @@ class MenuScreen(Screen): #
                 self.selected_index = (self.selected_index + 1) % len(self.buttons) #
             elif event.key in (pygame.K_z, pygame.K_RETURN): #
                 selected_button = self.buttons[self.selected_index] #
-                if selected_button.action == "ERASE_DATA": #
-                    self.reset_sound.play() #
-                else:
-                    self.ok_sound.play() #
+                self.ok_sound.play() #
                 self.next_screen = selected_button.action #
 
     def update(self): #
@@ -221,6 +218,83 @@ class GameSelectScreen(Screen): #
             button.set_selected(i == self.selected_index) #
         self.all_sprites.update() #
         self.all_sprites.draw(self.screen) #
+
+class ScoresScreen(Screen):
+    def __init__(self, screen, player_data=None):
+        super().__init__(screen, player_data)
+        self.__selected_game = ''
+        self.__selected_game_index = 0
+        self.__actual_player_index = 0
+        self.__game_players = []
+        self.__page = "GAME_SELECT" #Possiveis valores: GAME_SELECT, SCORES
+        self.__text_font = pygame.font.Font(st.text_font, 32)
+        self.__title_font = pygame.font.Font(st.text_font, 42)
+        self.set_background(os.path.join(st.img_folder, "title.png"))
+        self.__games = {"Blackjack":[{"player_name": "Blackjack", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250}], 
+                        "Uno":[{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250},{"player_name": "Uno", "points":50},{"player_name": "Lepanto", "points":500},{"player_name": "Lepanto", "points":250}] }
+        #TODO: Colocar dados do BD em self.__games <========================================================================= BD HERE :TODO#
+
+    def update(self):
+        pass
+
+    def draw(self):
+        self.screen.blit(self._background, (0,0))
+        self.draw_text_with_outline(self.screen, 'Esc to quit', self.__text_font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
+
+        if self.__page == "GAME_SELECT":
+            self.draw_text_with_outline(self.screen, "Select a Game", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK)
+            for i, game in enumerate(self.__games):
+                text_color = st.GREEN if i == self.__selected_game_index else st.WHITE
+                self.draw_text_with_outline(self.screen, f'{game}', self.__text_font, (st.SCREEN_WIDTH/2, 200+i*40), text_color, st.BLACK)
+                self.__selected_game = game
+
+        elif self.__page == "SCORES":
+            if self.__selected_game != '':
+                self.draw_text_with_outline(self.screen, "Player", self.__title_font, (st.SCREEN_WIDTH*3/7-100, 80), st.YELLOW, st.BLACK)
+                self.draw_text_with_outline(self.screen, "Score", self.__title_font, (st.SCREEN_WIDTH*4/7+100, 80), st.YELLOW, st.BLACK)
+                for i, player in enumerate(self.__game_players):
+                    i -= self.__actual_player_index
+                    text_color = st.GREEN if i == 0 else st.WHITE
+                    hpos = 200+i*40
+                    if i >= -1 and i <= 12:
+                        self.draw_text_with_outline(self.screen, f'{i+self.__actual_player_index+1} - {player["player_name"]}', self.__text_font, (st.SCREEN_WIDTH*3/7-100, hpos), text_color, st.BLACK)
+                        self.draw_text_with_outline(self.screen, f'{player["points"]}$', self.__text_font, (st.SCREEN_WIDTH*4/7+100, hpos), text_color, st.BLACK)
+                    #self.__selected_game = player
+
+    def handle_event(self, event):
+        
+        if self.__page == "GAME_SELECT":
+            if event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_UP, pygame.K_w):
+                    self.select_sound.play()
+                    self.__selected_game_index = (self.__selected_game_index - 1) % len(self.__games)
+                elif event.key in (pygame.K_DOWN, pygame.K_s):
+                    self.select_sound.play()
+                    self.__selected_game_index = (self.__selected_game_index + 1) % len(self.__games)
+                elif event.key in (pygame.K_z, pygame.K_RETURN):
+                    self.__selected_game = list(self.__games)[self.__selected_game_index]
+                    self.__game_players = self.__games[self.__selected_game]
+                    self.__game_players.sort(key=lambda x: x['points'], reverse=True)
+                    self.ok_sound.play()
+                    self.__page = "SCORES"
+                elif event.key in (pygame.K_x, pygame.K_ESCAPE):
+                    self.ok_sound.play()
+                    self.next_screen = "MENU"
+        
+        if self.__page == "SCORES":
+            if event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_UP, pygame.K_w):
+                    self.select_sound.play()
+                    self.__actual_player_index = (self.__actual_player_index - 1) % len(self.__game_players)
+                elif event.key in (pygame.K_DOWN, pygame.K_s):
+                    self.select_sound.play()
+                    self.__actual_player_index = (self.__actual_player_index + 1) % len(self.__game_players)
+                elif event.key in (pygame.K_x, pygame.K_ESCAPE):
+                    self.ok_sound.play()
+                    self.__page = "GAME_SELECT"
+                
+                
+    
 
 class BlackjackScreen(Screen): #
     """The View for the Blackjack game. It only draws what the Model tells it to.""" #
@@ -288,7 +362,6 @@ class BlackjackScreen(Screen): #
                         self.next_screen = "MENU" """
         
         elif self.__game.state == "ROUND_OVER":
-            #TODO: SALVAR DADOS PLAYER
             buttons = ['yes', 'no']
 
             if event.type == pygame.KEYDOWN: #
@@ -303,7 +376,7 @@ class BlackjackScreen(Screen): #
                         if self.__selected_opc == 0:
                             self.__game.state = "BET"
                         else:
-                            #TODO: SAVE POINTS IN BD
+                            #TODO: SAVE POINTS IN BD <================================================== BD HERE :TODO#
                             self.next_screen = "MENU"
                     else:
                         if self.__selected_opc == 0:
@@ -645,7 +718,7 @@ class UnoScreen(Screen):
 
 
         elif current_game_state == "ROUND_OVER":
-            #TODO: SALVAR DADOS PLAYER
+            #TODO: SALVAR DADOS PLAYER <============================================================ BD HERE :TODO#
             buttons = ['yes', 'no']
 
             if event.type == pygame.KEYDOWN: #
@@ -673,6 +746,9 @@ class NotificationScreen(Screen): #
         self.__font = pygame.font.Font(st.button_font, st.title_size) #
         self.set_background(os.path.join(st.img_folder, "title.png")) #
         self.entry_time = pygame.time.get_ticks() #
+    
+    def update(self):
+        pass
 
     def handle_event(self, event): #
         # Transition on key press or after a delay #

@@ -68,13 +68,11 @@ class UnoGame:
                 player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
                 if player == self.__players.getHumanPlayer():
                     player.sort()
-                #TODO: DELAY_ANIM(100ms)
 
         self.__disc_deck.add(self.__buy_deck.give())
 
         while self.__disc_deck.topCard().value in SPECIAL_CARDS:
             self.__disc_deck.add(self.__buy_deck.give())
-            #TODO: DELAY_ANIM(300ms)
 
         self.__state = 'PLAYER_TURN'
 
@@ -109,7 +107,6 @@ class UnoGame:
                     if self.__disc_deck.topCard().value == '+2':
                         for i in range(2):
                             self.draw_card(self.__players.getNextPlayer())
-                            #TODO: DELAY_ANIM(100ms)
                     if self.__disc_deck.topCard().value in ['+2', 'block']:
                         self.__players.setNextTurn()
                     if self.__disc_deck.topCard().value == 'reverse':
@@ -123,7 +120,6 @@ class UnoGame:
         if self.__disc_deck.topCard().value == '+4':
             for i in range(4):
                 self.draw_card(self.__players.getNextPlayer())
-                #TODO: DELAY_ANIM(100ms)
             self.__players.setNextTurn()
         self.next_turn()
     
@@ -138,7 +134,6 @@ class UnoGame:
         if self.__disc_deck.topCard().value == '+4':
             for i in range(4):
                 self.draw_card(self.__players.getNextPlayer())
-                #TODO: DELAY_ANIM(100ms)
             self.__players.setNextTurn()
         self.next_turn()
                     

@@ -103,6 +103,9 @@ class Game():
 
             elif next_screen_key == "GAME_SELECT":
                 current_screen = it.GameSelectScreen(self.__screen, current_player_data)
+
+            elif next_screen_key == "SCORES":
+                current_screen = it.ScoresScreen(self.__screen, current_player_data)
             
             elif next_screen_key == "ERASE_DATA":
                 db.erase_data()
