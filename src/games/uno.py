@@ -174,4 +174,3 @@ class UnoGame:
             buy_card_index = self.player_draw_card(self.__players.getCurrentPlayer())
             if buy_card_index != -1:
                 self.player_play_card(buy_card_index)
-        
