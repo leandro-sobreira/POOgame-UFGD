@@ -8,10 +8,10 @@ UNO_COLORS = ['red','yellow','green','blue']
 class UnoGame:
     
     #Private methods
-    def __init__(self, player_data):
+    def __init__(self, player_name:str):
 
         #Private atributes
-        self.__players = UnoPlayers(player_data['name'])
+        self.__players = UnoPlayers(player_name)
         self.__buy_deck = UnoDeck()
         self.__disc_deck = UnoDeck()
         self.__state = 'START' # Possible states: START, PLAYER_TURN, PLAYER_SELEC_COLOR, BOT_TURN, ,ROUND_OVER
@@ -96,6 +96,7 @@ class UnoGame:
             print(f'{self.__players.getCurrentPlayer().name}: played [{self.__disc_deck.topCard()}]')
             if self.__players.getCurrentPlayer().isEmpty():
                 self.sumPoints()
+                #TODO: SAVE THE DATA HERE <============================================================================< HERE :TODO#
                 self.state = 'ROUND_OVER'
             else:
                 if self.__disc_deck.topCard().value in SPECIAL_CARDS:

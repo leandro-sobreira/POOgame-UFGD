@@ -1,79 +1,71 @@
 import pickle
 import os
+from datetime import datetime # Import datetime to record the date
 
 # Define the path for the database file within the 'src' directory.
-DB_FILE = os.path.join(os.path.dirname(__file__), 'gamedata.dat') #
+DB_FILE = os.path.join(os.path.dirname(__file__), 'gamedata.dat')
 
-def load_data(): #
+def load_data():
     """
-    Loads data from the pickle file. If the file doesn't exist or is corrupt,
-    it returns a default, empty data structure.
+    Loads data from the file. If the file doesn't exist or is corrupt,
+    it returns a default, empty win log structure.
     """
-    if os.path.exists(DB_FILE): #
+    if os.path.exists(DB_FILE):
         try:
-            with open(DB_FILE, 'rb') as file:  # 'rb' stands for 'read binary' #
-                return pickle.load(file) #
-        except (pickle.UnpicklingError, EOFError): #
-            # If the file is corrupted or empty, return the default structure. #
-            return {"players": []} #
+            with open(DB_FILE, 'rb') as file:  # 'rb' stands for 'read binary'
+                return pickle.load(file)
+        except (pickle.UnpicklingError, EOFError):
+            # If the file is corrupted or empty, return the default structure.
+            return {"wins": []}
     else:
-        # The initial data structure if the file does not exist. #
-        return {"players": []} #
-
-def save_data(data): #
+        # The initial data structure if the file does not exist.
+        return {"wins": []}
+    
+def save_data(data):
     """
     Saves the provided data structure to the pickle file.
-    """ #
-    with open(DB_FILE, 'wb') as file:  # 'wb' stands for 'write binary' #
-        pickle.dump(data, file) #
-
-def get_player(name): #
     """
-    Searches for a player by name. If not found, it creates a new
-    player profile with default scores and returns it.
-    """ #
-    data = load_data() #
-    # Check if the player already exists. #
-    for player in data["players"]: #
-        if player["name"] == name: #
-            return player  # Return the found player's data. #
+    with open(DB_FILE, 'wb') as file:  # 'wb' stands for 'write binary'
+        pickle.dump(data, file)
 
-    # If the loop finishes without finding the player, create a new one.
-    # A new Blackjack player starts with 1000 points.
-    new_player = { #
-        "name": name, #
-        "blackjack_points": 1000, #
-        "uno_wins": 0  # Uno score can be tracked by wins. #
+def log_win(player_name, final_score, game_name):
+    """
+    Logs a new win to the database
+    """
+    data = load_data()  # Load existing data
+
+    new_win = {
+        "player_name": player_name,
+        "score": final_score,
+        "game": game_name,
+        "date": datetime.now().strftime("%d/%m/%y - %H:%M")
     }
-    data["players"].append(new_player) #
-    save_data(data) #
     
-    return new_player #
+    # Ensure the 'wins' key exists
+    if "wins" not in data:
+        data["wins"] = []
 
-def update_player(player_data): #
+    data["wins"].append(new_win)
+    save_data(data)
+    print(f"Win for {player_name} won {final_score} points in {game_name}.")
+
+def get_all_wins():
     """
-    Finds a player in the database by name and updates their record
-    with the provided player_data dictionary.
-    """ #
-    data = load_data() #
-    # Find the player in the list and replace their data with the new data. #
-    for i, p in enumerate(data["players"]): #
-        if p["name"] == player_data["name"]: #
-            data["players"][i] = player_data #
-            break #
-    else:
-        # This case is unlikely if get_player() is used correctly, but it's safe to have. #
-        data["players"].append(player_data) #
-        
-    save_data(data) #
-    print(f"Player data for {player_data['name']} updated.") #
+    Retrieves all wins, sorted by score.
+    """
+    data = load_data()
+    all_wins = data.get("wins", [])
 
-def erase_data(): #
+    """	# Sort wins by score in descending order.
+    all_wins.sort(key=lambda x: x["score"], reverse=True) """
+    return all_wins
+
+def erase_data(): 
     """
     Deletes the database file to reset all saved progress.
-    """ #
-    if os.path.exists(DB_FILE): #
-        os.remove(DB_FILE) #
-        print("Data file has been erased successfully.") #
+    """ 
+    if os.path.exists(DB_FILE): 
+        os.remove(DB_FILE) 
+        print("Data file has been erased successfully.") 
     else:
         print("No data file to erase.") #
