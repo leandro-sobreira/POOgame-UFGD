@@ -369,7 +369,8 @@ class BlackjackScreen(Screen): #
             self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
             if self.__game.player.points >= 10:
                 prompt = "Or [X] to quit and save your score"
-                self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #            
+                self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #  
+                #TODO: Fazer banco de dados          
             
 
     def get_player_data(self): #
