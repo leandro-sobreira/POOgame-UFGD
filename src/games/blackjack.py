@@ -212,8 +212,7 @@ class BlackjackGame:
         """
         Método que irá inicializar o jogo e irá começar o jogo em estado inicial a partir de uma determinada aposta 
         """
-        print(self.__betAmount)
-        
+                
         if self.__betAmount < 10 or self.__betAmount > self.__player.points:
             self.__state = "BET"
         else:
