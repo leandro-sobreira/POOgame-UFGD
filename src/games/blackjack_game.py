@@ -62,18 +62,18 @@ class BlackjackGame:
     get_player_data():
         Método responsável por obter os dados do jogador
     """
-    def __init__(self, player_data):
+    def __init__(self, player_name:str):
         """
         Construtor de um objeto BlackjackGame e responsável por inicializar os atributos de um objeto BlackjackGame
         """
-        self.__player = StandardPlayer(player_data['name'], player_data['blackjack_points']) #
-        self.__table = StandardPlayer("Dealer") # The dealer can be represented as a player #
-        self.__gameDeck = StandardDeck() #
+        self.__player = StandardPlayer(player_name, 1000) 
+        self.__table = StandardPlayer("Dealer")
+        self.__gameDeck = StandardDeck() 
         self.__betAmount = 0
 
         
-        self.__state = "BET" # Possible states: PLAYER_TURN, DEALER_TURN, ROUND_OVER #
-        self.__result = "" # e.g., "Player Wins!", "Bust!", "Push!" #
+        self.__state = "BET" # Possible states: PLAYER_TURN, DEALER_TURN, ROUND_OVER 
+        self.__result = "" # e.g., "Player Wins!", "Bust!", "Push!" 
 
         self.setBetAmount()
 
@@ -107,6 +107,10 @@ class BlackjackGame:
             StandardDeck: objeto StandardDeck atual sendo utilizado para representar um baralho convencional em mesa
         """
         return self.__gameDeck
+    
+    @property
+    def win_value(self):
+        return self.__win_value
     
     @property
     def betAmount(self):
@@ -208,8 +212,7 @@ class BlackjackGame:
         """
         Método que irá inicializar o jogo e irá começar o jogo em estado inicial a partir de uma determinada aposta 
         """
-        print(self.__betAmount)
-        
+                
         if self.__betAmount < 10 or self.__betAmount > self.__player.points:
             self.__state = "BET"
         else:
@@ -235,89 +238,91 @@ class BlackjackGame:
                 self.__state = "PLAYER_TURN"
 
 
-        # Check for immediate Blackjack #
-        if self.__player.sumValues() == 21: #
-            self.player_stand() #
+        # Check for immediate Blackjack 
+        if self.__player.sumValues() == 21: 
+            self.player_stand() 
     
-    def start_round(self): #
+    def start_round(self): 
         """
         Método responsável por iniciar um novo round do jogo, além de remover os pontos a partir da aposta realizada, resetar
         os atributos utilizados plea classe BlackjackGame e começar um novo jogo
         """
-        self.__state = "START" #
-        self.__result = "" #
+        self.__state = "START" 
+        self.__result = "" 
 
-        # Player pays the bet #
-        self.__player.remPoints(self.__betAmount) #
+        # Player pays the bet 
+        self.__player.remPoints(self.__betAmount) 
 
-        # Clear hands and deck #
-        self.__player.clear() #
-        self.__table.clear() #
-        self.__gameDeck.clear() #
-        self.__gameDeck.createDeck() #
-        self.__gameDeck.shuffle() #
+        # Clear hands and deck 
+        self.__win_value = 0
+        self.__player.clear() 
+        self.__table.clear() 
+        self.__gameDeck.clear() 
+        self.__gameDeck.createDeck() 
+        self.__gameDeck.shuffle() 
 
-        # Deal initial cards #
+        # Deal initial cards 
         
 
-    def player_hit(self): #
+    def player_hit(self): 
         """
         Método que irá solicitar uma nova carta do baralho ao jogar e realizar as operações 
         necessárias conforme as regras do BlackJack (ou 21)
         """
-        if self.__state == "PLAYER_TURN": #
-            self.__player.add(self.__gameDeck.give()) #
-            if self.__player.sumValues() > 21: #
-                self.__result = "Player Busts! Dealer Wins." #
+        if self.__state == "PLAYER_TURN": 
+            self.__player.add(self.__gameDeck.give()) 
+            if self.__player.sumValues() > 21: 
+                self.__result = "Player Busts! Dealer Wins." 
                 self._determine_winner()
-            elif self.__player.sumValues() == 21: #
-                self.player_stand() #
+            elif self.__player.sumValues() == 21: 
+                self.player_stand() 
 
-    def player_stand(self): #
+    def player_stand(self): 
         """
         Método que irá realizar a mudança de turno no qual o jogador permanece e o bot (dealer) joga
         """
-        if self.__state == "PLAYER_TURN": #
-            self.__state = "DEALER_TURN" #
+        if self.__state == "PLAYER_TURN": 
+            self.__state = "DEALER_TURN" 
 
-    def _dealer_play(self): #
+    def _dealer_play(self): 
         """
         Método que irá determinar as jogadas automáticas do bot (dealer) conforme as regras do BlackJack
         """
         if not self.__table[1].faceUp:
-            self.__table.flipAll(True) # Reveal the dealer's hole card #
+            self.__table.flipAll(True) # Reveal the dealer's hole card 
         else:
             if self.__table.sumValues() and self.__table.sumValues() < 17:
-                self.__table.add(self.__gameDeck.give()) #
+                self.__table.add(self.__gameDeck.give()) 
             else:
                 self._determine_winner() #    
 
-    def _determine_winner(self): #
+    def _determine_winner(self): 
         """
         Método que irá determinar o vencedor do jogo conforme os resultados finais gerados conforme
         as regras do BlackJack e realizar a mudança dos atributos necessários para confirmar a situação
         """
-        player_score = self.__player.sumValues() #
-        dealer_score = self.__table.sumValues() #
+        player_score = self.__player.sumValues() 
+        dealer_score = self.__table.sumValues() 
 
-        if player_score > 21: # This case is already handled but good for clarity #
-            self.__result = "Player Busts! Dealer Wins." #
-        elif dealer_score > 21: #
-            self.__result = "Dealer Busts! Player Wins." #
-            self.__player.addPoints(self.__betAmount * 2) # Return bet + winnings #
-        elif player_score > dealer_score: #
-            self.__result = "Player Wins!" #
-            self.__player.addPoints(self.__betAmount * 2) #
-        elif dealer_score > player_score: #
-            self.__result = "Dealer Wins." #
-        else: # Push #
-            self.__result = "Push (Draw)." #
-            self.__player.addPoints(self.__betAmount) # Return original bet #
+        if player_score > 21: # This case is already handled but good for clarity 
+            self.__result = "Player Busts! Dealer Wins." 
+        elif dealer_score > 21: 
+            self.__result = "Dealer Busts! Player Wins." 
+            self.__win_value = self.__betAmount * 2 # Return bet + winnings 
+        elif player_score > dealer_score: 
+            self.__result = "Player Wins!" 
+            self.__win_value = self.__betAmount * 2
+        elif dealer_score > player_score: 
+            self.__result = "Dealer Wins." 
+        else: # Push 
+            self.__result = "Push (Draw)." 
+            self.__win_value = self.__betAmount
+        self.__player.addPoints(self.__win_value) # Return original bet 
         
         self.__betAmount = 0
-        self.__state = "ROUND_OVER" #
+        self.__state = "ROUND_OVER" 
 
-    def get_player_data(self): #
+    def get_player_data(self): 
         """
         Método que irá obter os dados do jogador para operações necessárias
 
@@ -325,8 +330,8 @@ class BlackjackGame:
             dict{key: str, key: str}: Dicionário python com as informações do jogador, sendo 
                                       estar o nome e a quantidade de pontos obtidos no blackjack
         """
-        return { #
-            "name": self.__player.name, #
-            "blackjack_points": self.__player.points, #
-            # Include other game scores here if they were part of the original data #
+        return { 
+            "name": self.__player.name, 
+            "blackjack_points": self.__player.points, 
+            # Include other game scores here if they were part of the original data 
         }
