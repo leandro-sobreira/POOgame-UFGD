@@ -41,7 +41,7 @@ class Screen(ABC): #
         pygame.mixer.music.set_volume(volume) #
         pygame.mixer.music.play(-1) #
 
-    def draw_text_with_outline(self, surface, text, font, pos, text_color, outline_color, outline_width=2): #
+    def draw_text_with_outline(self, surface, text, font, pos, text_color, outline_color, outline_width=2, rotation=0): #
         """Renders text with a simple outline.""" #
         x, y = pos #
         # Render outline #
@@ -49,9 +49,13 @@ class Screen(ABC): #
             for dy in range(-outline_width, outline_width + 1): #
                 if dx != 0 or dy != 0: #
                     outline_surf = font.render(text, True, outline_color) #
+                    if rotation != 0:
+                        outline_surf = pygame.transform.rotate(outline_surf, rotation)
                     surface.blit(outline_surf, (x - outline_surf.get_width() // 2 + dx, y - outline_surf.get_height() // 2 + dy)) #
         # Render main text #
         text_surf = font.render(text, True, text_color) #
+        if rotation != 0:
+            text_surf = pygame.transform.rotate(text_surf, rotation)
         surface.blit(text_surf, (x - text_surf.get_width() // 2, y - text_surf.get_height() // 2)) #
 
 
@@ -298,14 +302,14 @@ class BlackjackScreen(Screen): #
         """Updates the card sprites on screen to match the game model.""" #
         self.card_sprites.empty() #
         # Sync dealer's hand #
-        for i, card in enumerate(self.game.table.getCards()): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.getCards())*20)/2 + i * 20)*st.SCALE, 120) #
-            image_key = card.getSprite()
+        for i, card in enumerate(self.game.table.cards): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.cards)*20)/2 + i * 20)*st.SCALE, 120) #
+            image_key = card.sprite
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
         # Sync player's hand #
-        for i, card in enumerate(self.game.player.getCards()): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.getCards())*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
-            image_key = card.getSprite() #
+        for i, card in enumerate(self.game.player.cards): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.cards)*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
+            image_key = card.sprite #
 
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
@@ -382,14 +386,14 @@ class UnoScreen(Screen):
                 self.card_images[key] = pygame.transform.scale(image, (st.UNO_CARD_WIDTH, st.UNO_CARD_HEIGHT))
     def card_position(self, player_index, card_index):
         card_spacement = 50
-        return (len(self.__game.getPlayers()[player_index].getCards())-1)*card_spacement/2-card_index*card_spacement
+        return (len(self.__game.players[player_index].cards)-1)*card_spacement/2-card_index*card_spacement
     
     def sync_sprites_with_model(self):
         self.__card_sprites.empty()
     # Sync Bots
         for i in range(1,4):
-            for j, card in enumerate(self.__game.getPlayers()[i].getCards()):
-                image_key = card.getSprite()
+            for j, card in enumerate(self.__game.players[i].cards):
+                image_key = card.sprite
                 if i == 1:
                     pos = (st.SCREEN_WIDTH*1/10 , (st.SCREEN_HEIGHT-self.card_position(1,j))/2)
                     rotate = 90
@@ -402,7 +406,7 @@ class UnoScreen(Screen):
                 self.__card_sprites.add(CardSprite(pos, pygame.transform.rotate(self.card_images[image_key],rotate)))
 
     # Sync Player hand #
-        for i, card in enumerate(self.__game.getPlayers()[0].getCards()): #
+        for i, card in enumerate(self.__game.players[0].cards): #
             posx=(st.SCREEN_WIDTH-self.card_position(0,i))/2
             posy=st.SCREEN_HEIGHT*7/8
             if self.__selected_card >= 0:
@@ -412,24 +416,24 @@ class UnoScreen(Screen):
                     posx += st.UNO_CARD_WIDTH/4
             if i == self.__selected_card:
                 posy -= 35
-            elif self.__game.getDiscDeck().topCard() and self.__game.getPlayers()[0].getCards()[i].match(self.__game.getDiscDeck().topCard()):
+            elif self.__game.disc_deck.topCard() and self.__game.players[0].cards[i].match(self.__game.disc_deck.topCard()):
                 posy -= 10
             pos = (posx, posy)
-            image_key = card.getSprite()
+            image_key = card.sprite
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
     # Sync Discard Deck #
         pos = (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
-        image_key = self.__game.getDiscDeck().topCard().getSprite()   
+        image_key = self.__game.disc_deck.topCard().sprite   
         self.__card_sprites.add(CardSprite(pos, self.card_images[image_key]))
 
     # Sync Buy Deck #
-        if self.__game.getBuyDeck().isEmpty():
+        if self.__game.buy_deck.isEmpty():
             self.__game.reshuffle_buy_deck()
-        image_key = self.__game.getBuyDeck().topCard().getSprite()
-        for i in range(-1,int(self.__game.getBuyDeck().size()/5)):
+        image_key = self.__game.buy_deck.topCard().sprite
+        for i in range(-1,int(self.__game.buy_deck.size()/5)):
             pos = (st.SCREEN_WIDTH*7/10+i*2, st.SCREEN_HEIGHT*2/5+i)
-            if i == int(self.__game.getBuyDeck().size()/5)-1 and self.__selected_card == -1:
+            if i == int(self.__game.buy_deck.size()/5)-1 and self.__selected_card == -1:
                 pos = (st.SCREEN_WIDTH*7/10+i*2, st.SCREEN_HEIGHT*2/5+i+30)
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
             
@@ -452,12 +456,12 @@ class UnoScreen(Screen):
             elif i == 3:
                 pos = (st.SCREEN_WIDTH*9/10+50, st.SCREEN_HEIGHT/2)
                 rotation = 90
-            if i == self.__game.getPlayers().getTurn():
+            if i == self.__game.players.turn:
                 text_color = st.GREEN
-            self.draw_text_with_outline(self.screen, self.__game.getPlayers()[i].getName(), pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
+            self.draw_text_with_outline(self.screen, self.__game.players[i].name, pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
 
         #place de rotacion image        
-        if self.__game.getPlayers().getRotation() == 1:
+        if self.__game.players.rotation == 1:
             rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
             self.screen.blit(rotation_image, rect)
@@ -468,7 +472,7 @@ class UnoScreen(Screen):
             self.screen.blit(rotation_image, rect)
 
 
-        if self.__game.getState() == "PLAYER_SELEC_COLOR":
+        if self.__game.state == "PLAYER_SELEC_COLOR":
             colors = ['red','yellow','green','blue']
             color_buttons = [
                 Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Red", "red", 30),
@@ -479,12 +483,12 @@ class UnoScreen(Screen):
             for i, button in enumerate(color_buttons):
                 button.set_selected(i == self.__selected_color)
             color_sprite_group = pygame.sprite.Group(color_buttons)
-            self.__game.getDiscDeck().topCard().setColor(colors[self.__selected_color])
+            self.__game.disc_deck.topCard().color(colors[self.__selected_color])
             color_sprite_group.update()
             color_sprite_group.draw(self.screen)
             self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
         
-        elif self.__game.getState() == "PLAY_DRAW_CARD":
+        elif self.__game.state == "PLAY_DRAW_CARD":
             buttons = [
                 Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Yes", "yes", 30),
                 Button((st.SCREEN_WIDTH/2 + 150, st.SCREEN_HEIGHT/2+100), "No", "no", 30)
@@ -500,7 +504,7 @@ class UnoScreen(Screen):
             
 
     def update(self):
-        current_game_state = self.__game.getState()
+        current_game_state = self.__game.state
 
         if current_game_state == "BOT_TURN":
             if self.__current_action_phase is None:
@@ -530,35 +534,35 @@ class UnoScreen(Screen):
 
     def handle_event(self, event):
         # Possible states: START, PLAYER_TURN, PLAYER_SELEC_COLOR, BOT_TURN, ,ROUND_OVER
-        current_game_state = self.__game.getState()
+        current_game_state = self.__game.state
 
 
 
-        if self.__game.getState() == "START":
+        if self.__game.state == "START":
             self.__game.start_round()
 
 
         
         elif current_game_state == "PLAYER_TURN":
             #print("PLAYER TURN")
-            player_cards = self.__game.getPlayers().getHumanPlayer().getCards()
+            player_cards = self.__game.players.getHumanPlayer().cards
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_a):
                     self.select_sound.play()
-                    self.__selected_card = ((self.__selected_card - 1) % (self.__game.getPlayers().getHumanPlayer().size()+1))
+                    self.__selected_card = ((self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_RIGHT, pygame.K_d):
                     self.select_sound.play()
-                    self.__selected_card = ((self.__selected_card + 1) % (self.__game.getPlayers().getHumanPlayer().size()+1))
+                    self.__selected_card = ((self.__selected_card + 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_z, pygame.K_RETURN):
                     if self.__selected_card >= 0:
                         self.__game.player_play_card(self.__selected_card)    
                     elif self.__selected_card == -1:
                         self.__game.human_draw_card()
-                    if self.__game.getPlayers().getHumanPlayer().size() > 0:
-                        self.__selected_card = ((self.__selected_card - 1) % (self.__game.getPlayers().getHumanPlayer().size()))
+                    if self.__game.players.getHumanPlayer().size() > 0:
+                        self.__selected_card = ((self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size()))
 
-                if self.__selected_card >= self.__game.getPlayers().getHumanPlayer().size():
+                if self.__selected_card >= self.__game.players.getHumanPlayer().size():
                     self.__selected_card = -1
 
 

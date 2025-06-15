@@ -141,8 +141,8 @@ class UnoGame:
                     self.__disc_deck.topCard().color = card.color
                     break
             else:
-                self.__disc_deck.topCard().setColor(random.choice(UNO_COLORS))
-        if self.__disc_deck.topCard().getValue() == '+4':
+                self.__disc_deck.topCard().color(random.choice(UNO_COLORS))
+        if self.__disc_deck.topCard().value == '+4':
             for i in range(4):
                 self.__players.getNextPlayer().add(self.__buy_deck.give(self.__players.getNextPlayer() == self.__players.getHumanPlayer()))
                 #TODO: DELAY_ANIM(100ms)
@@ -154,8 +154,8 @@ class UnoGame:
         topCard = self.__disc_deck.give()
         topCard.flip()
         while not self.__disc_deck.isEmpty():
-            if self.__disc_deck.topCard().getValue() in ['+4', 'wild']:
-                self.__disc_deck.topCard().setColor('')
+            if self.__disc_deck.topCard().value in ['+4', 'wild']:
+                self.__disc_deck.topCard().color('')
             self.__buy_deck.add(self.__disc_deck.give())
         self.__disc_deck.add(topCard)
         self.__buy_deck.shuffle()
@@ -164,16 +164,16 @@ class UnoGame:
         if self.__buy_deck.isEmpty():
             self.reshuffle_buy_deck()
         player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
-        print(f'{player.getName()}: drew a card, ({self.__buy_deck.size()} cards left in the buy deck)')
+        print(f'{player.name}: drew a card, ({self.__buy_deck.size()} cards left in the buy deck)')
 
     def human_draw_card(self):
         self.draw_card(self.__players.getCurrentPlayer())
-        if self.__disc_deck.topCard().match(self.__players.getCurrentPlayer().getCards()[-1]):
+        if self.__disc_deck.topCard().match(self.__players.getCurrentPlayer().cards[-1]):
             print("YESSSS")
             self.__state = 'PLAY_DRAW_CARD'
         else:
             self.__players.getCurrentPlayer().sort()
-        self.next_turn()
+            self.next_turn()
         #TODO: DELAY_ANIM(100ms), JOGAR CARTA COMPRADA OU N
 
     def bot_draw_card(self):
@@ -182,17 +182,18 @@ class UnoGame:
         card = self.__buy_deck.give(False)
         self.__players.getCurrentPlayer().add(card)
         if self.__disc_deck.topCard().match(card):
-            self.player_play_card(self.__players.getCurrentPlayer().getCards().index(card))
+            self.player_play_card(self.__players.getCurrentPlayer().cards.index(card))
             #TODO: DELAY_ANIM(100ms)
-        self.next_turn()
+        else:
+            self.next_turn()
 
     def bot_play(self):
         #TODO: BOT_THINKING_ANIM
-        for i, card in enumerate(self.__players.getCurrentPlayer().getCards()):
+        for i, card in enumerate(self.__players.getCurrentPlayer().cards):
             if card.match(self.__disc_deck.topCard()):
                 self.player_play_card(i)
                 break
         else:
-            print(f'{self.__players.getCurrentPlayer().getName()}: drew a card')
+            print(f'{self.__players.getCurrentPlayer().name}: drew a card')
             self.bot_draw_card()
         
