@@ -102,7 +102,7 @@ class PlayerNameScreen(Screen): #
     def __init__(self, screen, prompt_text="Enter Your Name and Press Enter"): #
         super().__init__(screen) #
         self.set_background(os.path.join(st.img_folder, "title.png")) #
-        self.font = pygame.font.Font(st.text_font, 32) #
+        self.__font = pygame.font.Font(st.text_font, 32) #
         self.input_font = pygame.font.Font(st.text_font, 28) #
         self.player_name = "" #
         self.prompt_text = prompt_text #
@@ -123,7 +123,7 @@ class PlayerNameScreen(Screen): #
 
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
-        self.draw_text_with_outline(self.screen, self.prompt_text, self.font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, self.prompt_text, self.__font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) #
         
         input_rect = pygame.Rect(st.SCREEN_WIDTH / 2 - 150, st.SCREEN_HEIGHT / 2, 300, 50) #
         pygame.draw.rect(self.screen, st.WHITE, input_rect, 2) #
@@ -225,22 +225,16 @@ class BlackjackScreen(Screen): #
     """The View for the Blackjack game. It only draws what the Model tells it to.""" #
     def __init__(self, screen, game_instance): #
         super().__init__(screen) #
-        self.game = game_instance  # This is the Model #
+        self.__game = game_instance  # This is the Model #
+        self.__current_action_phase = None 
         self.__assets_folder = os.path.join(st.img_folder, "games/blackjack")
         self.set_background(os.path.join(self.__assets_folder, "mesa.png")) #
-        self.font = pygame.font.Font(st.text_font, 24) #
-        self.card_sprites = pygame.sprite.Group() #
+        self.__font = pygame.font.Font(st.text_font, 32)
+        self.__card_sprites = pygame.sprite.Group() #
         self.load_card_images() #
-        self.prompt_text = "Enter the bet amount, or press X to exit"
-        self.input_value = ''
-        self.amount = 0
-        self.font = pygame.font.Font(st.text_font, 32)
-        self.done = False
-        self.__box_width = 700
-        self.__box_height = 150
-
-        self.__box_rect = pygame.Rect((st.SCREEN_WIDTH - self.__box_width) // 2,(st.SCREEN_HEIGHT - self.__box_height) // 2,self.__box_width, self.__box_height )
-
+        self.__input_value = ''
+        self.__amount = 0
+        
     def load_card_images(self): #
         """Pre-loads all card images into a dictionary for quick access.""" #
         self.card_images = {} #
@@ -252,129 +246,135 @@ class BlackjackScreen(Screen): #
                 self.card_images[key] = pygame.transform.scale(image, (70 * st.SCALE, 98 * st.SCALE)) #
 
     def handle_event(self, event): #
-        
-        
-
-        if self.game.state == "BET":
+        if self.__game.state == "BET":
             if event.type == pygame.KEYDOWN:
-                #if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER] and self.input_value != '':
-                
+                #if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER] and self.__input_value != '':
 
-                if event.key == pygame.K_RETURN and self.input_value != "":
+                if event.key == pygame.K_RETURN and self.__input_value != "":
                     print("ENTREI")
-                    
 
-                    self.amount = int(self.input_value)
+                    self.__amount = int(self.__input_value)
                     
-                    self.game.betAmount = self.amount
-                    #print("recebi", self.game.bet_amount)
-                    self.game.state = "PLAYER_TURN"
+                    self.__game.betAmount = self.__amount
+                    #print("recebi", self.__game.bet_amount)
+                    self.__game.state = "PLAYER_TURN"
                 elif event.key == pygame.K_BACKSPACE:
-                    self.input_value = self.input_value[:-1]
+                    self.__input_value = self.__input_value[:-1]
                 elif event.key == pygame.K_x:
                     self.next_screen = "MENU"
 
                 elif event.unicode.isdigit():
-                    self.input_value += event.unicode
+                    self.__input_value += event.unicode
                     
-            self.game.setBetAmount()
+            self.__game.setBetAmount()
 
-        elif self.game.state == "PLAYER_TURN": #
+        elif self.__game.state == "PLAYER_TURN": #
             if event.type == pygame.KEYDOWN: #
                 if event.key in (pygame.K_z, pygame.K_h): # 'Z' or 'H' to Hit #
                     self.flip_card.play() #
-                    self.game.player_hit() #
+                    self.__game.player_hit() #
 
                 elif event.key in (pygame.K_x, pygame.K_s): # 'X' or 'S' to Stand #
                     self.ok_sound.play() #
-                    self.game.player_stand() #
-
-                '''
-                    self.game._dealer_play()
-                    while self.game._dealer_play
-
-
-
-                '''
-
-            """elif self.game.state == "DEALER_TURN":
-                self.game._dealer_buy_loop()"""
+                    self.__game.player_stand() #
         
-        elif self.game.state == "ROUND_OVER": #
+        elif self.__game.state == "ROUND_OVER": #
             if event.type == pygame.KEYDOWN: #
                 if event.key in (pygame.K_z, pygame.K_RETURN): #
                     # Decide whether to start a new round or exit #
-                    if self.game.player.points >= 10: #
-                        self.game.setBetAmount() # Play again #
+                    if self.__game.player.points >= 10: #
+                        self.__game.setBetAmount() # Play again #
                     else:
                         self.next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu #
     
     def sync_sprites_with_model(self): #
-        pass
+        #Updates the card sprites on screen to match the game model. #
+        self.__card_sprites.empty() #
+        # Sync dealer's hand #
+        for i, card in enumerate(self.__game.table.cards): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.__game.table.cards)*20)/2 + i * 20)*st.SCALE, 120) #
+            image_key = card.sprite
+            self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
+        # Sync player's hand #
+            
+        for i, card in enumerate(self.__game.player.cards): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.__game.player.cards)*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
+            image_key = card.sprite
+            self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) 
 
         
     def update(self): #
-        #Updates the card sprites on screen to match the game model. #
-        self.card_sprites.empty() #
-        # Sync dealer's hand #
-        for i, card in enumerate(self.game.table.cards): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.cards)*20)/2 + i * 20)*st.SCALE, 120) #
-            image_key = card.sprite
-            self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
-        # Sync player's hand #
-            
-        for i, card in enumerate(self.game.player.cards): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.cards)*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
-            image_key = card.sprite
-            self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) 
+        current_game_state = self.__game.state
 
+        if current_game_state == "START":
+            if self.__current_action_phase is None:
+                self.__current_action_phase = "giving_cards"
+                self.__action_timer = pygame.time.get_ticks() + 350
+            elif self.__current_action_phase == "giving_cards":
+                if pygame.time.get_ticks() >= self.__action_timer:
+                    self.__game.give_start_cards()
+                    self.__current_action_phase = None
+
+        elif current_game_state == "DEALER_TURN":
+            if self.__current_action_phase is None:
+                self.__current_action_phase = "dealer_buying"
+                self.__action_timer = pygame.time.get_ticks() + 1000 # 1.5-second delay
+            elif self.__current_action_phase == "dealer_buying":
+                if pygame.time.get_ticks() >= self.__action_timer:
+                    self.__game._dealer_play() # Bot performs its action
+                    self.__current_action_phase = None # Reset phase; game state will change
 
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
         self.sync_sprites_with_model() #
-        self.card_sprites.draw(self.screen) #
+        self.__card_sprites.draw(self.screen) #
         
         # Draw scores #
-        dealer_score_text = f"Dealer's Hand: {self.game.table.sumValues()}" #
-        player_score_text = f"{self.game.player.name}'s Hand: {self.game.player.sumValues()}" #
-        self.draw_text_with_outline(self.screen, dealer_score_text, self.font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) #
-        self.draw_text_with_outline(self.screen, player_score_text, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) #
+        dealer_score_text = f"Dealer's Hand: {self.__game.table.sumValues()}" #
+        player_score_text = f"{self.__game.player.name}'s Hand: {self.__game.player.sumValues()}" #
+        self.draw_text_with_outline(self.screen, dealer_score_text, self.__font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, player_score_text, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) #
 
         # Draw prompts or results #
-        if self.game.state == "BET":
-            pygame.draw.rect(self.screen, st.BLACK, self.__box_rect)  # fundo da caixa
-            pygame.draw.rect(self.screen, st.WHITE, self.__box_rect, 2)  # borda branca
+        if self.__game.state == "BET":
+
+            self.done = False
+            box_width = 700
+            box_height = 150
+            pos = pygame.Rect((st.SCREEN_WIDTH - box_width) / 2,(st.SCREEN_HEIGHT - box_height) / 2,box_width, box_height )
+            pygame.draw.rect(self.screen, st.BLACK, pos)  # fundo da caixa
+            pygame.draw.rect(self.screen, st.WHITE, pos, 2)  # borda branca
 
             # Renderiza o texto do prompt
-            prompt_surface = self.font.render(self.prompt_text, True, st.WHITE)
+            prompt_surface = self.__font.render("Enter the bet amount, or press X to exit", True, st.WHITE)
             prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
             self.screen.blit(prompt_surface, prompt_rect)
 
             # Renderiza o valor digitado
-            input_surface = self.font.render(self.input_value, True, st.GREEN)
+            input_surface = self.__font.render(self.__input_value, True, st.GREEN)
             input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
             self.screen.blit(input_surface, input_rect)
     
-        elif self.game.state == "PLAYER_TURN": #
-            prompt = f'{self.game.player.points}$' #
-            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) #
+        elif self.__game.state == "PLAYER_TURN": #
+            prompt = f'{self.__game.player.points}$' #
+            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) #
 
             prompt = "Z Hit" #
-            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) #
             prompt = "X Stand" #
-            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) #
 
-        elif self.game.state == "ROUND_OVER": #
-            result_text = f"Result: {self.game.result}" #
-            prompt = "Press [Z] to play again." if self.game.player.points >= 10 else "Not enough points. Press [Z] to exit." #
+        elif self.__game.state == "ROUND_OVER": #
+            result_text = f"Result: {self.__game.result}" #
+            prompt = "Press [Z] to play again." if self.__game.player.points >= 10 else "Not enough points. Press [Z] to exit." #
             self.draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
-            self.draw_text_with_outline(self.screen, prompt, self.font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
+            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
             
             
 
     def get_player_data(self): #
         """Returns the updated player data when the game is over.""" #
-        return self.game.get_player_data() #
+        return self.__game.get_player_data() #
     
 class UnoScreen(Screen):
     def __init__(self, screen, game_instance):
@@ -600,7 +600,7 @@ class NotificationScreen(Screen): #
         super().__init__(screen, player_data) #
         self.message = message #
         self.next_screen_key = next_screen #
-        self.font = pygame.font.Font(st.button_font, st.title_size) #
+        self.__font = pygame.font.Font(st.button_font, st.title_size) #
         self.set_background(os.path.join(st.img_folder, "title.png")) #
         self.entry_time = pygame.time.get_ticks() #
 
@@ -611,7 +611,7 @@ class NotificationScreen(Screen): #
             
     def draw(self): #
         self.screen.blit(self._background, (0,0)) #
-        self.draw_text_with_outline(self.screen, self.message, self.font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) #
+        self.draw_text_with_outline(self.screen, self.message, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) #
 
 # --- SPRITE CLASSES ---
 

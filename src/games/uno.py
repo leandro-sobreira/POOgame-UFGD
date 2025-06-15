@@ -63,11 +63,11 @@ class UnoGame:
 
         for i in range(7):
             for player in self.__players:
+                #TODO: Saber qual é o problema 
                 ##############################PROBLEMA
                 #print(player, dir(player))
 
                 player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
-                #player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
                 if player == self.__players.getHumanPlayer():
                     player.sort()
                 #TODO: DELAY_ANIM(100ms)
@@ -117,7 +117,6 @@ class UnoGame:
             elif not self.__disc_deck.topCard().value in ['+4', 'wild']:
                 self.next_turn()
 
-    #QUANDO O BOTÃO DA COR É SELECIONADO RETORNA ESSA COR PARA ESSA FUNÇÃO
     def human_select_color(self, color):
         if self.__disc_deck.topCard().color == '':
             self.__disc_deck.topCard().color = color
@@ -144,7 +143,6 @@ class UnoGame:
         self.next_turn()
                     
     def reshuffle_buy_deck(self):
-        #TODO: RESHUFFLE_ANIM
         topCard = self.__disc_deck.give()
         topCard.flip()
         while not self.__disc_deck.isEmpty():
@@ -171,7 +169,6 @@ class UnoGame:
         return -1
 
     def bot_play(self):
-        #TODO: BOT_THINKING_ANIM
         for i, card in enumerate(self.__players.getCurrentPlayer().cards):
             if card.match(self.__disc_deck.topCard()):
                 self.player_play_card(i)

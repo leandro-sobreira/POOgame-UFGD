@@ -72,10 +72,29 @@ class BlackjackGame:
             self.__state = "BET"
         else:
             self.start_round()
+    # Deal initial cards  animation#
+    def give_start_cards(self):
+        if self.__table.size() == 0:
+            self.__table.add(self.__gameDeck.give())
+        elif self.__table.size() == 1:
+            if self.__player.size() == 0:
+                self.__player.add(self.__gameDeck.give())
+            elif self.__player.size() == 1:
+                self.__table.add(self.__gameDeck.give(False))
+        elif self.__table.size() == 2:
+            if self.__player.size() == 1:
+                self.__player.add(self.__gameDeck.give())
+            if self.__player.size() == 2:
+                self.__state = "PLAYER_TURN"
 
+
+        # Check for immediate Blackjack #
+        if self.__player.sumValues() == 21: #
+            self.player_stand() #
+    
     def start_round(self): #
         """Resets hands and deals initial cards for a new round.""" #
-        self.__state = "PLAYER_TURN" #
+        self.__state = "START" #
         self.__result = "" #
 
         # Player pays the bet #
@@ -89,14 +108,7 @@ class BlackjackGame:
         self.__gameDeck.shuffle() #
 
         # Deal initial cards #
-        self.__player.add(self.__gameDeck.give()) #
-        self.__table.add(self.__gameDeck.give()) # Dealer's first card (face up) #
-        self.__player.add(self.__gameDeck.give()) #
-        self.__table.add(self.__gameDeck.give(False)) # Dealer's second card (face down) #
-
-        # Check for immediate Blackjack #
-        if self.__player.sumValues() == 21: #
-            self.player_stand() #
+        
 
     def player_hit(self): #
         """Player requests another card.""" #
@@ -112,22 +124,17 @@ class BlackjackGame:
         """Player finishes their turn, and the dealer plays.""" #
         if self.__state == "PLAYER_TURN": #
             self.__state = "DEALER_TURN" #
-            self._dealer_play() #
             #self.table.flipAll(True)
 
     def _dealer_play(self): #
         """The dealer's automated turn logic.""" #
-        self.__table.flipAll(True) # Reveal the dealer's hole card #
-        while self.__table.sumValues() and self.__table.sumValues() < 17:
-            self.__table.add(self.__gameDeck.give()) #
-        self._determine_winner() #
-
-    """def _dealer_buy_loop(self):
-            if self.table.sumValues() < 50:
-                self.table.add(self.gameDeck.give()) #
+        if not self.__table[1].faceUp:
+            self.__table.flipAll(True) # Reveal the dealer's hole card #
+        else:
+            if self.__table.sumValues() and self.__table.sumValues() < 17:
+                self.__table.add(self.__gameDeck.give()) #
             else:
-                self._determine_winner() #"""
-            
+                self._determine_winner() #    
 
     def _determine_winner(self): #
         """Compares hands and sets the final result and payout.""" #
