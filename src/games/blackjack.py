@@ -116,7 +116,7 @@ class BlackjackGame:
             self.__player.add(self.__gameDeck.give()) #
             if self.__player.sumValues() > 21: #
                 self.__result = "Player Busts! Dealer Wins." #
-                self.__state = "ROUND_OVER" #
+                self._determine_winner()
             elif self.__player.sumValues() == 21: #
                 self.player_stand() #
 
@@ -124,7 +124,6 @@ class BlackjackGame:
         """Player finishes their turn, and the dealer plays.""" #
         if self.__state == "PLAYER_TURN": #
             self.__state = "DEALER_TURN" #
-            #self.table.flipAll(True)
 
     def _dealer_play(self): #
         """The dealer's automated turn logic.""" #

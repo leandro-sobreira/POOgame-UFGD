@@ -251,8 +251,6 @@ class BlackjackScreen(Screen): #
                 #if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER] and self.__input_value != '':
 
                 if event.key == pygame.K_RETURN and self.__input_value != "":
-                    print("ENTREI")
-
                     self.__amount = int(self.__input_value)
                     
                     self.__game.betAmount = self.__amount
@@ -260,9 +258,6 @@ class BlackjackScreen(Screen): #
                     self.__game.state = "PLAYER_TURN"
                 elif event.key == pygame.K_BACKSPACE:
                     self.__input_value = self.__input_value[:-1]
-                elif event.key == pygame.K_x:
-                    self.next_screen = "MENU"
-
                 elif event.unicode.isdigit():
                     self.__input_value += event.unicode
                     
@@ -283,9 +278,12 @@ class BlackjackScreen(Screen): #
                 if event.key in (pygame.K_z, pygame.K_RETURN): #
                     # Decide whether to start a new round or exit #
                     if self.__game.player.points >= 10: #
-                        self.__game.setBetAmount() # Play again #
+                        self.__game.state = "BET"
+                        #self.__game.setBetAmount() # Play again #
                     else:
                         self.next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu #
+                elif event.key in (pygame.K_x, pygame.K_ESCAPE):
+                    self.next_screen = "MENU"
     
     def sync_sprites_with_model(self): #
         #Updates the card sprites on screen to match the game model. #
@@ -339,14 +337,14 @@ class BlackjackScreen(Screen): #
         if self.__game.state == "BET":
 
             self.done = False
-            box_width = 700
+            box_width = 450
             box_height = 150
             pos = pygame.Rect((st.SCREEN_WIDTH - box_width) / 2,(st.SCREEN_HEIGHT - box_height) / 2,box_width, box_height )
             pygame.draw.rect(self.screen, st.BLACK, pos)  # fundo da caixa
             pygame.draw.rect(self.screen, st.WHITE, pos, 2)  # borda branca
 
             # Renderiza o texto do prompt
-            prompt_surface = self.__font.render("Enter the bet amount, or press X to exit", True, st.WHITE)
+            prompt_surface = self.__font.render("Enter the bet amount", True, st.WHITE)
             prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
             self.screen.blit(prompt_surface, prompt_rect)
 
@@ -366,10 +364,12 @@ class BlackjackScreen(Screen): #
 
         elif self.__game.state == "ROUND_OVER": #
             result_text = f"Result: {self.__game.result}" #
-            prompt = "Press [Z] to play again." if self.__game.player.points >= 10 else "Not enough points. Press [Z] to exit." #
             self.draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) #
+            prompt = "Press [Z] to play again." if self.__game.player.points >= 10 else "Not enough points. Press [Z] to exit." #
             self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) #
-            
+            if self.__game.player.points >= 10:
+                prompt = "Or [X] to quit and save your score"
+                self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #            
             
 
     def get_player_data(self): #
@@ -507,7 +507,7 @@ class UnoScreen(Screen):
             self.__game.disc_deck.topCard().color = colors[self.__selected_color]
             color_sprite_group.update()
             color_sprite_group.draw(self.screen)
-            self.draw_text_with_outline(self.screen, "You want to play the drew card?", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
             
 
     def update(self):
