@@ -116,7 +116,7 @@ class PlayerNameScreen(Screen):
             else:
                 if event.unicode.isprintable() and len(self.player_name) < 15: # Limit name length 
                     self.player_name += event.unicode 
-    
+
     def update(self): 
         pass 
 
