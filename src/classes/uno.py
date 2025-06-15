@@ -392,6 +392,9 @@ class UnoPlayers:
         """
         return (self.__turn + self.__rotation) % len(self.__players)
     
+    def getHumanTurn(self):
+        return 0
+    
     def getHumanPlayer(self):
         """
         Método que irá obter o jogador "humano" do UNO

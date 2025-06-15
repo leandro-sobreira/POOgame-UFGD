@@ -51,6 +51,8 @@ class UnoGame:
         self.__state = state
 
     def start_round(self):
+        for player in self.__players:
+            player.points = 0
         self.__buy_deck.clear()
         self.__disc_deck.clear()
         self.__players.clear()
@@ -66,21 +68,20 @@ class UnoGame:
                 player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
                 if player == self.__players.getHumanPlayer():
                     player.sort()
-                #TODO: DELAY_ANIM(100ms)
 
         self.__disc_deck.add(self.__buy_deck.give())
 
         while self.__disc_deck.topCard().value in SPECIAL_CARDS:
             self.__disc_deck.add(self.__buy_deck.give())
-            #TODO: DELAY_ANIM(300ms)
 
         self.__state = 'PLAYER_TURN'
 
 
     def next_turn(self):
+        
         self.__players.setNextTurn()
         self.players.already_buy = False
-        if self.__players.turn == 0:
+        if self.__players.turn == self.players.getHumanTurn():
             self.__players.getCurrentPlayer().sort()
             self.__state = 'PLAYER_TURN'
         else:
@@ -93,25 +94,25 @@ class UnoGame:
         if self.__disc_deck.topCard().match(card):
             self.__disc_deck.add(self.__players.getCurrentPlayer().give(card))
             print(f'{self.__players.getCurrentPlayer().name}: played [{self.__disc_deck.topCard()}]')
-            
-            if self.__disc_deck.topCard().value in SPECIAL_CARDS:
-                if self.__disc_deck.topCard().value in ['+4', 'wild']:
-                    if self.__players.getCurrentPlayer() == self.__players.getHumanPlayer():
-                        self.state = 'PLAYER_SELEC_COLOR'
-                    else:
-                        self.bot_select_color()
-                if self.__disc_deck.topCard().value == '+2':
-                    for i in range(2):
-                        self.draw_card(self.__players.getNextPlayer())
-                        #TODO: DELAY_ANIM(100ms)
-                if self.__disc_deck.topCard().value in ['+2', 'block']:
-                    self.__players.setNextTurn()
-                if self.__disc_deck.topCard().value == 'reverse':
-                    self.__players.flipRotation()
             if self.__players.getCurrentPlayer().isEmpty():
+                self.sumPoints()
                 self.state = 'ROUND_OVER'
-            elif not self.__disc_deck.topCard().value in ['+4', 'wild']:
-                self.next_turn()
+            else:
+                if self.__disc_deck.topCard().value in SPECIAL_CARDS:
+                    if self.__disc_deck.topCard().value in ['+4', 'wild']:
+                        if self.__players.getCurrentPlayer() == self.__players.getHumanPlayer():
+                            self.state = 'PLAYER_SELEC_COLOR'
+                        else:
+                            self.bot_select_color()
+                    if self.__disc_deck.topCard().value == '+2':
+                        for i in range(2):
+                            self.draw_card(self.__players.getNextPlayer())
+                    if self.__disc_deck.topCard().value in ['+2', 'block']:
+                        self.__players.setNextTurn()
+                    if self.__disc_deck.topCard().value == 'reverse':
+                        self.__players.flipRotation()
+                if not self.__disc_deck.topCard().value in ['+4', 'wild']:
+                    self.next_turn()
 
     def human_select_color(self, color):
         if self.__disc_deck.topCard().color == '':
@@ -119,7 +120,6 @@ class UnoGame:
         if self.__disc_deck.topCard().value == '+4':
             for i in range(4):
                 self.draw_card(self.__players.getNextPlayer())
-                #TODO: DELAY_ANIM(100ms)
             self.__players.setNextTurn()
         self.next_turn()
     
@@ -134,7 +134,6 @@ class UnoGame:
         if self.__disc_deck.topCard().value == '+4':
             for i in range(4):
                 self.draw_card(self.__players.getNextPlayer())
-                #TODO: DELAY_ANIM(100ms)
             self.__players.setNextTurn()
         self.next_turn()
                     
@@ -149,12 +148,12 @@ class UnoGame:
         self.__buy_deck.shuffle()
 
     def draw_card(self, player):
-        self.players.already_buy = True
         if self.__buy_deck.isEmpty():
             self.reshuffle_buy_deck()
         player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
 
     def player_draw_card(self, player):
+        self.players.already_buy = True
         self.draw_card(player)
         for card in player:
             if card.match(self.__disc_deck.topCard()):
@@ -170,7 +169,11 @@ class UnoGame:
                 self.player_play_card(i)
                 break
         else:
-            print(f'{self.__players.getCurrentPlayer().name}: drew a card')
             buy_card_index = self.player_draw_card(self.__players.getCurrentPlayer())
             if buy_card_index != -1:
                 self.player_play_card(buy_card_index)
+
+    def sumPoints(self):
+        for player in self.__players:
+            self.players.getCurrentPlayer().points += player.sumValues() 
+        
