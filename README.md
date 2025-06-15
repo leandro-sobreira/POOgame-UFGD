@@ -65,6 +65,10 @@ The project follows the Model-View-Controller pattern to promote a clean separat
 -   [ ] Refactor timed events (like bot turns) out of the View layer to better adhere to MVC principles.
 -   [ ] Create a centralized resource manager to load all assets (images, sounds) once at startup.
 
+## Documentação
+
+- [teste](docs/_build/html/index.html)
+
 ---
 
 ## 🧑‍💻 Authors
