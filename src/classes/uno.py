@@ -1,6 +1,4 @@
-import random
-
-from .deck import Card, Deck, Hand, Player
+from .deck import Deck, Card, Hand, Player
 
 class UnoCard(Card):
     """

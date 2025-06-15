@@ -1,8 +1,8 @@
 """
 This is the main module, it will be executed to display the game.
 """
-import sys
 import pygame
+
 from src.main_game import Game
 
 # Initializes the game

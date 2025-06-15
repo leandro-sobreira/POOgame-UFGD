@@ -3,7 +3,8 @@ import pygame
 import os
 import sys
 
-from .games import blackjack, uno
+from .games import blackjack_game as blackjack
+from .games import uno_game as uno
 
 from . import setup as st
 from . import interface as it
