@@ -154,8 +154,11 @@ class UnoPlayers:
     def getNextTurn(self):
         return (self.__turn + self.__rotation) % len(self.__players)
     
+    def getHumanTurn(self):
+        return 0
+    
     def getHumanPlayer(self):
-        return self.__players[0]
+        return self.__players[self.getHumanTurn()]
     
     #SOBRECARGA DE OPERADOR
     def __getitem__(self, index):

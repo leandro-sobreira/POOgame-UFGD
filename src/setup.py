@@ -29,6 +29,7 @@ UNO_CARD_HEIGHT = 140 * SCALE #
 # Define colors 
 RED = (255, 0, 0) #
 GREEN = (20, 255, 140) #
+YELLOW = (255, 255, 0) #
 BLUE = (100, 100, 255) #
 GREY = (210, 210 ,210) #
 WHITE = (255, 255, 255) #
