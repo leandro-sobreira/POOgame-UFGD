@@ -3,6 +3,11 @@ import random
 
 SPECIAL_CARDS = ['+4', 'wild', '+2', 'reverse', 'block']
 UNO_COLORS = ['red','yellow','green','blue']
+from ..classes.uno import UnoDeck, UnoPlayer, UnoPlayers, UnoCard
+import random
+
+SPECIAL_CARDS = ['+4', 'wild', '+2', 'reverse', 'block']
+UNO_COLORS = ['red','yellow','green','blue']
 
 class UnoGame:
     
@@ -136,59 +141,58 @@ class UnoGame:
                     self.__disc_deck.topCard().color = card.color
                     break
             else:
-                self.__disc_deck.topCard().color = random.choice(UNO_COLORS)
-
-        if self.__disc_deck.topCard().value == '+4':
+                self.__disc_deck.topCard().setColor(random.choice(UNO_COLORS))
+        if self.__disc_deck.topCard().getValue() == '+4':
             for i in range(4):
                 self.__players.getNextPlayer().add(self.__buy_deck.give(self.__players.getNextPlayer() == self.__players.getHumanPlayer()))
                 #TODO: DELAY_ANIM(100ms)
             self.__players.setNextTurn()
-
         self.next_turn()
                     
     def reshuffle_buy_deck(self):
         #TODO: RESHUFFLE_ANIM
         topCard = self.__disc_deck.give()
         topCard.flip()
-
         while not self.__disc_deck.isEmpty():
-            if self.__disc_deck.topCard().value in ['+4', 'wild']:
-                self.__disc_deck.topCard().color = ''
-
+            if self.__disc_deck.topCard().getValue() in ['+4', 'wild']:
+                self.__disc_deck.topCard().setColor('')
             self.__buy_deck.add(self.__disc_deck.give())
-
         self.__disc_deck.add(topCard)
         self.__buy_deck.shuffle()
 
-    def human_draw_card(self):
+    def draw_card(self, player):
         if self.__buy_deck.isEmpty():
             self.reshuffle_buy_deck()
+        player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
+        print(f'{player.getName()}: drew a card, ({self.__buy_deck.size()} cards left in the buy deck)')
 
-        self.__players.getCurrentPlayer().add(self.__buy_deck.give())
-        self.__players.getCurrentPlayer().sort()
-        #TODO: DELAY_ANIM(100ms)
+    def human_draw_card(self):
+        self.draw_card(self.__players.getCurrentPlayer())
+        if self.__disc_deck.topCard().match(self.__players.getCurrentPlayer().getCards()[-1]):
+            print("YESSSS")
+            self.__state = 'PLAY_DRAW_CARD'
+        else:
+            self.__players.getCurrentPlayer().sort()
         self.next_turn()
+        #TODO: DELAY_ANIM(100ms), JOGAR CARTA COMPRADA OU N
 
     def bot_draw_card(self):
         if self.__buy_deck.isEmpty():
             self.reshuffle_buy_deck()
-
         card = self.__buy_deck.give(False)
         self.__players.getCurrentPlayer().add(card)
-
         if self.__disc_deck.topCard().match(card):
-            self.player_play_card(self.__players.getCurrentPlayer().cards.index(card))
+            self.player_play_card(self.__players.getCurrentPlayer().getCards().index(card))
             #TODO: DELAY_ANIM(100ms)
-
         self.next_turn()
 
     def bot_play(self):
         #TODO: BOT_THINKING_ANIM
-        for i, card in enumerate(self.__players.getCurrentPlayer().cards):
+        for i, card in enumerate(self.__players.getCurrentPlayer().getCards()):
             if card.match(self.__disc_deck.topCard()):
                 self.player_play_card(i)
                 break
         else:
-            print(f'{self.__players.getCurrentPlayer().name}: drew a card')
+            print(f'{self.__players.getCurrentPlayer().getName()}: drew a card')
             self.bot_draw_card()
         

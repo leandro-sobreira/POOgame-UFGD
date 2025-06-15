@@ -7,9 +7,10 @@ File containing the global variables for the game.
 
 # Define paths for necessary folders
 source_folder = os.path.dirname(__file__) #
-img_folder = os.path.join(source_folder, "assets/img") #
-sound_folder = os.path.join(source_folder, "assets/sounds") #
-font_folder = os.path.join(source_folder, "assets/fonts") #
+assets_folder = os.path.join(source_folder, '../assets') #
+img_folder = os.path.join(assets_folder, "img") #
+sound_folder = os.path.join(assets_folder, "sounds") #
+font_folder = os.path.join(assets_folder, "fonts") #
 
 # CORRECTED: Removed pygame.init() and pygame.mixer.init()
 # Initialization should happen once in the main entry point.

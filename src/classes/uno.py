@@ -2,6 +2,7 @@ import random
 
 from .deck import Card, Deck, Hand, Player
 
+# CORRECTED: Removed the first, incomplete definition of UnoCard
 class UnoCard(Card):
     def __init__(self, value:str, color:str = '', frontSprite:str = '', backSprite:str = ''):
         super().__init__(frontSprite, backSprite)

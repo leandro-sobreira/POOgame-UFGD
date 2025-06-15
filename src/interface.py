@@ -61,6 +61,11 @@ class Screen(ABC): #
         pass #
 
     @abstractmethod
+    def update(self): #
+        """Abstract method for per-frame logic updates.""" #
+        pass #
+
+    @abstractmethod
     def draw(self): #
         """Abstract method to draw the screen's elements.""" #
         pass #
@@ -79,7 +84,7 @@ class Screen(ABC): #
                     self.next_screen = "QUIT" #
                 # Pass the event to the specific handler of the child screen #
                 self.handle_event(event) #
-
+            self.update() # Call update for continuous logic #
             self.draw() #
             pygame.display.flip() #
             
@@ -87,59 +92,6 @@ class Screen(ABC): #
                 is_running = False #
         
         return self.next_screen #
-
-# --- SCREEN IMPLEMENTATIONS ---
-
-"""
-class BetAmountScreen(Screen):
-    def __init__(self, screen, prompt_text="Digite o valor da aposta:"):
-        super().__init__(screen)
-        self.prompt_text = prompt_text
-        self.input_value = ''
-        self.amount = 0
-        self.font = pygame.font.Font(st.text_font, 32)
-        self.done = False
-        self.__box_width = 400
-        self.__box_height = 150
-
-        self.__box_rect = pygame.Rect((st.SCREEN_WIDTH - self.__box_width) // 2,(st.SCREEN_HEIGHT - self.__box_height) // 2,self.__box_width, self.__box_height )
-
-    def handle_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
-                self.next_screen = "BLACKJACK"
-            elif event.key == pygame.K_BACKSPACE:
-                self.input_value = self.input_value[:-1]
-            elif event.unicode.isdigit():
-                self.input_value += event.unicode
-
-    def getAmount(self):
-        return self.amount
-
-    def draw(self):
-        #self.screen.fill(st.BLACK)  # Limpa a tela com fundo preto
-        pygame.draw.rect(self.screen, st.BLACK, self.__box_rect)  # fundo da caixa
-        pygame.draw.rect(self.screen, st.WHITE, self.__box_rect, 2)  # borda branca
-
-        # Renderiza o texto do prompt
-        prompt_surface = self.font.render(self.prompt_text, True, st.WHITE)
-        prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
-        self.screen.blit(prompt_surface, prompt_rect)
-
-        # Renderiza o valor digitado
-        input_surface = self.font.render(self.input_value, True, st.GREEN)
-        input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
-        self.screen.blit(input_surface, input_rect)
-
-    def loop(self):
-        while not self.done:
-            for event in pygame.event.get():
-                self.handle_event(event)
-            self.draw()
-            pygame.display.flip()
-        return int(self.input_value) if self.input_value else 0
-"""
-
 
 class PlayerNameScreen(Screen): #
     def __init__(self, screen, prompt_text="Enter Your Name and Press Enter"): #
@@ -161,6 +113,9 @@ class PlayerNameScreen(Screen): #
                 if event.unicode.isprintable() and len(self.player_name) < 15: # Limit name length #
                     self.player_name += event.unicode #
     
+    def update(self): #
+        pass #
+
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
         self.draw_text_with_outline(self.screen, self.prompt_text, self.font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) #
@@ -202,6 +157,9 @@ class MenuScreen(Screen): #
                     self.ok_sound.play() #
                 self.next_screen = selected_button.action #
 
+    def update(self): #
+        pass #
+
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
         self.draw_text_with_outline(self.screen, "CARD GAME", self.title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE) #
@@ -229,6 +187,13 @@ class GameSelectScreen(Screen): #
         self.all_sprites = pygame.sprite.Group(self.buttons) #
 
     def handle_event(self, event): #
+        if self.selected_index == 0:
+            background = os.path.join(st.img_folder, "games/blackjack/mesa.png")
+        elif self.selected_index == 1:
+            background = os.path.join(st.img_folder, "games/uno/mesa.png")
+        else:
+            background = os.path.join(st.img_folder, "title.png")
+        self.set_background(os.path.join(st.img_folder, background))
         if event.type == pygame.KEYDOWN: #
             if event.key in (pygame.K_UP, pygame.K_w): #
                 self.select_sound.play() #
@@ -239,6 +204,9 @@ class GameSelectScreen(Screen): #
             elif event.key in (pygame.K_z, pygame.K_RETURN): #
                 self.ok_sound.play() #
                 self.next_screen = self.buttons[self.selected_index].action #
+
+    def update(self): #
+        pass #
     
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
@@ -253,7 +221,8 @@ class BlackjackScreen(Screen): #
     def __init__(self, screen, game_instance): #
         super().__init__(screen) #
         self.game = game_instance  # This is the Model #
-        self.set_background(os.path.join(st.img_folder, "games/blackjack/mesa.png")) #
+        self.__assets_folder = os.path.join(st.img_folder, "games/blackjack")
+        self.set_background(os.path.join(self.__assets_folder, "mesa.png")) #
         self.font = pygame.font.Font(st.text_font, 24) #
         self.card_sprites = pygame.sprite.Group() #
         self.load_card_images() #
@@ -322,17 +291,22 @@ class BlackjackScreen(Screen): #
                         self.next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu #
     
     def sync_sprites_with_model(self): #
+        pass
+
+
+    def update(self): #
         """Updates the card sprites on screen to match the game model.""" #
         self.card_sprites.empty() #
         # Sync dealer's hand #
-        for i, card in enumerate(self.game.table.cards): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.cards)*20)/2 + i * 20)*st.SCALE, 120) #
-            image_key = card.sprite
+        for i, card in enumerate(self.game.table.getCards()): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.table.getCards())*20)/2 + i * 20)*st.SCALE, 120) #
+            image_key = card.getSprite()
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
         # Sync player's hand #
-        for i, card in enumerate(self.game.player.cards): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.cards)*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
-            image_key = card.sprite #
+        for i, card in enumerate(self.game.player.getCards()): #
+            pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.getCards())*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
+            image_key = card.getSprite() #
+
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
     def draw(self): #
@@ -386,91 +360,115 @@ class UnoScreen(Screen):
     def __init__(self, screen, game_instance):
         super().__init__(screen)
         self.__game = game_instance
-        self.set_background(os.path.join(st.img_folder, "games/uno/mesa.png"))
+        self.__assets_folder = os.path.join(st.img_folder, "games/uno")
+        self.set_background(os.path.join(self.__assets_folder, "mesa.png"))
         self.__selected_card = 0
         self.__selected_color = 0
+        self.__selected_action = 0
         self.__card_sprites = pygame.sprite.Group() 
+        self.__action_timer = 0 # Timer for timed actions
+        self.__current_action_phase = None # To manage multi-step timed actions
         self.load_card_images()
+
 
     def load_card_images(self): #
         """Pre-loads all card images into a dictionary for quick access.""" #
         self.card_images = {} #
-        cards_path = os.path.join(st.img_folder, "games/uno/cards") #
+        cards_path = os.path.join(self.__assets_folder, "cards") #
         for filename in os.listdir(cards_path): #
             if filename.endswith(".png"): #
                 key = filename.replace(".png", "") # e.g., "blue_2" #
                 image = pygame.image.load(os.path.join(cards_path, filename)).convert_alpha() #
                 self.card_images[key] = pygame.transform.scale(image, (st.UNO_CARD_WIDTH, st.UNO_CARD_HEIGHT))
-
+    def card_position(self, player_index, card_index):
+        card_spacement = 50
+        return (len(self.__game.getPlayers()[player_index].getCards())-1)*card_spacement/2-card_index*card_spacement
+    
     def sync_sprites_with_model(self):
         self.__card_sprites.empty()
-    # Sync Bot1 hand #
-        for i, card in enumerate(self.__game.players[1].cards): #
-            pos = (st.SCREEN_WIDTH*9/10 , (st.SCREEN_HEIGHT/2 - (len(self.__game.players[3].cards)*25)/2 + i * 25)*st.SCALE) #
-            image_key = card.sprite
-            self.__card_sprites.add(CardSprite(pos, pygame.transform.rotate(self.card_images[image_key],90))) #
-    # Sync Bot2 hand #
-        for i, card in enumerate(self.__game.players[2].cards): #
-            pos = ((st.SCREEN_WIDTH/2 - (len(self.__game.players[2].cards)*25)/2 + i * 25)*st.SCALE, st.SCREEN_HEIGHT*1/8) #
-            image_key = card.sprite
-            self.__card_sprites.add(CardSprite(pos, pygame.transform.rotate(self.card_images[image_key],180))) #
-    # Sync Bot3 hand #
-        for i, card in enumerate(self.__game.players[3].cards): #
-            pos = (st.SCREEN_WIDTH*1/10 , (st.SCREEN_HEIGHT/2 - (len(self.__game.players[3].cards)*25)/2 + i * 25)*st.SCALE) #
-            image_key = card.sprite
-            self.__card_sprites.add(CardSprite(pos, pygame.transform.rotate(self.card_images[image_key],-90))) #
+    # Sync Bots
+        for i in range(1,4):
+            for j, card in enumerate(self.__game.getPlayers()[i].getCards()):
+                image_key = card.getSprite()
+                if i == 1:
+                    pos = (st.SCREEN_WIDTH*1/10 , (st.SCREEN_HEIGHT-self.card_position(1,j))/2)
+                    rotate = 90
+                elif i == 2:
+                    pos = ((st.SCREEN_WIDTH-self.card_position(2,j))/2, st.SCREEN_HEIGHT*1/8)
+                    rotate = 0
+                elif i == 3:
+                    pos = (st.SCREEN_WIDTH*9/10 , (st.SCREEN_HEIGHT-self.card_position(3,j))/2)
+                    rotate = -90
+                self.__card_sprites.add(CardSprite(pos, pygame.transform.rotate(self.card_images[image_key],rotate)))
+
     # Sync Player hand #
-        for i, card in enumerate(self.__game.players[0].cards): #
-            posx=(st.SCREEN_WIDTH/2 - (len(self.__game.players[0].cards)*25)/2 + i * 25)*st.SCALE
+        for i, card in enumerate(self.__game.getPlayers()[0].getCards()): #
+            posx=(st.SCREEN_WIDTH-self.card_position(0,i))/2
             posy=st.SCREEN_HEIGHT*7/8
-            if self.__selected_card == -1:
-                pos = (posx, posy)
-            elif i == self.__selected_card:
-                pos = (posx-25, posy-30)
-            elif i < self.__selected_card:
-                pos = (posx-25, posy)
-            else:
-                pos = (posx+25, posy) #
-            image_key = card.sprite
+            if self.__selected_card >= 0:
+                if i <= self.__selected_card and i >= 0:
+                    posx -= st.UNO_CARD_WIDTH/4
+                else:
+                    posx += st.UNO_CARD_WIDTH/4
+            if i == self.__selected_card:
+                posy -= 35
+            elif self.__game.getDiscDeck().topCard() and self.__game.getPlayers()[0].getCards()[i].match(self.__game.getDiscDeck().topCard()):
+                posy -= 10
+            pos = (posx, posy)
+            image_key = card.getSprite()
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
     # Sync Discard Deck #
-        
         pos = (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
-        image_key = self.__game.disc_deck.topCard().sprite
+        image_key = self.__game.getDiscDeck().topCard().getSprite()   
         self.__card_sprites.add(CardSprite(pos, self.card_images[image_key]))
 
     # Sync Buy Deck #
-        image_key = self.__game.buy_deck.topCard().sprite
-        for i in range(int(self.__game.buy_deck.size()/10)):
-            pos = (st.SCREEN_WIDTH*7/10+i, st.SCREEN_HEIGHT*2/5)
-            if i == int(self.__game.buy_deck.size()/10)-1 and self.__selected_card == -1:
-                pos = (st.SCREEN_WIDTH*7/10+i, st.SCREEN_HEIGHT*2/5+30)
+        if self.__game.getBuyDeck().isEmpty():
+            self.__game.reshuffle_buy_deck()
+        image_key = self.__game.getBuyDeck().topCard().getSprite()
+        for i in range(-1,int(self.__game.getBuyDeck().size()/5)):
+            pos = (st.SCREEN_WIDTH*7/10+i*2, st.SCREEN_HEIGHT*2/5+i)
+            if i == int(self.__game.getBuyDeck().size()/5)-1 and self.__selected_card == -1:
+                pos = (st.SCREEN_WIDTH*7/10+i*2, st.SCREEN_HEIGHT*2/5+i+30)
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
             
     def draw(self):
         self.screen.blit(self._background, (0, 0))
         self.sync_sprites_with_model()
-        self.__card_sprites.draw(self.screen)  
+        self.__card_sprites.draw(self.screen)
+
+        #place the names
+        for i in range(4):
+            rotation = 0
+            text_color = st.WHITE
+            if i == 0:
+                pos = (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*7/8+50)
+            elif i == 1:
+                pos = (st.SCREEN_WIDTH*1/10-50, st.SCREEN_HEIGHT/2)
+                rotation = -90
+            elif i == 2:
+                pos = (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*1/8-50)
+            elif i == 3:
+                pos = (st.SCREEN_WIDTH*9/10+50, st.SCREEN_HEIGHT/2)
+                rotation = 90
+            if i == self.__game.getPlayers().getTurn():
+                text_color = st.GREEN
+            self.draw_text_with_outline(self.screen, self.__game.getPlayers()[i].getName(), pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
+
         #place de rotacion image        
-        if self.__game.players.rotation == 1:
-            rotation_image = pygame.image.load(os.path.join(st.img_folder, "games/uno/rotation.png")).convert_alpha()
+        if self.__game.getPlayers().getRotation() == 1:
+            rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
             self.screen.blit(rotation_image, rect)
         else:
-            rotation_image = pygame.image.load(os.path.join(st.img_folder, "games/uno/rotation.png")).convert_alpha()
+            rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rotation_image = pygame.transform.flip(rotation_image, True, False)
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
             self.screen.blit(rotation_image, rect)
 
-        
-            
 
-        if self.__game.state != "PLAYER_TURN":
-            self.__selected_card = -2
-
-
-        if self.__game.state == "PLAYER_SELEC_COLOR":
+        if self.__game.getState() == "PLAYER_SELEC_COLOR":
             colors = ['red','yellow','green','blue']
             color_buttons = [
                 Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Red", "red", 30),
@@ -481,40 +479,91 @@ class UnoScreen(Screen):
             for i, button in enumerate(color_buttons):
                 button.set_selected(i == self.__selected_color)
             color_sprite_group = pygame.sprite.Group(color_buttons)
-            self.__game.disc_deck.topCard().color = colors[self.__selected_color]
+            self.__game.getDiscDeck().topCard().setColor(colors[self.__selected_color])
             color_sprite_group.update()
             color_sprite_group.draw(self.screen)
             self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+        
+        elif self.__game.getState() == "PLAY_DRAW_CARD":
+            buttons = [
+                Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Yes", "yes", 30),
+                Button((st.SCREEN_WIDTH/2 + 150, st.SCREEN_HEIGHT/2+100), "No", "no", 30)
+            ]
+            for i, button in enumerate(buttons):
+                button.set_selected(i == self.__selected_action)
+            action_sprite_group = pygame.sprite.Group(buttons)
+            action_sprite_group.update()
+            action_sprite_group.draw(self.screen)
+            self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+            
+            #draw_text_with_outline(self.screen, "Do you want to play this card?", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-50)) 
+            
 
-                  
+    def update(self):
+        current_game_state = self.__game.getState()
+
+        if current_game_state == "BOT_TURN":
+            if self.__current_action_phase is None:
+                # Bot's turn begins, set a timer for "thinking"
+                self.__current_action_phase = "bot_thinking"
+                self.__action_timer = pygame.time.get_ticks() + 1000 # 1-second delay
+            elif self.__current_action_phase == "bot_thinking":
+                if pygame.time.get_ticks() >= self.__action_timer:
+                    self.__game.bot_play() # Bot performs its action
+                    self.__current_action_phase = None # Reset phase; game state will change
+        
+        elif current_game_state == "ROUND_OVER":
+            if self.__current_action_phase is None:
+                # Round is over, display message for a bit before restarting
+                self.__current_action_phase = "round_over_message"
+                self.__action_timer = pygame.time.get_ticks() + 2000 # 2-second delay
+                # print("UnoScreen: ROUND OVER - displaying for 2s") # For debugging
+            elif self.__current_action_phase == "round_over_message":
+                if pygame.time.get_ticks() >= self.__action_timer:
+                    # print("UnoScreen: ROUND OVER - delay ended, starting new round.") # For debugging
+                    self.__game.start_round() # Start new round, game state will change
+                    self.__current_action_phase = None # Reset phase
+        
+        # If game state changed from a timed phase, reset the phase
+        elif self.__current_action_phase is not None:
+             self.__current_action_phase = None
 
     def handle_event(self, event):
         # Possible states: START, PLAYER_TURN, PLAYER_SELEC_COLOR, BOT_TURN, ,ROUND_OVER
-        if self.__game.state == "START":
+        current_game_state = self.__game.getState()
+
+
+
+        if self.__game.getState() == "START":
             self.__game.start_round()
 
-        elif self.__game.state == "PLAYER_TURN":
-            #print("PLAYER TURN")
-            player_cards = self.__game.players.getHumanPlayer().cards
 
-            if event.type == pygame.KEYDOWN: #
-                if event.key in (pygame.K_LEFT, pygame.K_a): #
-                    self.select_sound.play() #
-                    self.__selected_card = ((self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size()+1)) #
-                elif event.key in (pygame.K_RIGHT, pygame.K_d): #
-                    self.select_sound.play() #
-                    self.__selected_card = ((self.__selected_card + 1) % (self.__game.players.getHumanPlayer().size()+1)) #
-                elif event.key in (pygame.K_z, pygame.K_RETURN): #
+        
+        elif current_game_state == "PLAYER_TURN":
+            #print("PLAYER TURN")
+            player_cards = self.__game.getPlayers().getHumanPlayer().getCards()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_LEFT, pygame.K_a):
+                    self.select_sound.play()
+                    self.__selected_card = ((self.__selected_card - 1) % (self.__game.getPlayers().getHumanPlayer().size()+1))
+                elif event.key in (pygame.K_RIGHT, pygame.K_d):
+                    self.select_sound.play()
+                    self.__selected_card = ((self.__selected_card + 1) % (self.__game.getPlayers().getHumanPlayer().size()+1))
+                elif event.key in (pygame.K_z, pygame.K_RETURN):
                     if self.__selected_card >= 0:
                         self.__game.player_play_card(self.__selected_card)    
                     elif self.__selected_card == -1:
                         self.__game.human_draw_card()
-                    self.__selected_card = 0
+                    if self.__game.getPlayers().getHumanPlayer().size() > 0:
+                        self.__selected_card = ((self.__selected_card - 1) % (self.__game.getPlayers().getHumanPlayer().size()))
 
-                if self.__selected_card == self.__game.players.getHumanPlayer().size():
+                if self.__selected_card >= self.__game.getPlayers().getHumanPlayer().size():
                     self.__selected_card = -1
+
+
         
-        elif self.__game.state == "PLAYER_SELEC_COLOR":
+        elif current_game_state == "PLAYER_SELEC_COLOR":
             print("PLAYER SELEC COLOR")
             colors = ['red','yellow','green','blue']
 
@@ -526,16 +575,21 @@ class UnoScreen(Screen):
                     self.select_sound.play() #
                     self.__selected_color = (self.__selected_color - 1) % len(colors) #
                 elif event.key in (pygame.K_z, pygame.K_RETURN): #
-                    self.__game.human_select_color(colors[self.__selected_color])
+                    self.__game.human_select_color(colors[self.__selected_color])       
 
-        elif self.__game.state == "BOT_TURN":
-            #print("BOT TURN")
-            pass
-        
-        elif self.__game.state == "ROUND_OVER":
-            print("ROUND OVER")
+        elif current_game_state == "PLAY_DRAW_CARD":
+            buttons = ['Yes', 'No']
 
-                    
+            if event.key in (pygame.K_RIGHT, pygame.K_d): #
+                self.select_sound.play() #
+                self.__selected_action = (self.__selected_action + 1) % len(buttons) #
+            elif event.key in (pygame.K_LEFT, pygame.K_a): #
+                self.select_sound.play() #
+                self.__selected_action = (self.__selected_action - 1) % len(buttons) #
+            elif event.key in (pygame.K_z, pygame.K_RETURN): #
+                self.__game.human_select_color(buttons[self.__selected_action])
+
+        # BOT_TURN and ROUND_OVER logic is now handled in update() for timed delays
 
 
 class NotificationScreen(Screen): #
