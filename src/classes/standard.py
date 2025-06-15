@@ -6,12 +6,23 @@ class StandardCard(Card):
         self.__suit = suit #
         self.__value = value #
 
-    def getSuit(self): #
+    @property
+    def suit(self): #
         return self.__suit
     
-    def getValue(self): #
+    @property
+    def value(self): #
         return self.__value
+    
+    @suit.setter
+    def suit(self, suit):
+        self.__suit = suit
+    
+    @value.setter
+    def value(self, value):
+        self.__value = value    
 
+    #SOBRECARGA DE OPERADOR
     def __str__(self): #
         if self.getFace(): #
             return f'{self.__value} of {self.__suit}' #
@@ -19,9 +30,13 @@ class StandardCard(Card):
             return 'Face Down' #
 
 class StandardDeck(Deck): #
+    def __init__(self): #
+        super().__init__() #
+
     def createDeck(self): #
         suits = ['heart', 'diamond', 'club', 'spade'] #
         values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'] #
+        
         for suit in suits: #
             for value in values: #
                 self.add(StandardCard(suit=suit, value=value, frontSprite=f'{value}_of_{suit}', backSprite='cardBack_red5')) #
@@ -33,9 +48,9 @@ class StandardHand(Hand): #
     def sumValues(self): #
         total = 0 #
         aces_appears = False 
-        for card in self.getCards(): #
-            if card.getFace(): #
-                value = card.getValue() #
+        for card in self.cards: #
+            if card.faceUp: #
+                value = card.value #
                 if value in ('jack', 'queen', 'king'): #
                     total += 10 #
                 elif value == 'ace': #
@@ -49,7 +64,7 @@ class StandardHand(Hand): #
             total += 10 #
         return total #
 
-class StandardPlayer(Player, StandardHand): # Corrected name from StardardPlayer
+class StandardPlayer(Player, StandardHand):
     def __init__(self, name, points=1000):
-        Player.__init__(self, name, points) # CORRECTED: Called the Player initializer
-        StandardHand.__init__(self) # CORRECTED: Called the superclass initializer
+        Player.__init__(self, name, points) 
+        StandardHand.__init__(self) 

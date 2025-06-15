@@ -1,5 +1,6 @@
-from .deck import Card, Deck, Hand, Player
 import random
+
+from .deck import Card, Deck, Hand, Player
 
 # CORRECTED: Removed the first, incomplete definition of UnoCard
 class UnoCard(Card):
@@ -8,13 +9,20 @@ class UnoCard(Card):
         self.__value = value
         self.__color = color
 
-    def getColor(self):
+    @property
+    def color(self):
         return self.__color
-        
-    def getValue(self):
+    
+    @property
+    def value(self):
         return self.__value
-        
-    def setColor(self, color:str):
+    
+    @value.setter
+    def value(self, value):
+        self.__value = value
+
+    @color.setter
+    def color(self, color:str):
         if color in ('red', 'yellow', 'green', 'blue', '') and self.__value in ('wild', '+4'):
             self.__color = color
             if color == '':
@@ -24,28 +32,34 @@ class UnoCard(Card):
             #TODO:Ver se essa forma está certa ou é melhor fazer um setSprite()
     
     def match(self, card):
-        if self.__color == '' or card.getColor() == '':
+        if self.__color == '' or card.color == '':
             return True
-        return self.__color == card.getColor() or self.__value == card.getValue()
+        return self.__color == card.color or self.__value == card.value
 
+    #SOBRECARGA DE OPERADOR
     def __str__(self):
-        if self.getFace():
+        if self._Card__faceUp:
             return f'{self.__color} {self.__value}' if self.__color else f'{self.__value}'
         else:
             return 'Face Down'
 
-# ... (rest of the file is the same)
 class UnoDeck(Deck):
+    def __init__(self):
+        super().__init__()
+
     def createDeck(self):
         colors = ['red', 'yellow', 'green', 'blue']
         values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+2', 'block', 'reverse']
+
         for color in colors:
             for value in values:
                 self.add(UnoCard(value=value, color=color, frontSprite=f'{color}_{value}', backSprite='back'))
                 if value != '0':
                     self.add(UnoCard(value=value, color=color, frontSprite=f'{color}_{value}', backSprite='back'))
+
         for i in range(4):
             self.add(UnoCard(value='wild', frontSprite='wild', backSprite='back'))
+
         for i in range(4):
             self.add(UnoCard(value='+4', frontSprite='+4', backSprite='back'))
 
@@ -55,21 +69,22 @@ class UnoHand(Hand):
 
     def sumValues(self):
         total = 0
-        for card in self.getCards():
-            if card.getValue() in ('+2', 'block', 'reverse'):
+        for card in self.cards:
+            if card.value in ('+2', 'block', 'reverse'):
                 total += 20
-            elif card.getValue() in ('+4', 'wild'):
+            elif card.value in ('+4', 'wild'):
                 total += 50
             else:
-                total += int(card.getValue())
+                total += int(card.value)
         return total
 
     def sort(self):
-        self.getCards().sort(key=lambda card: (card.getColor(), card.getValue()))
+        self.cards.sort(key=lambda card: (card.color, card.value))
 
 class UnoPlayer(Player, UnoHand):
     def __init__(self, name, points = 0):
-        super().__init__(name, points)
+        Player.__init__(self, name, points)
+        UnoHand.__init__(self)
 
 class UnoPlayers:
     def __init__(self, playerName):
@@ -77,8 +92,10 @@ class UnoPlayers:
         self.__players = [UnoPlayer(name) for name in playersNames]
         self.__turn = 0
         self.__rotation = 1
+        self.__already_buy = False
 
-    def getTurn(self):
+    @property
+    def turn(self):
         return self.__turn
 
     def clear(self):
@@ -87,20 +104,46 @@ class UnoPlayers:
         for player in self.__players:
             player.clear()
     
-    def getNextTurn(self):
-        return (self.__turn + self.__rotation) % len(self.__players)
+    @property
+    def rotation(self):
+        return self.__rotation
+
+    @property
+    def players(self):
+        return self.__players
+    
+    @property
+    def already_buy(self):
+        return self.__already_buy
+
+    @turn.setter
+    def turn(self, turn):
+        self.__turn = turn
+    
+    @rotation.setter
+    def rotation(self, rotation):
+        self.__rotation = rotation
+
+    @already_buy.setter
+    def already_buy(self, already_buy):
+        self.__already_buy = already_buy
+    
+    @players.setter
+    def players(self, players):
+        self.__players = players
+
+    def flipRotation(self):
+        self.__rotation *= -1    
     
     def setNextTurn(self):
         self.__turn = (self.__turn + self.__rotation) % len(self.__players)
-    
-    def getRotation(self):
-        return self.__rotation
 
-    def flipRotation(self):
-        self.__rotation *= -1
-
-    def getPlayers(self):
-        return self.__players
+    def clear(self):
+        self.__turn = 0
+        self.__rotation = 1
+        self.__already_buy = False
+        for player in self.__players:
+            player.clear()
     
     def getCurrentPlayer(self):
         return self.__players[self.__turn]
@@ -108,8 +151,12 @@ class UnoPlayers:
     def getNextPlayer(self):
         return self.__players[self.getNextTurn()]
     
+    def getNextTurn(self):
+        return (self.__turn + self.__rotation) % len(self.__players)
+    
     def getHumanPlayer(self):
         return self.__players[0]
     
+    #SOBRECARGA DE OPERADOR
     def __getitem__(self, index):
         return self.__players[index]
