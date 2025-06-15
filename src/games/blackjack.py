@@ -46,7 +46,7 @@ class BlackjackGame:
         self.__player = player
     
     @table.setter
-    def player(self, table):
+    def table(self, table):
         self.__table = table
     
     @gameDeck.setter
@@ -66,6 +66,8 @@ class BlackjackGame:
         self.__result = result
 
     def setBetAmount(self):
+        print(self.__betAmount)
+        
         if self.__betAmount < 10 or self.__betAmount > self.__player.points:
             self.__state = "BET"
         else:
@@ -136,17 +138,17 @@ class BlackjackGame:
             self.__result = "Player Busts! Dealer Wins." #
         elif dealer_score > 21: #
             self.__result = "Dealer Busts! Player Wins." #
-            self.__player.addPoints(self.__bet_amount * 2) # Return bet + winnings #
+            self.__player.addPoints(self.__betAmount * 2) # Return bet + winnings #
         elif player_score > dealer_score: #
             self.__result = "Player Wins!" #
-            self.__player.addPoints(self.__bet_amount * 2) #
+            self.__player.addPoints(self.__betAmount * 2) #
         elif dealer_score > player_score: #
             self.__result = "Dealer Wins." #
         else: # Push #
             self.__result = "Push (Draw)." #
-            self.__player.addPoints(self.__bet_amount) # Return original bet #
+            self.__player.addPoints(self.__betAmount) # Return original bet #
         
-        self.__bet_amount = 0
+        self.__betAmount = 0
         self.__state = "ROUND_OVER" #
 
     def get_player_data(self): #

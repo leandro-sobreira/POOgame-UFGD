@@ -34,7 +34,6 @@ class UnoCard(Card):
     def match(self, card):
         if self.__color == '' or card.color == '':
             return True
-        
         return self.__color == card.color or self.__value == card.value
 
     #SOBRECARGA DE OPERADOR
@@ -123,6 +122,12 @@ class UnoPlayers:
     
     def setNextTurn(self):
         self.__turn = (self.__turn + self.__rotation) % len(self.__players)
+
+    def clear(self):
+        self.__turn = 0
+        self.__rotation = 1
+        for player in self.__players:
+            player.clear()
     
     def getCurrentPlayer(self):
         return self.__players[self.__turn]

@@ -29,6 +29,7 @@ class Screen(ABC): #
         self.select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_02.ogg")) #
         self.ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_01.ogg")) #
         self.reset_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "reset.ogg")) #
+        self.flip_card = pygame.mixer.Sound(os.path.join(st.sound_folder, "flipcard.ogg"))
 
     def set_background(self, image_path): #
         """Sets and scales the background image.""" #
@@ -139,8 +140,8 @@ class MenuScreen(Screen): #
         self.buttons = [ #
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 200), "Start", "GAME_SELECT"), #
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 150), "Erase Data", "ERASE_DATA"), #
-            Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Config", "CONFIG"), #
-            Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 50), "Quit", "QUIT") #
+            #Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Config", "CONFIG"), #
+            Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Quit", "QUIT") #
         ]
         self.selected_index = 0 #
         self.all_sprites = pygame.sprite.Group(self.buttons) #
@@ -230,12 +231,12 @@ class BlackjackScreen(Screen): #
         self.font = pygame.font.Font(st.text_font, 24) #
         self.card_sprites = pygame.sprite.Group() #
         self.load_card_images() #
-        self.prompt_text = "Digite o valor da aposta:"
+        self.prompt_text = "Enter the bet amount, or press X to exit"
         self.input_value = ''
         self.amount = 0
         self.font = pygame.font.Font(st.text_font, 32)
         self.done = False
-        self.__box_width = 400
+        self.__box_width = 700
         self.__box_height = 150
 
         self.__box_rect = pygame.Rect((st.SCREEN_WIDTH - self.__box_width) // 2,(st.SCREEN_HEIGHT - self.__box_height) // 2,self.__box_width, self.__box_height )
@@ -243,7 +244,7 @@ class BlackjackScreen(Screen): #
     def load_card_images(self): #
         """Pre-loads all card images into a dictionary for quick access.""" #
         self.card_images = {} #
-        cards_path = os.path.join(st.img_folder, "games/blackjack/cards") #
+        cards_path = os.path.join(self.__assets_folder, "cards") # 
         for filename in os.listdir(cards_path): #
             if filename.endswith(".png"): #
                 key = filename.replace(".png", "") # e.g., "king_of_spade" #
@@ -251,15 +252,28 @@ class BlackjackScreen(Screen): #
                 self.card_images[key] = pygame.transform.scale(image, (70 * st.SCALE, 98 * st.SCALE)) #
 
     def handle_event(self, event): #
+        
+        
 
         if self.game.state == "BET":
             if event.type == pygame.KEYDOWN:
-                if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER] and self.input_value != '':
+                #if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER] and self.input_value != '':
+                
+
+                if event.key == pygame.K_RETURN and self.input_value != "":
+                    print("ENTREI")
+                    
+
                     self.amount = int(self.input_value)
-                    self.game.bet_amount = self.amount
+                    
+                    self.game.betAmount = self.amount
+                    #print("recebi", self.game.bet_amount)
                     self.game.state = "PLAYER_TURN"
                 elif event.key == pygame.K_BACKSPACE:
                     self.input_value = self.input_value[:-1]
+                elif event.key == pygame.K_x:
+                    self.next_screen = "MENU"
+
                 elif event.unicode.isdigit():
                     self.input_value += event.unicode
                     
@@ -268,8 +282,9 @@ class BlackjackScreen(Screen): #
         elif self.game.state == "PLAYER_TURN": #
             if event.type == pygame.KEYDOWN: #
                 if event.key in (pygame.K_z, pygame.K_h): # 'Z' or 'H' to Hit #
-                    self.ok_sound.play() #
+                    self.flip_card.play() #
                     self.game.player_hit() #
+
                 elif event.key in (pygame.K_x, pygame.K_s): # 'X' or 'S' to Stand #
                     self.ok_sound.play() #
                     self.game.player_stand() #
@@ -297,9 +312,9 @@ class BlackjackScreen(Screen): #
     def sync_sprites_with_model(self): #
         pass
 
-
+        
     def update(self): #
-        """Updates the card sprites on screen to match the game model.""" #
+        #Updates the card sprites on screen to match the game model. #
         self.card_sprites.empty() #
         # Sync dealer's hand #
         for i, card in enumerate(self.game.table.cards): #
@@ -307,11 +322,12 @@ class BlackjackScreen(Screen): #
             image_key = card.sprite
             self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
         # Sync player's hand #
+            
         for i, card in enumerate(self.game.player.cards): #
             pos = ((st.SCREEN_WIDTH/2 - (len(self.game.player.cards)*20)/2 + i * 20)*st.SCALE, (st.SCREEN_HEIGHT*6/8 +i*15)*st.SCALE) #
-            image_key = card.sprite #
+            image_key = card.sprite
+            self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) 
 
-            self.card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
 
     def draw(self): #
         self.screen.blit(self._background, (0, 0)) #
@@ -368,7 +384,6 @@ class UnoScreen(Screen):
         self.set_background(os.path.join(self.__assets_folder, "mesa.png"))
         self.__selected_card = 0
         self.__selected_color = 0
-        self.__selected_action = 0
         self.__card_sprites = pygame.sprite.Group() 
         self.__action_timer = 0 # Timer for timed actions
         self.__current_action_phase = None # To manage multi-step timed actions
@@ -483,24 +498,10 @@ class UnoScreen(Screen):
             for i, button in enumerate(color_buttons):
                 button.set_selected(i == self.__selected_color)
             color_sprite_group = pygame.sprite.Group(color_buttons)
-            self.__game.disc_deck.topCard().color(colors[self.__selected_color])
+            self.__game.disc_deck.topCard().color = colors[self.__selected_color]
             color_sprite_group.update()
             color_sprite_group.draw(self.screen)
-            self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
-        
-        elif self.__game.state == "PLAY_DRAW_CARD":
-            buttons = [
-                Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Yes", "yes", 30),
-                Button((st.SCREEN_WIDTH/2 + 150, st.SCREEN_HEIGHT/2+100), "No", "no", 30)
-            ]
-            for i, button in enumerate(buttons):
-                button.set_selected(i == self.__selected_action)
-            action_sprite_group = pygame.sprite.Group(buttons)
-            action_sprite_group.update()
-            action_sprite_group.draw(self.screen)
-            self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
-            
-            #draw_text_with_outline(self.screen, "Do you want to play this card?", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-50)) 
+            self.draw_text_with_outline(self.screen, "You want to play the drew card?", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
             
 
     def update(self):
@@ -556,7 +557,8 @@ class UnoScreen(Screen):
                     self.__selected_card = ((self.__selected_card + 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_z, pygame.K_RETURN):
                     if self.__selected_card >= 0:
-                        self.__game.player_play_card(self.__selected_card)    
+                        self.__game.player_play_card(self.__selected_card) 
+                        self.flip_card.play()
                     elif self.__selected_card == -1:
                         self.__game.human_draw_card()
                     if self.__game.players.getHumanPlayer().size() > 0:
@@ -580,18 +582,6 @@ class UnoScreen(Screen):
                     self.__selected_color = (self.__selected_color - 1) % len(colors) #
                 elif event.key in (pygame.K_z, pygame.K_RETURN): #
                     self.__game.human_select_color(colors[self.__selected_color])       
-
-        elif current_game_state == "PLAY_DRAW_CARD":
-            buttons = ['Yes', 'No']
-
-            if event.key in (pygame.K_RIGHT, pygame.K_d): #
-                self.select_sound.play() #
-                self.__selected_action = (self.__selected_action + 1) % len(buttons) #
-            elif event.key in (pygame.K_LEFT, pygame.K_a): #
-                self.select_sound.play() #
-                self.__selected_action = (self.__selected_action - 1) % len(buttons) #
-            elif event.key in (pygame.K_z, pygame.K_RETURN): #
-                self.__game.human_select_color(buttons[self.__selected_action])
 
         # BOT_TURN and ROUND_OVER logic is now handled in update() for timed delays
 

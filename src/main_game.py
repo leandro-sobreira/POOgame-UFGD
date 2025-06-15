@@ -111,6 +111,7 @@ class Game():
 
             elif next_screen_key == "BLACKJACK":
             #while True
+                
 
                 """current_screen = it.BetAmountScreen(screen:screen)
                 amount = it.BetAmountScreen.getAmount()"""
@@ -119,8 +120,10 @@ class Game():
 
                 # 1. Instantiate the game (Model)
                 blackjack_instance = blackjack.BlackjackGame(current_player_data)
+                
                 # 2. Instantiate the game screen (View) and pass the model to it
                 current_screen = it.BlackjackScreen(self.__screen, blackjack_instance)
+                
 
             elif next_screen_key == "UNO":
                 uno_instance = uno.UnoGame(current_player_data)
