@@ -448,7 +448,7 @@ class UnoScreen(Screen):
         image_key = self.__game.buy_deck.topCard().sprite
         for i in range(-1,int(self.__game.buy_deck.size()/5)):
             pos = (st.SCREEN_WIDTH*7/10+i*2, st.SCREEN_HEIGHT*2/5+i)
-            if i == int(self.__game.buy_deck.size()/5)-1 and self.__selected_card == -1:
+            if i == int(self.__game.buy_deck.size()/5)-1 and self.__selected_card == -1 and not self.__game.players.already_buy:
                 pos = (st.SCREEN_WIDTH*7/10+i*2, st.SCREEN_HEIGHT*2/5+i+30)
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) #
             
@@ -486,8 +486,14 @@ class UnoScreen(Screen):
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
             self.screen.blit(rotation_image, rect)
 
+        if self.__game.state == "PLAYER_TURN":
+            text_color = st.WHITE
+            if self.__game.players.already_buy:
+                if self.__selected_card == -1:
+                    text_color = st.GREEN
+                self.draw_text_with_outline(self.screen, "Skip", pygame.font.Font(st.button_font, 20), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*5/8), text_color, st.BLACK)
 
-        if self.__game.state == "PLAYER_SELEC_COLOR":
+        elif self.__game.state == "PLAYER_SELEC_COLOR":
             colors = ['red','yellow','green','blue']
             color_buttons = [
                 Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Red", "red", 30),
@@ -511,7 +517,7 @@ class UnoScreen(Screen):
             if self.__current_action_phase is None:
                 # Bot's turn begins, set a timer for "thinking"
                 self.__current_action_phase = "bot_thinking"
-                self.__action_timer = pygame.time.get_ticks() + 1000 # 1-second delay
+                self.__action_timer = pygame.time.get_ticks() + 1500 # 1.5-second delay
             elif self.__current_action_phase == "bot_thinking":
                 if pygame.time.get_ticks() >= self.__action_timer:
                     self.__game.bot_play() # Bot performs its action
@@ -560,9 +566,11 @@ class UnoScreen(Screen):
                         self.__game.player_play_card(self.__selected_card) 
                         self.flip_card.play()
                     elif self.__selected_card == -1:
-                        self.__game.human_draw_card()
-                    if self.__game.players.getHumanPlayer().size() > 0:
-                        self.__selected_card = ((self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size()))
+                        if not self.__game.players.already_buy:
+                            self.__selected_card = self.__game.player_draw_card(self.__game.players.getHumanPlayer())
+                            self.__game.players.getHumanPlayer().sort
+                        else:
+                            self.__game.next_turn()
 
                 if self.__selected_card >= self.__game.players.getHumanPlayer().size():
                     self.__selected_card = -1

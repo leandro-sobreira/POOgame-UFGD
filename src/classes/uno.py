@@ -92,6 +92,7 @@ class UnoPlayers:
         self.__players = [UnoPlayer(name) for name in playersNames]
         self.__turn = 0
         self.__rotation = 1
+        self.__already_buy = False
 
     @property
     def turn(self):
@@ -104,6 +105,10 @@ class UnoPlayers:
     @property
     def players(self):
         return self.__players
+    
+    @property
+    def already_buy(self):
+        return self.__already_buy
 
     @turn.setter
     def turn(self, turn):
@@ -112,6 +117,10 @@ class UnoPlayers:
     @rotation.setter
     def rotation(self, rotation):
         self.__rotation = rotation
+
+    @already_buy.setter
+    def already_buy(self, already_buy):
+        self.__already_buy = already_buy
     
     @players.setter
     def players(self, players):
@@ -126,6 +135,7 @@ class UnoPlayers:
     def clear(self):
         self.__turn = 0
         self.__rotation = 1
+        self.__already_buy = False
         for player in self.__players:
             player.clear()
     
