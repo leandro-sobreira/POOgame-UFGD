@@ -662,18 +662,6 @@ class BlackjackScreen(Screen):
                     self._Screen__ok_sound.play() 
                     self.__game.player_stand() 
         
-            """elif self.__game.state == "ROUND_OVER": 
-                if event.type == pygame.KEYDOWN: 
-                    if event.key in (pygame.K_z, pygame.K_RETURN): 
-                        # Decide whether to start a new round or exit 
-                        if self.__game.player.points >= 10: 
-                            self.__game.state = "BET"
-                            #self.__game.setBetAmount() # Play again 
-                        else:
-                            self.__next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu 
-                    elif event.key in (pygame.K_x, pygame.K_ESCAPE):
-                        self.__next_screen = "MENU" """
-        
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
 

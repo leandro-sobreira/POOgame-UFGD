@@ -58,22 +58,15 @@ The project follows the Model-View-Controller pattern to promote a clean separat
 
 ---
 
-## 🔮 Future Improvements
-
--   [ ] Implement a "Settings" screen to adjust audio volume.
--   [ ] Add more casino games (e.g., Poker).
--   [ ] Refactor timed events (like bot turns) out of the View layer to better adhere to MVC principles.
--   [ ] Create a centralized resource manager to load all assets (images, sounds) once at startup.
-
 ## Documentação
 
-- Para acessar a documentação, siga o caminho a partir da pasta root do projeto: '''cd docs/_build/html/index.html''' e acesse para obter maiores detalhes do projeto 
+- To get more information about the project, acess the documentation in ```cd docs/_build/html/index.html``` 
 ---
 
 ## 🧑‍💻 Authors
 
 Developed with dedication by:
-- **Eduardo Rizzi**
+- **Abner Lucas Pereira Cardoso Vera**
+- **Eduardo Rodrigues Rizzi**
 - **Leandro Peres Sobreira**
 - **Marcos Henrique Almeida Lima**
-- **Abner Lucas Pereira Cardoso Vera**
