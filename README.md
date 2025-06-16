@@ -67,8 +67,7 @@ The project follows the Model-View-Controller pattern to promote a clean separat
 
 ## Documentação
 
-- [teste](docs/_build/html/index.html)
-
+- Para acessar a documentação, siga o caminho a partir da pasta root do projeto: '''cd docs/_build/html/index.html''' e acesse para obter maiores detalhes do projeto 
 ---
 
 ## 🧑‍💻 Authors
