@@ -7,3 +7,4 @@ classes
    deck
    standard
    uno
+   uno_game

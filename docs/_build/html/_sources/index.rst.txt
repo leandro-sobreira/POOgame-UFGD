@@ -20,7 +20,6 @@ Welcome to POO Game Cassino UFGD (Grupo LEMA)'s documentation!
    
    database_manager
 
-
 Indices and tables
 ==================
 

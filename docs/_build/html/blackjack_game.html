@@ -19,7 +19,9 @@
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main_game module" href="main_game.html" />
+    <link rel="prev" title="uno_game module" href="uno_game.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,9 +40,34 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="modules.html">classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules1.html">games</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules1.html">games</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="uno_game.html">uno_game module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">blackjack_game module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame"><code class="docutils literal notranslate"><span class="pre">BlackjackGame</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.betAmount"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.betAmount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.gameDeck"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.gameDeck</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.get_player_data"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.get_player_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.give_start_cards"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.give_start_cards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.player"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.player</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.player_hit"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.player_hit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.player_stand"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.player_stand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.result"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.result</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.setBetAmount"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.setBetAmount()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.start_round"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.start_round()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.state"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.state</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.table"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.games.blackjack_game.BlackjackGame.win_value"><code class="docutils literal notranslate"><span class="pre">BlackjackGame.win_value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main_game.html">main_game module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">interface module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_manager.html">database_manager</a></li>
 </ul>
 
         </div>
@@ -57,6 +84,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules1.html">games</a> &raquo;</li>
       <li>blackjack_game module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/blackjack_game.rst.txt" rel="nofollow"> View page source</a>
@@ -67,11 +95,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="blackjack-game-module">
-<h1>blackjack_game module<a class="headerlink" href="#blackjack-game-module" title="Permalink to this heading"></a></h1>
-<span class="target" id="module-src.games.blackjack_game"></span><dl class="py class">
+  <section id="module-src.games.blackjack_game">
+<span id="blackjack-game-module"></span><h1>blackjack_game module<a class="headerlink" href="#module-src.games.blackjack_game" title="Permalink to this heading"></a></h1>
+<dl class="py class">
 <dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.games.blackjack_game.</span></span><span class="sig-name descname"><span class="pre">BlackjackGame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.games.blackjack_game.</span></span><span class="sig-name descname"><span class="pre">BlackjackGame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Classe BlackjackGame feita para ser uma mesa de jogo conforme as regras de um
 jogo de BlackJack clássico (ou 21), junto das ações e funções necessárias</p>
@@ -277,6 +305,11 @@ os atributos utilizados plea classe BlackjackGame e começar um novo jogo</p>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="src.games.blackjack_game.BlackjackGame.win_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">win_value</span></span><a class="headerlink" href="#src.games.blackjack_game.BlackjackGame.win_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -284,7 +317,10 @@ os atributos utilizados plea classe BlackjackGame e começar um novo jogo</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uno_game.html" class="btn btn-neutral float-left" title="uno_game module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="main_game.html" class="btn btn-neutral float-right" title="main_game module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

@@ -20,6 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="database_manager" href="database_manager.html" />
     <link rel="prev" title="main_game module" href="main_game.html" /> 
 </head>
 
@@ -45,64 +46,130 @@
 <li class="toctree-l1"><a class="reference internal" href="main_game.html">main_game module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">interface module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.BlackjackScreen"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.amount"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.amount</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.assets_folder"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.assets_folder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.card_sprites"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.card_sprites</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.current_action_phase"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.current_action_phase</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.draw"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.draw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.font"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.font</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.game"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.game</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.get_player_data"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.get_player_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.handle_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.input_value"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.input_value</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.load_card_images"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.load_card_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.selected_opc"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.selected_opc</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.sync_sprites_with_model"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.sync_sprites_with_model()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.BlackjackScreen.update"><code class="docutils literal notranslate"><span class="pre">BlackjackScreen.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.Button"><code class="docutils literal notranslate"><span class="pre">Button</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.action"><code class="docutils literal notranslate"><span class="pre">Button.action</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.colors"><code class="docutils literal notranslate"><span class="pre">Button.colors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.font"><code class="docutils literal notranslate"><span class="pre">Button.font</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.image"><code class="docutils literal notranslate"><span class="pre">Button.image</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.is_selected"><code class="docutils literal notranslate"><span class="pre">Button.is_selected</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.message"><code class="docutils literal notranslate"><span class="pre">Button.message</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.rect"><code class="docutils literal notranslate"><span class="pre">Button.rect</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.set_selected"><code class="docutils literal notranslate"><span class="pre">Button.set_selected()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Button.update"><code class="docutils literal notranslate"><span class="pre">Button.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#src.interface.CardSprite"><code class="docutils literal notranslate"><span class="pre">CardSprite</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src.interface.CardSprite"><code class="docutils literal notranslate"><span class="pre">CardSprite</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.CardSprite.image"><code class="docutils literal notranslate"><span class="pre">CardSprite.image</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.CardSprite.rect"><code class="docutils literal notranslate"><span class="pre">CardSprite.rect</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.GameSelectScreen"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.all_sprites"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.all_sprites</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.buttons"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.buttons</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.draw"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.draw()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.handle_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.selected_index"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.selected_index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.title_font"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.title_font</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.GameSelectScreen.update"><code class="docutils literal notranslate"><span class="pre">GameSelectScreen.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.MenuScreen"><code class="docutils literal notranslate"><span class="pre">MenuScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.all_sprites"><code class="docutils literal notranslate"><span class="pre">MenuScreen.all_sprites</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.buttons"><code class="docutils literal notranslate"><span class="pre">MenuScreen.buttons</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.draw"><code class="docutils literal notranslate"><span class="pre">MenuScreen.draw()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">MenuScreen.handle_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.selected_index"><code class="docutils literal notranslate"><span class="pre">MenuScreen.selected_index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.title_font"><code class="docutils literal notranslate"><span class="pre">MenuScreen.title_font</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.MenuScreen.update"><code class="docutils literal notranslate"><span class="pre">MenuScreen.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.NotificationScreen"><code class="docutils literal notranslate"><span class="pre">NotificationScreen</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.draw"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.draw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.entry_time"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.entry_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.font"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.font</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.handle_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.message"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.message</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.next_screen_key"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.next_screen_key</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.NotificationScreen.update"><code class="docutils literal notranslate"><span class="pre">NotificationScreen.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.PlayerNameScreen"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.PlayerNameScreen.draw"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen.draw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.PlayerNameScreen.font"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen.font</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.PlayerNameScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen.handle_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.PlayerNameScreen.input_font"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen.input_font</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.PlayerNameScreen.prompt_text"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen.prompt_text</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.PlayerNameScreen.update"><code class="docutils literal notranslate"><span class="pre">PlayerNameScreen.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#src.interface.ScoresScreen"><code class="docutils literal notranslate"><span class="pre">ScoresScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.available_games"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.available_games</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.draw"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.draw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.game_scores"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.game_scores</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.handle_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.page"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.page</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.scroll_offset"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.scroll_offset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.selected_game_index"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.selected_game_index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.text_font"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.text_font</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.title_font"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.title_font</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.update"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.ScoresScreen.visible_rows"><code class="docutils literal notranslate"><span class="pre">ScoresScreen.visible_rows</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.Screen"><code class="docutils literal notranslate"><span class="pre">Screen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.background"><code class="docutils literal notranslate"><span class="pre">Screen.background</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.draw"><code class="docutils literal notranslate"><span class="pre">Screen.draw()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.draw_text_with_outline"><code class="docutils literal notranslate"><span class="pre">Screen.draw_text_with_outline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.flip_card"><code class="docutils literal notranslate"><span class="pre">Screen.flip_card</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.handle_event"><code class="docutils literal notranslate"><span class="pre">Screen.handle_event()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.loop"><code class="docutils literal notranslate"><span class="pre">Screen.loop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.next_screen"><code class="docutils literal notranslate"><span class="pre">Screen.next_screen</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.ok_sound"><code class="docutils literal notranslate"><span class="pre">Screen.ok_sound</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.player_name"><code class="docutils literal notranslate"><span class="pre">Screen.player_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.reset_sound"><code class="docutils literal notranslate"><span class="pre">Screen.reset_sound</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.screen"><code class="docutils literal notranslate"><span class="pre">Screen.screen</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.select_sound"><code class="docutils literal notranslate"><span class="pre">Screen.select_sound</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.set_background"><code class="docutils literal notranslate"><span class="pre">Screen.set_background()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.set_music"><code class="docutils literal notranslate"><span class="pre">Screen.set_music()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.Screen.update"><code class="docutils literal notranslate"><span class="pre">Screen.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#src.interface.UnoScreen"><code class="docutils literal notranslate"><span class="pre">UnoScreen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.action_timer"><code class="docutils literal notranslate"><span class="pre">UnoScreen.action_timer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.assets_folder"><code class="docutils literal notranslate"><span class="pre">UnoScreen.assets_folder</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.card_position"><code class="docutils literal notranslate"><span class="pre">UnoScreen.card_position()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.card_sprites"><code class="docutils literal notranslate"><span class="pre">UnoScreen.card_sprites</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.current_action_phase"><code class="docutils literal notranslate"><span class="pre">UnoScreen.current_action_phase</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.draw"><code class="docutils literal notranslate"><span class="pre">UnoScreen.draw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.game"><code class="docutils literal notranslate"><span class="pre">UnoScreen.game</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.handle_event"><code class="docutils literal notranslate"><span class="pre">UnoScreen.handle_event()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.load_card_images"><code class="docutils literal notranslate"><span class="pre">UnoScreen.load_card_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.selected_card"><code class="docutils literal notranslate"><span class="pre">UnoScreen.selected_card</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.selected_color"><code class="docutils literal notranslate"><span class="pre">UnoScreen.selected_color</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.selected_opc"><code class="docutils literal notranslate"><span class="pre">UnoScreen.selected_opc</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.sync_sprites_with_model"><code class="docutils literal notranslate"><span class="pre">UnoScreen.sync_sprites_with_model()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.interface.UnoScreen.update"><code class="docutils literal notranslate"><span class="pre">UnoScreen.update()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="database_manager.html">database_manager</a></li>
 </ul>
 
         </div>
@@ -136,11 +203,41 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">BlackjackScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.BlackjackScreen" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#src.interface.Screen" title="src.interface.Screen"><code class="xref py py-class docutils literal notranslate"><span class="pre">Screen</span></code></a></p>
 <p>The View for the Blackjack game. It only draws what the Model tells it to.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.amount">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">amount</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.amount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.assets_folder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assets_folder</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.assets_folder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.card_sprites">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">card_sprites</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.card_sprites" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.current_action_phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_action_phase</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.current_action_phase" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.BlackjackScreen.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.BlackjackScreen.draw" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract method to draw the screen’s elements.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">font</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.game">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">game</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.game" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.BlackjackScreen.get_player_data">
@@ -154,11 +251,21 @@
 <dd><p>Abstract method to handle screen-specific events.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.input_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_value</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.input_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.BlackjackScreen.load_card_images">
 <span class="sig-name descname"><span class="pre">load_card_images</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.BlackjackScreen.load_card_images" title="Permalink to this definition"></a></dt>
 <dd><p>Pre-loads all card images into a dictionary for quick access.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.BlackjackScreen.selected_opc">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_opc</span></span><a class="headerlink" href="#src.interface.BlackjackScreen.selected_opc" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.BlackjackScreen.sync_sprites_with_model">
@@ -177,6 +284,41 @@
 <dt class="sig sig-object py" id="src.interface.Button">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">Button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.Button" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.action">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#src.interface.Button.action" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.colors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colors</span></span><a class="headerlink" href="#src.interface.Button.colors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">font</span></span><a class="headerlink" href="#src.interface.Button.font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.image">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">image</span></span><a class="headerlink" href="#src.interface.Button.image" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.is_selected">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_selected</span></span><a class="headerlink" href="#src.interface.Button.is_selected" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.message">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">message</span></span><a class="headerlink" href="#src.interface.Button.message" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Button.rect">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rect</span></span><a class="headerlink" href="#src.interface.Button.rect" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.Button.set_selected">
 <span class="sig-name descname"><span class="pre">set_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_selected</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.Button.set_selected" title="Permalink to this definition"></a></dt>
@@ -200,12 +342,32 @@ method by the same name in the Group class.</p>
 <dt class="sig sig-object py" id="src.interface.CardSprite">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">CardSprite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.CardSprite" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.CardSprite.image">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">image</span></span><a class="headerlink" href="#src.interface.CardSprite.image" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.CardSprite.rect">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rect</span></span><a class="headerlink" href="#src.interface.CardSprite.rect" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="src.interface.GameSelectScreen">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">GameSelectScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.GameSelectScreen" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">GameSelectScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.GameSelectScreen" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#src.interface.Screen" title="src.interface.Screen"><code class="xref py py-class docutils literal notranslate"><span class="pre">Screen</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.GameSelectScreen.all_sprites">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_sprites</span></span><a class="headerlink" href="#src.interface.GameSelectScreen.all_sprites" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.GameSelectScreen.buttons">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buttons</span></span><a class="headerlink" href="#src.interface.GameSelectScreen.buttons" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.GameSelectScreen.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.GameSelectScreen.draw" title="Permalink to this definition"></a></dt>
@@ -218,6 +380,16 @@ method by the same name in the Group class.</p>
 <dd><p>Abstract method to handle screen-specific events.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.GameSelectScreen.selected_index">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_index</span></span><a class="headerlink" href="#src.interface.GameSelectScreen.selected_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.GameSelectScreen.title_font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">title_font</span></span><a class="headerlink" href="#src.interface.GameSelectScreen.title_font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.GameSelectScreen.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.GameSelectScreen.update" title="Permalink to this definition"></a></dt>
@@ -228,8 +400,18 @@ method by the same name in the Group class.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="src.interface.MenuScreen">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">MenuScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.MenuScreen" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">MenuScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.MenuScreen" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#src.interface.Screen" title="src.interface.Screen"><code class="xref py py-class docutils literal notranslate"><span class="pre">Screen</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.MenuScreen.all_sprites">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_sprites</span></span><a class="headerlink" href="#src.interface.MenuScreen.all_sprites" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.MenuScreen.buttons">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">buttons</span></span><a class="headerlink" href="#src.interface.MenuScreen.buttons" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.MenuScreen.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.MenuScreen.draw" title="Permalink to this definition"></a></dt>
@@ -241,6 +423,16 @@ method by the same name in the Group class.</p>
 <span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.MenuScreen.handle_event" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract method to handle screen-specific events.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.MenuScreen.selected_index">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_index</span></span><a class="headerlink" href="#src.interface.MenuScreen.selected_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.MenuScreen.title_font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">title_font</span></span><a class="headerlink" href="#src.interface.MenuScreen.title_font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.MenuScreen.update">
@@ -261,10 +453,36 @@ method by the same name in the Group class.</p>
 <dd><p>Abstract method to draw the screen’s elements.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.NotificationScreen.entry_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entry_time</span></span><a class="headerlink" href="#src.interface.NotificationScreen.entry_time" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.NotificationScreen.font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">font</span></span><a class="headerlink" href="#src.interface.NotificationScreen.font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.NotificationScreen.handle_event">
 <span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.NotificationScreen.handle_event" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract method to handle screen-specific events.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.NotificationScreen.message">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">message</span></span><a class="headerlink" href="#src.interface.NotificationScreen.message" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.NotificationScreen.next_screen_key">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_screen_key</span></span><a class="headerlink" href="#src.interface.NotificationScreen.next_screen_key" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.interface.NotificationScreen.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.NotificationScreen.update" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract method for per-frame logic updates.</p>
 </dd></dl>
 
 </dd></dl>
@@ -279,11 +497,26 @@ method by the same name in the Group class.</p>
 <dd><p>Abstract method to draw the screen’s elements.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.PlayerNameScreen.font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">font</span></span><a class="headerlink" href="#src.interface.PlayerNameScreen.font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.PlayerNameScreen.handle_event">
 <span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.PlayerNameScreen.handle_event" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract method to handle screen-specific events.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.PlayerNameScreen.input_font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_font</span></span><a class="headerlink" href="#src.interface.PlayerNameScreen.input_font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.PlayerNameScreen.prompt_text">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prompt_text</span></span><a class="headerlink" href="#src.interface.PlayerNameScreen.prompt_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.PlayerNameScreen.update">
@@ -294,11 +527,78 @@ method by the same name in the Group class.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">ScoresScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.ScoresScreen" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.interface.Screen" title="src.interface.Screen"><code class="xref py py-class docutils literal notranslate"><span class="pre">Screen</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.available_games">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_games</span></span><a class="headerlink" href="#src.interface.ScoresScreen.available_games" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.ScoresScreen.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract method to draw the screen’s elements.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.game_scores">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">game_scores</span></span><a class="headerlink" href="#src.interface.ScoresScreen.game_scores" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.handle_event">
+<span class="sig-name descname"><span class="pre">handle_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.ScoresScreen.handle_event" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract method to handle screen-specific events.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.page">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">page</span></span><a class="headerlink" href="#src.interface.ScoresScreen.page" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.scroll_offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scroll_offset</span></span><a class="headerlink" href="#src.interface.ScoresScreen.scroll_offset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.selected_game_index">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_game_index</span></span><a class="headerlink" href="#src.interface.ScoresScreen.selected_game_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.text_font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text_font</span></span><a class="headerlink" href="#src.interface.ScoresScreen.text_font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.title_font">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">title_font</span></span><a class="headerlink" href="#src.interface.ScoresScreen.title_font" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.ScoresScreen.update" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract method for per-frame logic updates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.ScoresScreen.visible_rows">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">visible_rows</span></span><a class="headerlink" href="#src.interface.ScoresScreen.visible_rows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="src.interface.Screen">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">Screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.Screen" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">Screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.Screen" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>An abstract base class for all game screens.
-Ensures that every screen has a consistent structure and behavior.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.background">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">background</span></span><a class="headerlink" href="#src.interface.Screen.background" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.Screen.draw">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.Screen.draw" title="Permalink to this definition"></a></dt>
@@ -310,6 +610,11 @@ Ensures that every screen has a consistent structure and behavior.</p>
 <span class="sig-name descname"><span class="pre">draw_text_with_outline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outline_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outline_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.Screen.draw_text_with_outline" title="Permalink to this definition"></a></dt>
 <dd><p>Renders text with a simple outline.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.flip_card">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">flip_card</span></span><a class="headerlink" href="#src.interface.Screen.flip_card" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.Screen.handle_event">
@@ -323,6 +628,36 @@ Ensures that every screen has a consistent structure and behavior.</p>
 <dd><p>The main loop for a screen. It handles events, updates, and drawing.
 Returns the key for the next screen to be displayed.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.next_screen">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">next_screen</span></span><a class="headerlink" href="#src.interface.Screen.next_screen" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.ok_sound">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ok_sound</span></span><a class="headerlink" href="#src.interface.Screen.ok_sound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.player_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">player_name</span></span><a class="headerlink" href="#src.interface.Screen.player_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.reset_sound">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset_sound</span></span><a class="headerlink" href="#src.interface.Screen.reset_sound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.screen">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">screen</span></span><a class="headerlink" href="#src.interface.Screen.screen" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.Screen.select_sound">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">select_sound</span></span><a class="headerlink" href="#src.interface.Screen.select_sound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.Screen.set_background">
@@ -348,9 +683,29 @@ Returns the key for the next screen to be displayed.</p>
 <dt class="sig sig-object py" id="src.interface.UnoScreen">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.interface.</span></span><span class="sig-name descname"><span class="pre">UnoScreen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.UnoScreen" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#src.interface.Screen" title="src.interface.Screen"><code class="xref py py-class docutils literal notranslate"><span class="pre">Screen</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.action_timer">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_timer</span></span><a class="headerlink" href="#src.interface.UnoScreen.action_timer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.assets_folder">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assets_folder</span></span><a class="headerlink" href="#src.interface.UnoScreen.assets_folder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.UnoScreen.card_position">
 <span class="sig-name descname"><span class="pre">card_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">card_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.UnoScreen.card_position" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.card_sprites">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">card_sprites</span></span><a class="headerlink" href="#src.interface.UnoScreen.card_sprites" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.current_action_phase">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_action_phase</span></span><a class="headerlink" href="#src.interface.UnoScreen.current_action_phase" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -358,6 +713,11 @@ Returns the key for the next screen to be displayed.</p>
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.UnoScreen.draw" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract method to draw the screen’s elements.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.game">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">game</span></span><a class="headerlink" href="#src.interface.UnoScreen.game" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.UnoScreen.handle_event">
@@ -370,6 +730,21 @@ Returns the key for the next screen to be displayed.</p>
 <span class="sig-name descname"><span class="pre">load_card_images</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.interface.UnoScreen.load_card_images" title="Permalink to this definition"></a></dt>
 <dd><p>Pre-loads all card images into a dictionary for quick access.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.selected_card">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_card</span></span><a class="headerlink" href="#src.interface.UnoScreen.selected_card" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.selected_color">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_color</span></span><a class="headerlink" href="#src.interface.UnoScreen.selected_color" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.interface.UnoScreen.selected_opc">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_opc</span></span><a class="headerlink" href="#src.interface.UnoScreen.selected_opc" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.interface.UnoScreen.sync_sprites_with_model">
@@ -391,6 +766,7 @@ Returns the key for the next screen to be displayed.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="main_game.html" class="btn btn-neutral float-left" title="main_game module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="database_manager.html" class="btn btn-neutral float-right" title="database_manager" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

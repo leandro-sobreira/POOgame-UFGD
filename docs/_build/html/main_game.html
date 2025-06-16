@@ -20,7 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="uno_game module" href="uno_game.html" /> 
+    <link rel="next" title="interface module" href="interface.html" />
+    <link rel="prev" title="blackjack_game module" href="blackjack_game.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,9 +45,9 @@
 <li class="toctree-l1"><a class="reference internal" href="modules1.html">games</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">main_game module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#src.main_game.Game"><code class="docutils literal notranslate"><span class="pre">Game</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.current_player_data"><code class="docutils literal notranslate"><span class="pre">Game.current_player_data</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.icon_path"><code class="docutils literal notranslate"><span class="pre">Game.icon_path</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.mainLoop"><code class="docutils literal notranslate"><span class="pre">Game.mainLoop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.player_name"><code class="docutils literal notranslate"><span class="pre">Game.player_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.running"><code class="docutils literal notranslate"><span class="pre">Game.running</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.screen"><code class="docutils literal notranslate"><span class="pre">Game.screen</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.main_game.Game.screen_size"><code class="docutils literal notranslate"><span class="pre">Game.screen_size</span></code></a></li>
@@ -54,6 +55,8 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">interface module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_manager.html">database_manager</a></li>
 </ul>
 
         </div>
@@ -96,7 +99,7 @@ icon_path : str</p>
 </dd>
 </dl>
 <dl class="simple">
-<dt>current_player_data():</dt><dd><p>Getter de current_player_data</p>
+<dt>player_name():</dt><dd><p>Getter de player_name</p>
 </dd>
 <dt>running():</dt><dd><p>Getter de running</p>
 </dd>
@@ -106,7 +109,7 @@ icon_path : str</p>
 </dd>
 <dt>icon_path():</dt><dd><p>Getter de icon_path</p>
 </dd>
-<dt>current_player_data():</dt><dd><p>Setter de current_player_data</p>
+<dt>player_name():</dt><dd><p>Setter de player_name</p>
 </dd>
 <dt>running():</dt><dd><p>Setter de running</p>
 </dd>
@@ -119,24 +122,6 @@ icon_path : str</p>
 <dt>mainLoop():</dt><dd><p>Realiza a execução do looping principal do jogo e também a finalização da execução</p>
 </dd>
 </dl>
-<dl class="py property">
-<dt class="sig sig-object py" id="src.main_game.Game.current_player_data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_player_data</span></span><a class="headerlink" href="#src.main_game.Game.current_player_data" title="Permalink to this definition"></a></dt>
-<dd><p>Getter de current_player_data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>str, key: str}: dicionário atual sendo utilizado para representar os dados de um jogador, sendo</dt><dd><p>o nome e a pontuação atual as informações armazenadas no dict</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict{key</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="src.main_game.Game.icon_path">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">icon_path</span></span><a class="headerlink" href="#src.main_game.Game.icon_path" title="Permalink to this definition"></a></dt>
@@ -156,6 +141,20 @@ icon_path : str</p>
 <span class="sig-name descname"><span class="pre">mainLoop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.main_game.Game.mainLoop" title="Permalink to this definition"></a></dt>
 <dd><p>Método principal responsável por inicializar o jogo e também encerrá-lo conforme fluxo decidido
 pela equipe</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.main_game.Game.player_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">player_name</span></span><a class="headerlink" href="#src.main_game.Game.player_name" title="Permalink to this definition"></a></dt>
+<dd><p>Getter de player_name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>str atual sendo utilizada para representar o nome do jogador em BlackjackGame</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>player_name</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -208,7 +207,8 @@ pela equipe</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="uno_game.html" class="btn btn-neutral float-left" title="uno_game module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="blackjack_game.html" class="btn btn-neutral float-left" title="blackjack_game module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interface.html" class="btn btn-neutral float-right" title="interface module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
