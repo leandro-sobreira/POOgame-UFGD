@@ -64,7 +64,7 @@ The project follows the Model-View-Controller pattern to promote a clean separat
 
 ---
 
-## Documentação
+## Documentation
 
 - To get more information about the project, acess the documentation in ```cd docs/_build/html/index.html``` 
 ---
