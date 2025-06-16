@@ -305,17 +305,17 @@ class BlackjackGame:
         dealer_score = self.__table.sumValues() 
 
         if player_score > 21: # This case is already handled but good for clarity 
-            self.__result = "Player Busts! Dealer Wins." 
+            self.__result = f"{self.__player.name} Busts!" 
         elif dealer_score > 21: 
-            self.__result = "Dealer Busts! Player Wins." 
+            self.__result = f"{self.__player.name} Wins." 
             self.__win_value = self.__betAmount * 2 # Return bet + winnings 
         elif player_score > dealer_score: 
-            self.__result = "Player Wins!" 
+            self.__result = "f{self.__player.name} Wins!" 
             self.__win_value = self.__betAmount * 2
         elif dealer_score > player_score: 
-            self.__result = "Dealer Wins." 
+            self.__result = "{self.__player.name} Lose!." 
         else: # Push 
-            self.__result = "Push (Draw)." 
+            self.__result = "Draw." 
             self.__win_value = self.__betAmount
         self.__player.addPoints(self.__win_value) # Return original bet 
         

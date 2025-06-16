@@ -676,7 +676,7 @@ class BlackjackScreen(Screen):
                     # Player chose 'Quit' (index 1)
                     if self.__selected_opc == 1:
                         # If the player won, return data to be logged
-                        if "Win" in self.__game.result:
+                        if self.__game.win_value >= 10:
                             final_score = self.__game.player.points
                             self._Screen__next_screen = ("LOG_WIN", final_score, "Blackjack")
                         else: # If they lost or tied, just return to menu
@@ -732,8 +732,8 @@ class BlackjackScreen(Screen):
         self.sync_sprites_with_model() 
         self.__card_sprites.draw(self._Screen__screen) 
 
-        self.draw_text_with_outline(self._Screen__screen, f'{self.__game.player.points}$', self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) 
-        
+        self.draw_text_with_outline(self._Screen__screen, f'{self.__game.player.points} points', self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) 
+
         # Draw scores 
         dealer_score_text = f"Dealer's Hand: {self.__game.table.sumValues()}" 
         player_score_text = f"{self.__game.player.name}'s Hand: {self.__game.player.sumValues()}" 
@@ -767,18 +767,8 @@ class BlackjackScreen(Screen):
             self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) 
             prompt = "X Stand" 
             self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) 
-
-            """elif self.__game.state == "ROUND_OVER": 
-            result_text = f"Result: {self.__game.result}" 
-            self.draw_text_with_outline(self._Screen__screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
-            prompt = "Press [Z] to play again." if self.__game.player.points >= 10 else "Not enough points. Press [Z] to exit." 
-            self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) 
-            if self.__game.player.points >= 10:
-                prompt = "Or [X] to quit and save your score"
-                self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #  """
             
         elif self.__game.state == "ROUND_OVER":
-            buttons = ['yes', 'no']
             opc_buttons = [
                 Button((st.SCREEN_WIDTH/2 - 150, st.SCREEN_HEIGHT/2+100), "Yes", "yes", 30),
                 Button((st.SCREEN_WIDTH/2 + 150, st.SCREEN_HEIGHT/2+100), "Quit", "no", 30)
@@ -789,7 +779,7 @@ class BlackjackScreen(Screen):
             color_sprite_group.update()
             color_sprite_group.draw(self._Screen__screen)
             self.draw_text_with_outline(self._Screen__screen, self.__game.result, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
-            self.draw_text_with_outline(self._Screen__screen, f'+{self.__game.win_value}$', pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 280), st.YELLOW, st.BLACK) 
+            self.draw_text_with_outline(self._Screen__screen, f'+{self.__game.win_value} points', pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 280), st.YELLOW, st.BLACK) 
             prompt = "Bet again? (Quit to save points)" if self.__game.player.points >= 10 else "Not enough points. Restart?"   
             self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2 +50), st.WHITE, st.BLACK) # 
             
@@ -804,6 +794,7 @@ class UnoScreen(Screen):
         self.__game = game_instance
         self.__assets_folder = os.path.join(st.img_folder, "games/uno")
         self.set_background(os.path.join(self.__assets_folder, "mesa.png"))
+        self.__text_font = pygame.font.Font(st.button_font, 30)
         self.__selected_card = 0
         self.__selected_color = 0
         self.__selected_opc = 0
@@ -973,6 +964,8 @@ class UnoScreen(Screen):
             self._Screen__screen.blit(rotation_image, rect)
 
         if self.__game.state == "PLAYER_TURN":
+            self.draw_text_with_outline(self._Screen__screen, "Arrows key to move", pygame.font.Font(st.text_font, 20), (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, "Enter or Z to play", pygame.font.Font(st.text_font, 20), (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12+25), st.GREEN, st.BLACK)
             text_color = st.WHITE
             if self.__game.players.already_buy:
                 if self.__selected_card == -1:
@@ -993,7 +986,7 @@ class UnoScreen(Screen):
             self.__game.disc_deck.topCard().color = colors[self.__selected_color]
             color_sprite_group.update()
             color_sprite_group.draw(self._Screen__screen)
-            self.draw_text_with_outline(self._Screen__screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, "Select a color", self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
@@ -1005,11 +998,11 @@ class UnoScreen(Screen):
                 button.set_selected(i == self.__selected_opc)
             color_sprite_group = pygame.sprite.Group(opc_buttons)
             color_sprite_group.update()
-            color_sprite_group.draw(self._Screen__screen)
             if self.__game.players.getCurrentPlayer() == self.__game.players.getHumanPlayer():
-                self.draw_text_with_outline(self._Screen__screen, f'{self.__game.players.getHumanPlayer().name} Win! with {self.__game.players.getHumanPlayer().points}', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, f'{self.__game.players.getHumanPlayer().name} Win! with {self.__game.players.getHumanPlayer().points}', self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
             else:
-                self.draw_text_with_outline(self._Screen__screen, f'You lose!', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+                color_sprite_group.draw(self._Screen__screen)
+                self.draw_text_with_outline(self._Screen__screen, f'You lose!', self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
             
 
@@ -1020,7 +1013,7 @@ class UnoScreen(Screen):
             if self.__current_action_phase is None:
                 # Bot's turn begins, set a timer for "thinking"
                 self.__current_action_phase = "bot_thinking"
-                self.__action_timer = pygame.time.get_ticks() + 1500 # 1.5-second delay
+                self.__action_timer = pygame.time.get_ticks() + 100 # 1.5-second delay
             elif self.__current_action_phase == "bot_thinking":
                 if pygame.time.get_ticks() >= self.__action_timer:
                     self.__game.bot_play() # Bot performs its action

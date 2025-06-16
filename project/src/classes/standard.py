@@ -151,7 +151,7 @@ class StandardHand(Hand): #
                     total += int(value) #
         
         # Adjust for aces if total is under 12 #
-        while total < 12 and aces_appears:
+        if total < 12 and aces_appears:
             total += 10 #
         return total #
 
