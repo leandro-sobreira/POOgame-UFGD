@@ -1037,6 +1037,15 @@ class UnoScreen(Screen):
                 if pygame.time.get_ticks() >= self.__action_timer:
                     self.__game.bot_play() # Bot performs its action
                     self.__current_action_phase = None # Reset phase; game state will change
+        elif current_game_state == "ROUND_OVER" :
+            if self.__current_action_phase is None:
+                self.__current_action_phase = "round_over"
+                self.__action_timer = pygame.time.get_ticks() + 2000 # 2-second delay
+            elif self.__current_action_phase == "round_over" and self.__game.players.getHumanPlayer().points > 0:
+                if pygame.time.get_ticks() >= self.__action_timer:
+                    final_score = self.__game.players.getHumanPlayer().points
+                    self.next_screen = ("LOG_WIN", final_score, "Uno")
+                    self.__current_action_phase = None
         
         # If game state changed from a timed phase, reset the phase
         elif self.__current_action_phase is not None:
