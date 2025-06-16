@@ -12,8 +12,8 @@ from . import setup as st
 class Screen(ABC): 
     def __init__(self, screen, player_name=None):
         self.__screen = screen
-        self.__player_name = player_name
-        self.__next_screen = None
+        self.__player_name = player_name #?
+        self.__next_screen = None #?
         self.__background = None
         
         self.__select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_02.ogg")) 
@@ -156,7 +156,7 @@ class PlayerNameScreen(Screen):
         
         self.__font = pygame.font.Font(st.text_font, 32) 
         self.__input_font = pygame.font.Font(st.text_font, 28) 
-        self.__player_name = "" 
+        self._Screen__player_name = "" 
         self.__prompt_text = prompt_text 
     
     @property
@@ -175,13 +175,13 @@ class PlayerNameScreen(Screen):
     def input_font(self, input_font):
         self.__input_font = input_font
 
-    @property
-    def player_name(self):
-        return self.__player_name
+    # @property
+    # def player_name(self):
+    #     return self.__player_name
 
-    @player_name.setter
-    def player_name(self, player_name):
-        self.__player_name = player_name
+    # @player_name.setter
+    # def player_name(self, player_name):
+    #     self.__player_name = player_name
 
     @property
     def prompt_text(self):
@@ -194,25 +194,25 @@ class PlayerNameScreen(Screen):
     def handle_event(self, event): 
         if event.type == pygame.KEYDOWN: 
             if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]: 
-                self.__ok_sound.play() 
-                self.__next_screen = "GET_PLAYER" 
+                self._Screen__ok_sound.play() 
+                self._Screen__next_screen = "GET_PLAYER" 
             elif event.key == pygame.K_BACKSPACE: 
-                self.__player_name = self.__player_name[:-1] 
+                self._Screen__player_name = self._Screen__player_name[:-1] 
             else:
-                if event.unicode.isprintable() and len(self.__player_name) < 15: # Limit name length 
-                    self.__player_name += event.unicode 
+                if event.unicode.isprintable() and len(self._Screen__player_name) < 15: # Limit name length 
+                    self._Screen__player_name += event.unicode 
 
     def update(self): 
         pass 
 
     def draw(self): 
-        self.__screen.blit(self.__background, (0, 0)) 
-        self.draw_text_with_outline(self.__screen, self.__prompt_text, self.__font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) 
+        self._Screen__screen.blit(self._Screen__background, (0, 0)) 
+        self.draw_text_with_outline(self._Screen__screen, self.__prompt_text, self.__font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) 
         
         input_rect = pygame.Rect(st.SCREEN_WIDTH / 2 - 150, st.SCREEN_HEIGHT / 2, 300, 50) 
-        pygame.draw.rect(self.__screen, st.WHITE, input_rect, 2) 
-        input_surface = self.__input_font.render(self.__player_name, True, st.WHITE) 
-        self.__screen.blit(input_surface, (input_rect.x + 10, input_rect.y + 10)) 
+        pygame.draw.rect(self._Screen__screen, st.WHITE, input_rect, 2) 
+        input_surface = self.__input_font.render(self._Screen__player_name, True, st.WHITE) 
+        self._Screen__screen.blit(input_surface, (input_rect.x + 10, input_rect.y + 10)) 
 
 class MenuScreen(Screen): 
     def __init__(self, screen, player_name): 
@@ -265,33 +265,33 @@ class MenuScreen(Screen):
     def handle_event(self, event): 
         if event.type == pygame.KEYDOWN: 
             if event.key in (pygame.K_UP, pygame.K_w): 
-                self.__select_sound.play() 
+                self._Screen__select_sound.play() 
                 self.__selected_index = (self.__selected_index - 1) % len(self.__buttons) 
             elif event.key in (pygame.K_DOWN, pygame.K_s): 
-                self.__select_sound.play() 
+                self._Screen__select_sound.play() 
                 self.__selected_index = (self.__selected_index + 1) % len(self.__buttons) 
             elif event.key in (pygame.K_z, pygame.K_RETURN): 
                 selected_button = self.__buttons[self.__selected_index] 
-                self.__ok_sound.play() 
-                self.__next_screen = selected_button.action 
+                self._Screen__ok_sound.play() 
+                self._Screen__next_screen = selected_button.action 
 
     def update(self): 
         pass 
 
     def draw(self):
-        self.__screen.blit(self.__background, (0, 0))
-        self.draw_text_with_outline(self.__screen, "CARD GAME", self.__title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE)
+        self._Screen__screen.blit(self._Screen__background, (0, 0))
+        self.draw_text_with_outline(self._Screen__screen, "CARD GAME", self.__title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE)
         
         # CORREÇÃO AQUI:
         # A linha antiga que causava o erro foi substituída.
         # Agora usamos self.__player_name e não exibimos mais os pontos.
-        welcome_text = f"Welcome, {self.__player_name}!"
-        self.draw_text_with_outline(self.__screen, welcome_text, pygame.font.Font(st.button_font, 22), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK)
+        welcome_text = f"Welcome, {self._Screen__player_name}!"
+        self.draw_text_with_outline(self._Screen__screen, welcome_text, pygame.font.Font(st.button_font, 22), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK)
 
         for i, button in enumerate(self.__buttons):
             button.set_selected(i == self.__selected_index)
         self.__all_sprites.update()
-        self.__all_sprites.draw(self.__screen)
+        self.__all_sprites.draw(self._Screen__screen)
 
 class GameSelectScreen(Screen): 
     def __init__(self, screen, player_name): 
@@ -349,25 +349,25 @@ class GameSelectScreen(Screen):
         self.set_background(os.path.join(st.img_folder, background))
         if event.type == pygame.KEYDOWN: 
             if event.key in (pygame.K_UP, pygame.K_w): 
-                self.__select_sound.play() 
+                self._Screen__select_sound.play() 
                 self.__selected_index = (self.__selected_index - 1) % len(self.__buttons) 
             elif event.key in (pygame.K_DOWN, pygame.K_s): 
-                self.__select_sound.play() 
+                self._Screen__select_sound.play() 
                 self.__selected_index = (self.__selected_index + 1) % len(self.__buttons) 
             elif event.key in (pygame.K_z, pygame.K_RETURN): 
-                self.__ok_sound.play() 
-                self.__next_screen = self.__buttons[self.__selected_index].action 
+                self._Screen__ok_sound.play() 
+                self._Screen__next_screen = self.__buttons[self.__selected_index].action 
 
     def update(self): 
         pass 
     
     def draw(self): 
-        self.__screen.blit(self.__background, (0, 0)) 
-        self.draw_text_with_outline(self.__screen, "Select a Game", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK) 
+        self._Screen__screen.blit(self._Screen__background, (0, 0)) 
+        self.draw_text_with_outline(self._Screen__screen, "Select a Game", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK) 
         for i, button in enumerate(self.__buttons): 
             button.set_selected(i == self.__selected_index) 
         self.__all_sprites.update() 
-        self.__all_sprites.draw(self.__screen) 
+        self.__all_sprites.draw(self._Screen__screen) 
 
 # In src/interface.py, replace the entire ScoresScreen class with this one.
 
@@ -472,36 +472,36 @@ class ScoresScreen(Screen):
             # --- Event Handling for GAME_SELECT page ---
             if self.__page == "GAME_SELECT":
                 if event.key in (pygame.K_x, pygame.K_ESCAPE):
-                    self.__ok_sound.play()
-                    self.__next_screen = "MENU"
+                    self._Screen__ok_sound.play()
+                    self._Screen__next_screen = "MENU"
                 
                 # Only allow navigation if there are games with scores
                 if self.__available_games:
                     if event.key in (pygame.K_UP, pygame.K_w):
-                        self.__select_sound.play()
+                        self._Screen__select_sound.play()
                         self.__selected_game_index = (self.__selected_game_index - 1) % len(self.__available_games)
                     elif event.key in (pygame.K_DOWN, pygame.K_s):
-                        self.__select_sound.play()
+                        self._Screen__select_sound.play()
                         self.__selected_game_index = (self.__selected_game_index + 1) % len(self.__available_games)
                     elif event.key in (pygame.K_z, pygame.K_RETURN):
-                        self.__ok_sound.play()
+                        self._Screen__ok_sound.play()
                         self.__page = "SCORES"  # Switch to the scores page
                         self.__scroll_offset = 0  # Reset scroll for the new list
 
             # --- Event Handling for SCORES page ---
             elif self.__page == "SCORES":
                 if event.key in (pygame.K_x, pygame.K_ESCAPE):
-                    self.__ok_sound.play()
+                    self._Screen__ok_sound.play()
                     self.__page = "GAME_SELECT"  # Go back to the game selection page
                 
                 # Scrolling logic for the scores list
                 selected_game = self.__available_games[self.__selected_game_index]
                 if self.__game_scores[selected_game]:
                     if event.key in (pygame.K_UP, pygame.K_w):
-                        self.__select_sound.play()
+                        self._Screen__select_sound.play()
                         self.__scroll_offset = max(0, self.__scroll_offset - 1)
                     elif event.key in (pygame.K_DOWN, pygame.K_s):
-                        self.__select_sound.play()
+                        self._Screen__select_sound.play()
                         max_scroll = len(self.__game_scores[selected_game]) - self.__visible_rows
                         self.__scroll_offset = min(max(0, max_scroll), self.__scroll_offset + 1)
 
@@ -509,41 +509,41 @@ class ScoresScreen(Screen):
         pass
 
     def draw(self):
-        self.__screen.blit(self.__background, (0, 0))
-        self.draw_text_with_outline(self.__screen, "Press ESC to go back", self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 40), st.WHITE, st.BLACK)
+        self._Screen__screen.blit(self._Screen__background, (0, 0))
+        self.draw_text_with_outline(self._Screen__screen, "Press ESC to go back", self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 40), st.WHITE, st.BLACK)
 
         # --- Drawing logic for GAME_SELECT page ---
         if self.__page == "GAME_SELECT":
-            self.draw_text_with_outline(self.__screen, "Select a Game to View Scores", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, "Select a Game to View Scores", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK)
             
             if not self.__available_games:
-                self.draw_text_with_outline(self.__screen, "No scores recorded yet.", self.__text_font, (st.SCREEN_WIDTH/2, 300), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, "No scores recorded yet.", self.__text_font, (st.SCREEN_WIDTH/2, 300), st.WHITE, st.BLACK)
             else:
                 for i, game_name in enumerate(self.__available_games):
                     y_pos = 200 + i * 50
                     color = st.GREEN if i == self.__selected_game_index else st.WHITE
-                    self.draw_text_with_outline(self.__screen, game_name, self.__text_font, (st.SCREEN_WIDTH/2, y_pos), color, st.BLACK)
+                    self.draw_text_with_outline(self._Screen__screen, game_name, self.__text_font, (st.SCREEN_WIDTH/2, y_pos), color, st.BLACK)
 
         # --- Drawing logic for SCORES page ---
         elif self.__page == "SCORES":
             selected_game_name = self.__available_games[self.__selected_game_index]
             scores_for_game = self.__game_scores[selected_game_name]
             
-            self.draw_text_with_outline(self.__screen, f"{selected_game_name} Rankings", self.__title_font, (st.SCREEN_WIDTH/2, 60), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, f"{selected_game_name} Rankings", self.__title_font, (st.SCREEN_WIDTH/2, 60), st.WHITE, st.BLACK)
             
             # Draw headers
             header_y = 120
-            self.draw_text_with_outline(self.__screen, "Player", self.__text_font, (st.SCREEN_WIDTH/4, header_y), st.YELLOW, st.BLACK)
-            self.draw_text_with_outline(self.__screen, "Score", self.__text_font, (st.SCREEN_WIDTH/2, header_y), st.YELLOW, st.BLACK)
-            self.draw_text_with_outline(self.__screen, "Date", self.__text_font, (st.SCREEN_WIDTH * 3/4, header_y), st.YELLOW, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, "Player", self.__text_font, (st.SCREEN_WIDTH/4, header_y), st.YELLOW, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, "Score", self.__text_font, (st.SCREEN_WIDTH/2, header_y), st.YELLOW, st.BLACK)
+            self.draw_text_with_outline(self._Screen__screen, "Date", self.__text_font, (st.SCREEN_WIDTH * 3/4, header_y), st.YELLOW, st.BLACK)
 
             # Draw scores
             visible_wins = scores_for_game[self.__scroll_offset : self.__scroll_offset + self.__visible_rows]
             for i, win in enumerate(visible_wins):
                 y_pos = 180 + i * 40
-                self.draw_text_with_outline(self.__screen, win['player_name'], self.__text_font, (st.SCREEN_WIDTH/4, y_pos), st.WHITE, st.BLACK)
-                self.draw_text_with_outline(self.__screen, str(win['score']), self.__text_font, (st.SCREEN_WIDTH/2, y_pos), st.GREEN, st.BLACK)
-                self.draw_text_with_outline(self.__screen, win['date'], self.__text_font, (st.SCREEN_WIDTH * 3/4, y_pos), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, win['player_name'], self.__text_font, (st.SCREEN_WIDTH/4, y_pos), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, str(win['score']), self.__text_font, (st.SCREEN_WIDTH/2, y_pos), st.GREEN, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, win['date'], self.__text_font, (st.SCREEN_WIDTH * 3/4, y_pos), st.WHITE, st.BLACK)
 
 class BlackjackScreen(Screen): 
     """The View for the Blackjack game. It only draws what the Model tells it to.""" 
@@ -655,11 +655,11 @@ class BlackjackScreen(Screen):
         elif self.__game.state == "PLAYER_TURN": 
             if event.type == pygame.KEYDOWN: 
                 if event.key in (pygame.K_z, pygame.K_h): # 'Z' or 'H' to Hit 
-                    self.__flip_card.play() 
+                    self._Screen__flip_card.play() 
                     self.__game.player_hit() 
 
                 elif event.key in (pygame.K_x, pygame.K_s): # 'X' or 'S' to Stand 
-                    self.__ok_sound.play() 
+                    self._Screen__ok_sound.play() 
                     self.__game.player_stand() 
         
             """elif self.__game.state == "ROUND_OVER": 
@@ -679,10 +679,10 @@ class BlackjackScreen(Screen):
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_RIGHT, pygame.K_d):
-                    self.__select_sound.play()
+                    self._Screen__select_sound.play()
                     self.__selected_opc = (self.__selected_opc + 1) % len(buttons)
                 elif event.key in (pygame.K_LEFT, pygame.K_a):
-                    self.__select_sound.play()
+                    self._Screen__select_sound.play()
                     self.__selected_opc = (self.__selected_opc - 1) % len(buttons)
                 elif event.key in (pygame.K_z, pygame.K_RETURN):
                     # Player chose 'Quit' (index 1)
@@ -690,9 +690,9 @@ class BlackjackScreen(Screen):
                         # If the player won, return data to be logged
                         if "Win" in self.__game.result:
                             final_score = self.__game.player.points
-                            self.__next_screen = ("LOG_WIN", final_score, "Blackjack")
+                            self._Screen__next_screen = ("LOG_WIN", final_score, "Blackjack")
                         else: # If they lost or tied, just return to menu
-                            self.__next_screen = "MENU"
+                            self._Screen__next_screen = "MENU"
                     else: # Player chose to play again
                         if self.__game.player.points >= 10:
                             self.__game.state = "BET"
@@ -740,17 +740,17 @@ class BlackjackScreen(Screen):
                     self.__current_action_phase = None # Reset phase; game state will change
 
     def draw(self): 
-        self.__screen.blit(self.__background, (0, 0)) 
+        self._Screen__screen.blit(self._Screen__background, (0, 0)) 
         self.sync_sprites_with_model() 
-        self.__card_sprites.draw(self.__screen) 
+        self.__card_sprites.draw(self._Screen__screen) 
 
-        self.draw_text_with_outline(self.__screen, f'{self.__game.player.points}$', self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) 
+        self.draw_text_with_outline(self._Screen__screen, f'{self.__game.player.points}$', self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) 
         
         # Draw scores 
         dealer_score_text = f"Dealer's Hand: {self.__game.table.sumValues()}" 
         player_score_text = f"{self.__game.player.name}'s Hand: {self.__game.player.sumValues()}" 
-        self.draw_text_with_outline(self.__screen, dealer_score_text, self.__font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) 
-        self.draw_text_with_outline(self.__screen, player_score_text, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) 
+        self.draw_text_with_outline(self._Screen__screen, dealer_score_text, self.__font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) 
+        self.draw_text_with_outline(self._Screen__screen, player_score_text, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) 
 
         
 
@@ -761,33 +761,33 @@ class BlackjackScreen(Screen):
             box_width = 450
             box_height = 150
             pos = pygame.Rect((st.SCREEN_WIDTH - box_width) / 2,(st.SCREEN_HEIGHT - box_height) / 2,box_width, box_height )
-            pygame.draw.rect(self.__screen, st.BLACK, pos)  # fundo da caixa
-            pygame.draw.rect(self.__screen, st.WHITE, pos, 2)  # borda branca
+            pygame.draw.rect(self._Screen__screen, st.BLACK, pos)  # fundo da caixa
+            pygame.draw.rect(self._Screen__screen, st.WHITE, pos, 2)  # borda branca
 
             # Renderiza o texto do prompt
             prompt_surface = self.__font.render("Enter the bet amount", True, st.WHITE)
             prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
-            self.__screen.blit(prompt_surface, prompt_rect)
+            self._Screen__screen.blit(prompt_surface, prompt_rect)
 
             # Renderiza o valor digitado
             input_surface = self.__font.render(self.__input_value, True, st.GREEN)
             input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
-            self.__screen.blit(input_surface, input_rect)
+            self._Screen__screen.blit(input_surface, input_rect)
     
         elif self.__game.state == "PLAYER_TURN": 
             prompt = "Z Hit" 
-            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) 
+            self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) 
             prompt = "X Stand" 
-            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) 
+            self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) 
 
             """elif self.__game.state == "ROUND_OVER": 
             result_text = f"Result: {self.__game.result}" 
-            self.draw_text_with_outline(self.__screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
+            self.draw_text_with_outline(self._Screen__screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
             prompt = "Press [Z] to play again." if self.__game.player.points >= 10 else "Not enough points. Press [Z] to exit." 
-            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) 
+            self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) 
             if self.__game.player.points >= 10:
                 prompt = "Or [X] to quit and save your score"
-                self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #  """
+                self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #  """
             
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
@@ -799,11 +799,11 @@ class BlackjackScreen(Screen):
                 button.set_selected(i == self.__selected_opc)
             color_sprite_group = pygame.sprite.Group(opc_buttons)
             color_sprite_group.update()
-            color_sprite_group.draw(self.__screen)
-            self.draw_text_with_outline(self.__screen, self.__game.result, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
-            self.draw_text_with_outline(self.__screen, f'+{self.__game.win_value}$', pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 280), st.YELLOW, st.BLACK) 
+            color_sprite_group.draw(self._Screen__screen)
+            self.draw_text_with_outline(self._Screen__screen, self.__game.result, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
+            self.draw_text_with_outline(self._Screen__screen, f'+{self.__game.win_value}$', pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 280), st.YELLOW, st.BLACK) 
             prompt = "Bet again? (Quit to save points)" if self.__game.player.points >= 10 else "Not enough points. Restart?"   
-            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2 +50), st.WHITE, st.BLACK) # 
+            self.draw_text_with_outline(self._Screen__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2 +50), st.WHITE, st.BLACK) # 
             
 
     def get_player_data(self): 
@@ -951,9 +951,9 @@ class UnoScreen(Screen):
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) 
             
     def draw(self):
-        self.__screen.blit(self.__background, (0, 0))
+        self._Screen__screen.blit(self._Screen__background, (0, 0))
         self.sync_sprites_with_model()
-        self.__card_sprites.draw(self.__screen)
+        self.__card_sprites.draw(self._Screen__screen)
 
         #place the names
         for i in range(4):
@@ -971,25 +971,25 @@ class UnoScreen(Screen):
                 rotation = 90
             if i == self.__game.players.turn:
                 text_color = st.GREEN
-            self.draw_text_with_outline(self.__screen, self.__game.players[i].name, pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
+            self.draw_text_with_outline(self._Screen__screen, self.__game.players[i].name, pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
 
         #place de rotacion image        
         if self.__game.players.rotation == 1:
             rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
-            self.__screen.blit(rotation_image, rect)
+            self._Screen__screen.blit(rotation_image, rect)
         else:
             rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rotation_image = pygame.transform.flip(rotation_image, True, False)
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
-            self.__screen.blit(rotation_image, rect)
+            self._Screen__screen.blit(rotation_image, rect)
 
         if self.__game.state == "PLAYER_TURN":
             text_color = st.WHITE
             if self.__game.players.already_buy:
                 if self.__selected_card == -1:
                     text_color = st.GREEN
-                self.draw_text_with_outline(self.__screen, "Skip", pygame.font.Font(st.button_font, 20), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*5/8), text_color, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, "Skip", pygame.font.Font(st.button_font, 20), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*5/8), text_color, st.BLACK)
 
         elif self.__game.state == "PLAYER_SELEC_COLOR":
             colors = ['red','yellow','green','blue']
@@ -1004,8 +1004,8 @@ class UnoScreen(Screen):
             color_sprite_group = pygame.sprite.Group(color_buttons)
             self.__game.disc_deck.topCard().color = colors[self.__selected_color]
             color_sprite_group.update()
-            color_sprite_group.draw(self.__screen)
-            self.draw_text_with_outline(self.__screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+            color_sprite_group.draw(self._Screen__screen)
+            self.draw_text_with_outline(self._Screen__screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
@@ -1017,11 +1017,11 @@ class UnoScreen(Screen):
                 button.set_selected(i == self.__selected_opc)
             color_sprite_group = pygame.sprite.Group(opc_buttons)
             color_sprite_group.update()
-            color_sprite_group.draw(self.__screen)
+            color_sprite_group.draw(self._Screen__screen)
             if self.__game.players.getCurrentPlayer() == self.__game.players.getHumanPlayer():
-                self.draw_text_with_outline(self.__screen, f'{self.__game.players.getHumanPlayer().name} Win! with {self.__game.players.getHumanPlayer().points}', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, f'{self.__game.players.getHumanPlayer().name} Win! with {self.__game.players.getHumanPlayer().points}', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
             else:
-                self.draw_text_with_outline(self.__screen, f'You lose!', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, f'You lose!', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
             
 
@@ -1059,15 +1059,15 @@ class UnoScreen(Screen):
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_a):
-                    self.__select_sound.play()
+                    self._Screen__select_sound.play()
                     self.__selected_card = ((self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_RIGHT, pygame.K_d):
-                    self.__select_sound.play()
+                    self._Screen__select_sound.play()
                     self.__selected_card = ((self.__selected_card + 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_z, pygame.K_RETURN):
                     if self.__selected_card >= 0:
                         self.__game.player_play_card(self.__selected_card) 
-                        self.__flip_card.play()
+                        self._Screen__flip_card.play()
                     elif self.__selected_card == -1:
                         if not self.__game.players.already_buy:
                             self.__selected_card = self.__game.player_draw_card(self.__game.players.getHumanPlayer())
@@ -1086,10 +1086,10 @@ class UnoScreen(Screen):
 
             if event.type == pygame.KEYDOWN: 
                 if event.key in (pygame.K_RIGHT, pygame.K_d): 
-                    self.__select_sound.play() 
+                    self._Screen__select_sound.play() 
                     self.__selected_color = (self.__selected_color + 1) % len(colors) 
                 elif event.key in (pygame.K_LEFT, pygame.K_a): 
-                    self.__select_sound.play() 
+                    self._Screen__select_sound.play() 
                     self.__selected_color = (self.__selected_color - 1) % len(colors) 
                 elif event.key in (pygame.K_z, pygame.K_RETURN): 
                     self.__game.human_select_color(colors[self.__selected_color])       
@@ -1102,16 +1102,16 @@ class UnoScreen(Screen):
 
             if event.type == pygame.KEYDOWN: 
                 if event.key in (pygame.K_RIGHT, pygame.K_d): 
-                    self.__select_sound.play() 
+                    self._Screen__select_sound.play() 
                     self.__selected_opc = (self.__selected_opc + 1) % len(buttons) 
                 elif event.key in (pygame.K_LEFT, pygame.K_a): 
-                    self.__select_sound.play() 
+                    self._Screen__select_sound.play() 
                     self.__selected_opc = (self.__selected_opc - 1) % len(buttons) 
                 elif event.key in (pygame.K_z, pygame.K_RETURN): 
                     if self.__selected_opc == 0:
                         self.__game.start_round()
                     else:
-                        self.__next_screen = "MENU"
+                        self._Screen__next_screen = "MENU"
 
         # BOT_TURN and ROUND_OVER logic is now handled in update() for timed delays
 
@@ -1164,11 +1164,11 @@ class NotificationScreen(Screen):
     def handle_event(self, event): 
         # Transition on key press or after a delay 
         if event.type == pygame.KEYDOWN or pygame.time.get_ticks() - self.__entry_time > 2000: 
-            self.__next_screen = self.__next_screen_key 
+            self._Screen__next_screen = self.__next_screen_key 
             
     def draw(self): 
-        self.__screen.blit(self.__background, (0,0)) 
-        self.draw_text_with_outline(self.__screen, self.__message, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) 
+        self._Screen__screen.blit(self._Screen__background, (0,0)) 
+        self.draw_text_with_outline(self._Screen__screen, self.__message, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) 
 
 # --- SPRITE CLASSES ---
 
