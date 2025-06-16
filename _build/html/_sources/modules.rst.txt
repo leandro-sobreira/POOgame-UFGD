@@ -1,9 +1,10 @@
-games
-=====
+classes
+=======
 
 .. toctree::
    :maxdepth: 4
 
+   deck
+   standard
+   uno
    uno_game
-   blackjack_game
-   

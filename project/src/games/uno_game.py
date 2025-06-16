@@ -8,8 +8,8 @@ UNO_COLORS = ['red','yellow','green','blue']
 class UnoGame:
     """
     Classe UnoGame feita para ser uma mesa de jogo conforme as regras de um
-    jogo de Uno clássico, junto das ações e funções necessárias
-
+    jogo de Uno clássico, junto das ações e funções necessárias 
+    
     Atributos
     ---------
     Privados:
@@ -17,7 +17,7 @@ class UnoGame:
         buy_deck : UnoDeck
         disc_deck : UnoDeck
         state : str
-
+    
     Métodos
     -------
     players():
@@ -58,19 +58,16 @@ class UnoGame:
     sumPoints():
         Método responsável por obter a soma de pontuação das cartas conforme as regras do UNO clássico
     """
-    #Private methods
+
     def __init__(self, player_name:str):
         """
         Construtor da classe UnoGame responsável por inicializar os atributos de um objeto UnoGame     
         """
-        #Private atributes
         self.__players = UnoPlayers(player_name)
         self.__buy_deck = UnoDeck()
         self.__disc_deck = UnoDeck()
-        self.__state = 'START' # Possible states: START, PLAYER_TURN, PLAYER_SELEC_COLOR, BOT_TURN, ,ROUND_OVER
+        self.__state = 'START' 
 
-
-    #Public methods
     @property
     def players(self):
         """
