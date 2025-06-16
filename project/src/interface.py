@@ -1,15 +1,51 @@
 import pygame
 import os
-from . import setup as st
 import random
+
 from abc import ABC, abstractmethod
+
 from . import database_manager as db
+from . import setup as st
+
 
 # --- ABSTRACT SCREEN CLASS (BASE FOR ALL SCREENS) ---
 class Screen(ABC): 
     """
-    An abstract base class for all game screens.
-    Ensures that every screen has a consistent structure and behavior.
+    Classe Screen feita para ser uma classe abstrata a ser utilizada como abstração de uma tela qualquer a ser renderizada
+
+    Atributos
+    ---------
+    Privados:
+        screen : dict{key: str, key: int}
+        player_name : bool
+        next_screen : tuple(int, int)
+        screen : pygame.Surface
+        icon_path : str
+
+    Métodos
+    -------
+    player_name():
+        Getter de player_name
+    running():
+        Getter de running
+    screen_size():
+        Getter de screen_size
+    screen():
+        Getter de screen
+    icon_path():
+        Getter de icon_path
+    player_name():
+        Setter de player_name
+    running():
+        Setter de running
+    screen_size():
+        Setter de screen_size
+    screen():
+        Setter de screen
+    icon_path():
+        Setter de icon_path
+    mainLoop():
+        Realiza a execução do looping principal do jogo e também a finalização da execução
     """ 
     def __init__(self, screen, player_name=None):
         self.screen = screen

@@ -12,7 +12,7 @@ from . import database_manager as db
 
 class Game():
     """
-    The Game class is intended to be the main class used to initialize the game as a whole.
+    Classe Game feita para ser a classe principal a ser utilizada para a inicialização do jogo como um todo
 
     Atributos
     ---------
@@ -25,8 +25,8 @@ class Game():
 
     Métodos
     -------
-    current_player_data():
-        Getter de current_player_data
+    player_name():
+        Getter de player_name
     running():
         Getter de running
     screen_size():
@@ -35,8 +35,8 @@ class Game():
         Getter de screen
     icon_path():
         Getter de icon_path
-    current_player_data():
-        Setter de current_player_data
+    player_name():
+        Setter de player_name
     running():
         Setter de running
     screen_size():
@@ -50,7 +50,7 @@ class Game():
     """
     def __init__(self):
         """
-        Constructor of the Game class, responsible for initializing the attributes of a Game object.     
+        Construtor da classe Game responsável por inicializar os atributos de um objeto Game     
         """
         # Pygame Initialization
         pygame.init()
@@ -62,6 +62,17 @@ class Game():
         self.__screen_size = (st.SCREEN_WIDTH, st.SCREEN_HEIGHT)
         self.__screen = None
         self.__icon_path = None
+
+    @property
+    def player_name(self):
+        """
+        Getter de player_name
+
+        Returns:
+            player_name: str atual sendo utilizada para representar o nome do jogador em BlackjackGame
+        """
+
+        return self.__player_name
 
     @property
     def running(self):
@@ -103,6 +114,16 @@ class Game():
         """
         return self.__icon_path
     
+    @player_name.setter
+    def player_name(self, player_name):
+        """
+        Setter de player_name
+
+        Argumentos:
+            player_name (str): str a ser utilizada para representar o nome do jogador em BlackjackGame
+        """
+        self.__player_name = player_name
+
     @running.setter
     def running(self, running):
         """
@@ -111,7 +132,7 @@ class Game():
         Argumentos:
             running (bool): valor booleano a ser utilizado como running para definir estados do jogo
         """
-        self.__runnning = running
+        self.__running = running
     
     @screen_size.setter
     def screen_size(self, screen_size):
@@ -155,7 +176,8 @@ class Game():
     
     def mainLoop(self):
         """
-        Main method responsible for initializing the game and also ending it according to the flow.
+        Método principal responsável por inicializar o jogo e também encerrá-lo conforme fluxo decidido
+        pela equipe
         """
         # Screen Manager
         # The first screen is now for entering the player's name.

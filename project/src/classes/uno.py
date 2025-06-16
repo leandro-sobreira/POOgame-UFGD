@@ -391,6 +391,12 @@ class UnoPlayers:
         return (self.__turn + self.__rotation) % len(self.__players)
     
     def getHumanTurn(self):
+        """
+        Método que irá retornar o turno do player humano de UnoPlayer
+
+        Returns:
+            int: Valor int que representa o turno do jogador 
+        """
         return 0
     
     def getHumanPlayer(self):
