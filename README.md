@@ -1,6 +1,6 @@
 # UFGD Online Casino
 
-![Gameplay GIF](Apresentation1.gif)
+![Gameplay GIF](Menu.gif)
 
 A suite of card games developed in Pygame as a final project for an Object-Oriented Programming course at UFGD. The project showcases OOP principles, a Model-View-Controller (MVC) architecture, and a refactored data persistence system.
 
@@ -11,7 +11,13 @@ A suite of card games developed in Pygame as a final project for an Object-Orien
 -   **MVC Architecture:** A clean separation between game logic (Model), the graphical interface (View), and flow control (Controller).
 -   **Two Complete Games:**
     -   **Blackjack:** Play against the house with a betting system in a faithful implementation of the classic game.
+       
+        ![Gameplay GIF](BlackJack.gif)
+
+        
     -   **UNO:** A full UNO match against three computer-controlled opponents.
+      
+        ![Gameplay GIF](uno.gif)
 -   **Win-Log Persistence:** Instead of player profiles, the game now saves a log of every win to `gamedata.dat`. Each record includes the player's name, score, the game, and the date/time of the victory.
 -   **Dynamic Leaderboard:** A scores screen that allows filtering victories by game and sorts them from the highest to the lowest score.
 -   **UI and Sound Effects:** Navigable menus, background music, and sound effects for a more immersive experience.
