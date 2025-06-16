@@ -10,66 +10,81 @@ from . import setup as st
 
 # --- ABSTRACT SCREEN CLASS (BASE FOR ALL SCREENS) ---
 class Screen(ABC): 
-    """
-    Classe Screen feita para ser uma classe abstrata a ser utilizada como abstração de uma tela qualquer a ser renderizada
-
-    Atributos
-    ---------
-    Privados:
-        screen : dict{key: str, key: int}
-        player_name : bool
-        next_screen : tuple(int, int)
-        screen : pygame.Surface
-        icon_path : str
-
-    Métodos
-    -------
-    player_name():
-        Getter de player_name
-    running():
-        Getter de running
-    screen_size():
-        Getter de screen_size
-    screen():
-        Getter de screen
-    icon_path():
-        Getter de icon_path
-    player_name():
-        Setter de player_name
-    running():
-        Setter de running
-    screen_size():
-        Setter de screen_size
-    screen():
-        Setter de screen
-    icon_path():
-        Setter de icon_path
-    mainLoop():
-        Realiza a execução do looping principal do jogo e também a finalização da execução
-    """ 
     def __init__(self, screen, player_name=None):
-        self.screen = screen
-        self.player_name = player_name
-        self.next_screen = None
-        self._background = None
+        self.__screen = screen
+        self.__player_name = player_name
+        self.__next_screen = None
+        self.__background = None
+        
+        self.__select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_02.ogg")) 
+        self.__ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_01.ogg")) 
+        self.__reset_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "reset.ogg")) 
+        self.__flip_card = pygame.mixer.Sound(os.path.join(st.sound_folder, "flipcard.ogg"))
 
-        # Load common sounds
-        
-        #self.select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "computer-processing-sound-effects-short-click-select-02-122133.ogg")) 
-        #self.ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "computer-processing-sound-effects-short-click-select-01-122134.ogg"))
-        #self.select_sound.set_volume(0.2)
-        #self.ok_sound.set_volume(0.2)
-        #self.reset_sound.set_volume(0.2)
-        
-        self.select_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_02.ogg")) 
-        self.ok_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "short-click-select_01.ogg")) 
-        self.reset_sound = pygame.mixer.Sound(os.path.join(st.sound_folder, "reset.ogg")) 
-        self.flip_card = pygame.mixer.Sound(os.path.join(st.sound_folder, "flipcard.ogg"))
+    @property
+    def screen(self):
+        return self.__screen
+
+    @property
+    def player_name(self):
+        return self.__player_name
+
+    @player_name.setter
+    def player_name(self, player_name):
+        self.__player_name = player_name
+
+    @property
+    def next_screen(self):
+        return self.__next_screen
+
+    @next_screen.setter
+    def next_screen(self, next_screen):
+        self.__next_screen = next_screen
+
+    @property
+    def background(self):
+        return self.__background
+
+    @background.setter
+    def background(self, background):
+        self.__background = background
+
+    @property
+    def select_sound(self):
+        return self.__select_sound
+
+    @select_sound.setter
+    def select_sound(self, select_sound):
+        self.__select_sound = select_sound
+
+    @property
+    def ok_sound(self):
+        return self.__ok_sound
+
+    @ok_sound.setter
+    def ok_sound(self, ok_sound):
+        self.__ok_sound = ok_sound
+
+    @property
+    def reset_sound(self):
+        return self.__reset_sound
+
+    @reset_sound.setter
+    def reset_sound(self, reset_sound):
+        self.__reset_sound = reset_sound
+
+    @property
+    def flip_card(self):
+        return self.__flip_card
+
+    @flip_card.setter
+    def flip_card(self, flip_card):
+        self.__flip_card = flip_card
 
     def set_background(self, image_path): 
         """Sets and scales the background image.""" 
         background = pygame.image.load(image_path).convert() 
-        self._background = pygame.transform.scale(background, self.screen.get_size()) 
+        self.__background = pygame.transform.scale(background, self.__screen.get_size()) 
 
     def set_music(self, music_path, volume=0.2): 
         """Loads and plays background music in a loop.""" 
@@ -121,140 +136,238 @@ class Screen(ABC):
 
             for event in pygame.event.get(): 
                 if event.type == pygame.QUIT: 
-                    self.next_screen = "QUIT" 
+                    self.__next_screen = "QUIT" 
                 # Pass the event to the specific handler of the child screen 
                 self.handle_event(event) 
             self.update() # Call update for continuous logic 
             self.draw() 
             pygame.display.flip() 
             
-            if self.next_screen: 
+            if self.__next_screen: 
                 is_running = False 
         
-        return self.next_screen 
+        return self.__next_screen 
 
 class PlayerNameScreen(Screen): 
     def __init__(self, screen, prompt_text="Enter Your Name and Press Enter"): 
         super().__init__(screen) 
+
         self.set_background(os.path.join(st.img_folder, "title.png")) 
+        
         self.__font = pygame.font.Font(st.text_font, 32) 
-        self.input_font = pygame.font.Font(st.text_font, 28) 
-        self.player_name = "" 
-        self.prompt_text = prompt_text 
+        self.__input_font = pygame.font.Font(st.text_font, 28) 
+        self.__player_name = "" 
+        self.__prompt_text = prompt_text 
+    
+    @property
+    def font(self):
+        return self.__font
+
+    @font.setter
+    def font(self, font):
+        self.__font = font
+
+    @property
+    def input_font(self):
+        return self.__input_font
+
+    @input_font.setter
+    def input_font(self, input_font):
+        self.__input_font = input_font
+
+    @property
+    def player_name(self):
+        return self.__player_name
+
+    @player_name.setter
+    def player_name(self, player_name):
+        self.__player_name = player_name
+
+    @property
+    def prompt_text(self):
+        return self.__prompt_text
+
+    @prompt_text.setter
+    def prompt_text(self, prompt_text):
+        self.__prompt_text = prompt_text
 
     def handle_event(self, event): 
         if event.type == pygame.KEYDOWN: 
             if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]: 
-                self.ok_sound.play() 
-                self.next_screen = "GET_PLAYER" 
+                self.__ok_sound.play() 
+                self.__next_screen = "GET_PLAYER" 
             elif event.key == pygame.K_BACKSPACE: 
-                self.player_name = self.player_name[:-1] 
+                self.__player_name = self.__player_name[:-1] 
             else:
-                if event.unicode.isprintable() and len(self.player_name) < 15: # Limit name length 
-                    self.player_name += event.unicode 
+                if event.unicode.isprintable() and len(self.__player_name) < 15: # Limit name length 
+                    self.__player_name += event.unicode 
 
     def update(self): 
         pass 
 
     def draw(self): 
-        self.screen.blit(self._background, (0, 0)) 
-        self.draw_text_with_outline(self.screen, self.prompt_text, self.__font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) 
+        self.__screen.blit(self.__background, (0, 0)) 
+        self.draw_text_with_outline(self.__screen, self.__prompt_text, self.__font, (st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 50), st.WHITE, st.BLACK) 
         
         input_rect = pygame.Rect(st.SCREEN_WIDTH / 2 - 150, st.SCREEN_HEIGHT / 2, 300, 50) 
-        pygame.draw.rect(self.screen, st.WHITE, input_rect, 2) 
-        input_surface = self.input_font.render(self.player_name, True, st.WHITE) 
-        self.screen.blit(input_surface, (input_rect.x + 10, input_rect.y + 10)) 
+        pygame.draw.rect(self.__screen, st.WHITE, input_rect, 2) 
+        input_surface = self.__input_font.render(self.__player_name, True, st.WHITE) 
+        self.__screen.blit(input_surface, (input_rect.x + 10, input_rect.y + 10)) 
 
 class MenuScreen(Screen): 
     def __init__(self, screen, player_name): 
         super().__init__(screen, player_name) 
         self.set_background(os.path.join(st.img_folder, "title.png")) 
         self.set_music(os.path.join(st.sound_folder, "1197551_Butterflies.ogg")) 
-        self.title_font = pygame.font.Font(os.path.join(st.font_folder, st.title_font), st.title_size) 
+        self.__title_font = pygame.font.Font(os.path.join(st.font_folder, st.title_font), st.title_size) 
         
-        self.buttons = [ 
+        self.__buttons = [ 
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 200), "Start", "GAME_SELECT"), 
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 150), "Erase Data", "ERASE_DATA"), 
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 100), "Scores", "SCORES"), 
             Button((st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 50), "Quit", "QUIT") 
         ]
-        self.selected_index = 0 
-        self.all_sprites = pygame.sprite.Group(self.buttons) 
+        self.__selected_index = 0 
+        self.__all_sprites = pygame.sprite.Group(self.__buttons) 
+
+    @property
+    def title_font(self):
+        return self.__title_font
+
+    @title_font.setter
+    def title_font(self, title_font):
+        self.__title_font = title_font
+
+    @property
+    def buttons(self):
+        return self.__buttons
+
+    @buttons.setter
+    def buttons(self, buttons):
+        self.__buttons = buttons
+
+    @property
+    def selected_index(self):
+        return self.__selected_index
+
+    @selected_index.setter
+    def selected_index(self, selected_index):
+        self.__selected_index = selected_index
+
+    @property
+    def all_sprites(self):
+        return self.__all_sprites
+
+    @all_sprites.setter
+    def all_sprites(self, all_sprites):
+        self.__all_sprites = all_sprites
 
     def handle_event(self, event): 
         if event.type == pygame.KEYDOWN: 
             if event.key in (pygame.K_UP, pygame.K_w): 
-                self.select_sound.play() 
-                self.selected_index = (self.selected_index - 1) % len(self.buttons) 
+                self.__select_sound.play() 
+                self.__selected_index = (self.__selected_index - 1) % len(self.__buttons) 
             elif event.key in (pygame.K_DOWN, pygame.K_s): 
-                self.select_sound.play() 
-                self.selected_index = (self.selected_index + 1) % len(self.buttons) 
+                self.__select_sound.play() 
+                self.__selected_index = (self.__selected_index + 1) % len(self.__buttons) 
             elif event.key in (pygame.K_z, pygame.K_RETURN): 
-                selected_button = self.buttons[self.selected_index] 
-                self.ok_sound.play() 
-                self.next_screen = selected_button.action 
+                selected_button = self.__buttons[self.__selected_index] 
+                self.__ok_sound.play() 
+                self.__next_screen = selected_button.action 
 
     def update(self): 
         pass 
 
     def draw(self):
-        self.screen.blit(self._background, (0, 0))
-        self.draw_text_with_outline(self.screen, "CARD GAME", self.title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE)
+        self.__screen.blit(self.__background, (0, 0))
+        self.draw_text_with_outline(self.__screen, "CARD GAME", self.__title_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/4), st.BLACK, st.WHITE)
         
         # CORREÇÃO AQUI:
         # A linha antiga que causava o erro foi substituída.
-        # Agora usamos self.player_name e não exibimos mais os pontos.
-        welcome_text = f"Welcome, {self.player_name}!"
-        self.draw_text_with_outline(self.screen, welcome_text, pygame.font.Font(st.button_font, 22), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK)
+        # Agora usamos self.__player_name e não exibimos mais os pontos.
+        welcome_text = f"Welcome, {self.__player_name}!"
+        self.draw_text_with_outline(self.__screen, welcome_text, pygame.font.Font(st.button_font, 22), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK)
 
-        for i, button in enumerate(self.buttons):
-            button.set_selected(i == self.selected_index)
-        self.all_sprites.update()
-        self.all_sprites.draw(self.screen)
+        for i, button in enumerate(self.__buttons):
+            button.set_selected(i == self.__selected_index)
+        self.__all_sprites.update()
+        self.__all_sprites.draw(self.__screen)
 
 class GameSelectScreen(Screen): 
     def __init__(self, screen, player_name): 
         super().__init__(screen, player_name) 
         self.set_background(os.path.join(st.img_folder, "games/blackjack/mesa.png")) 
-        self.title_font = pygame.font.Font(st.button_font, st.title_size) 
+        self.__title_font = pygame.font.Font(st.button_font, st.title_size) 
 
-        self.buttons = [ 
+        self.__buttons = [ 
             Button((st.SCREEN_WIDTH/2, 200), "Blackjack", "BLACKJACK"), 
             Button((st.SCREEN_WIDTH/2, 250), "UNO", "UNO"), 
             Button((st.SCREEN_WIDTH/2, 350), "Back to Menu", "MENU") 
         ]
-        self.selected_index = 0 
-        self.all_sprites = pygame.sprite.Group(self.buttons) 
+        self.__selected_index = 0 
+        self.__all_sprites = pygame.sprite.Group(self.__buttons) 
+
+    @property
+    def title_font(self):
+        return self.__title_font
+
+    @title_font.setter
+    def title_font(self, title_font):
+        self.__title_font = title_font
+
+    @property
+    def buttons(self):
+        return self.__buttons
+
+    @buttons.setter
+    def buttons(self, buttons):
+        self.__buttons = buttons
+
+    @property
+    def selected_index(self):
+        return self.__selected_index
+
+    @selected_index.setter
+    def selected_index(self, selected_index):
+        self.__selected_index = selected_index
+
+    @property
+    def all_sprites(self):
+        return self.__all_sprites
+
+    @all_sprites.setter
+    def all_sprites(self, all_sprites):
+        self.__all_sprites = all_sprites
 
     def handle_event(self, event): 
-        if self.selected_index == 0:
+        if self.__selected_index == 0:
             background = os.path.join(st.img_folder, "games/blackjack/mesa.png")
-        elif self.selected_index == 1:
+        elif self.__selected_index == 1:
             background = os.path.join(st.img_folder, "games/uno/mesa.png")
         else:
             background = os.path.join(st.img_folder, "title.png")
         self.set_background(os.path.join(st.img_folder, background))
         if event.type == pygame.KEYDOWN: 
             if event.key in (pygame.K_UP, pygame.K_w): 
-                self.select_sound.play() 
-                self.selected_index = (self.selected_index - 1) % len(self.buttons) 
+                self.__select_sound.play() 
+                self.__selected_index = (self.__selected_index - 1) % len(self.__buttons) 
             elif event.key in (pygame.K_DOWN, pygame.K_s): 
-                self.select_sound.play() 
-                self.selected_index = (self.selected_index + 1) % len(self.buttons) 
+                self.__select_sound.play() 
+                self.__selected_index = (self.__selected_index + 1) % len(self.__buttons) 
             elif event.key in (pygame.K_z, pygame.K_RETURN): 
-                self.ok_sound.play() 
-                self.next_screen = self.buttons[self.selected_index].action 
+                self.__ok_sound.play() 
+                self.__next_screen = self.__buttons[self.__selected_index].action 
 
     def update(self): 
         pass 
     
     def draw(self): 
-        self.screen.blit(self._background, (0, 0)) 
-        self.draw_text_with_outline(self.screen, "Select a Game", self.title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK) 
-        for i, button in enumerate(self.buttons): 
-            button.set_selected(i == self.selected_index) 
-        self.all_sprites.update() 
-        self.all_sprites.draw(self.screen) 
+        self.__screen.blit(self.__background, (0, 0)) 
+        self.draw_text_with_outline(self.__screen, "Select a Game", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK) 
+        for i, button in enumerate(self.__buttons): 
+            button.set_selected(i == self.__selected_index) 
+        self.__all_sprites.update() 
+        self.__all_sprites.draw(self.__screen) 
 
 # In src/interface.py, replace the entire ScoresScreen class with this one.
 
@@ -290,41 +403,105 @@ class ScoresScreen(Screen):
         # Create a list of games that have at least one score recorded
         self.__available_games = [game for game, scores in self.__game_scores.items() if scores]
 
+    @property
+    def title_font(self):
+        return self.__title_font
+
+    @title_font.setter
+    def title_font(self, title_font):
+        self.__title_font = title_font
+
+    @property
+    def text_font(self):
+        return self.__text_font
+
+    @text_font.setter
+    def text_font(self, text_font):
+        self.__text_font = text_font
+
+    @property
+    def page(self):
+        return self.__page
+
+    @page.setter
+    def page(self, page):
+        self.__page = page
+
+    @property
+    def selected_game_index(self):
+        return self.__selected_game_index
+
+    @selected_game_index.setter
+    def selected_game_index(self, selected_game_index):
+        self.__selected_game_index = selected_game_index
+
+    @property
+    def scroll_offset(self):
+        return self.__scroll_offset
+
+    @scroll_offset.setter
+    def scroll_offset(self, scroll_offset):
+        self.__scroll_offset = scroll_offset
+
+    @property
+    def visible_rows(self):
+        return self.__visible_rows
+
+    @visible_rows.setter
+    def visible_rows(self, visible_rows):
+        self.__visible_rows = visible_rows
+
+    @property
+    def game_scores(self):
+        return self.__game_scores
+
+    @game_scores.setter
+    def game_scores(self, game_scores):
+        self.__game_scores = game_scores
+
+    @property
+    def available_games(self):
+        return self.__available_games
+
+    @available_games.setter
+    def available_games(self, available_games):
+        self.__available_games = available_games
+
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             # --- Event Handling for GAME_SELECT page ---
             if self.__page == "GAME_SELECT":
                 if event.key in (pygame.K_x, pygame.K_ESCAPE):
-                    self.ok_sound.play()
-                    self.next_screen = "MENU"
+                    self.__ok_sound.play()
+                    self.__next_screen = "MENU"
                 
                 # Only allow navigation if there are games with scores
                 if self.__available_games:
                     if event.key in (pygame.K_UP, pygame.K_w):
-                        self.select_sound.play()
+                        self.__select_sound.play()
                         self.__selected_game_index = (self.__selected_game_index - 1) % len(self.__available_games)
                     elif event.key in (pygame.K_DOWN, pygame.K_s):
-                        self.select_sound.play()
+                        self.__select_sound.play()
                         self.__selected_game_index = (self.__selected_game_index + 1) % len(self.__available_games)
                     elif event.key in (pygame.K_z, pygame.K_RETURN):
-                        self.ok_sound.play()
+                        self.__ok_sound.play()
                         self.__page = "SCORES"  # Switch to the scores page
                         self.__scroll_offset = 0  # Reset scroll for the new list
 
             # --- Event Handling for SCORES page ---
             elif self.__page == "SCORES":
                 if event.key in (pygame.K_x, pygame.K_ESCAPE):
-                    self.ok_sound.play()
+                    self.__ok_sound.play()
                     self.__page = "GAME_SELECT"  # Go back to the game selection page
                 
                 # Scrolling logic for the scores list
                 selected_game = self.__available_games[self.__selected_game_index]
                 if self.__game_scores[selected_game]:
                     if event.key in (pygame.K_UP, pygame.K_w):
-                        self.select_sound.play()
+                        self.__select_sound.play()
                         self.__scroll_offset = max(0, self.__scroll_offset - 1)
                     elif event.key in (pygame.K_DOWN, pygame.K_s):
-                        self.select_sound.play()
+                        self.__select_sound.play()
                         max_scroll = len(self.__game_scores[selected_game]) - self.__visible_rows
                         self.__scroll_offset = min(max(0, max_scroll), self.__scroll_offset + 1)
 
@@ -332,41 +509,41 @@ class ScoresScreen(Screen):
         pass
 
     def draw(self):
-        self.screen.blit(self._background, (0, 0))
-        self.draw_text_with_outline(self.screen, "Press ESC to go back", self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 40), st.WHITE, st.BLACK)
+        self.__screen.blit(self.__background, (0, 0))
+        self.draw_text_with_outline(self.__screen, "Press ESC to go back", self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 40), st.WHITE, st.BLACK)
 
         # --- Drawing logic for GAME_SELECT page ---
         if self.__page == "GAME_SELECT":
-            self.draw_text_with_outline(self.screen, "Select a Game to View Scores", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self.__screen, "Select a Game to View Scores", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK)
             
             if not self.__available_games:
-                self.draw_text_with_outline(self.screen, "No scores recorded yet.", self.__text_font, (st.SCREEN_WIDTH/2, 300), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self.__screen, "No scores recorded yet.", self.__text_font, (st.SCREEN_WIDTH/2, 300), st.WHITE, st.BLACK)
             else:
                 for i, game_name in enumerate(self.__available_games):
                     y_pos = 200 + i * 50
                     color = st.GREEN if i == self.__selected_game_index else st.WHITE
-                    self.draw_text_with_outline(self.screen, game_name, self.__text_font, (st.SCREEN_WIDTH/2, y_pos), color, st.BLACK)
+                    self.draw_text_with_outline(self.__screen, game_name, self.__text_font, (st.SCREEN_WIDTH/2, y_pos), color, st.BLACK)
 
         # --- Drawing logic for SCORES page ---
         elif self.__page == "SCORES":
             selected_game_name = self.__available_games[self.__selected_game_index]
             scores_for_game = self.__game_scores[selected_game_name]
             
-            self.draw_text_with_outline(self.screen, f"{selected_game_name} Rankings", self.__title_font, (st.SCREEN_WIDTH/2, 60), st.WHITE, st.BLACK)
+            self.draw_text_with_outline(self.__screen, f"{selected_game_name} Rankings", self.__title_font, (st.SCREEN_WIDTH/2, 60), st.WHITE, st.BLACK)
             
             # Draw headers
             header_y = 120
-            self.draw_text_with_outline(self.screen, "Player", self.__text_font, (st.SCREEN_WIDTH/4, header_y), st.YELLOW, st.BLACK)
-            self.draw_text_with_outline(self.screen, "Score", self.__text_font, (st.SCREEN_WIDTH/2, header_y), st.YELLOW, st.BLACK)
-            self.draw_text_with_outline(self.screen, "Date", self.__text_font, (st.SCREEN_WIDTH * 3/4, header_y), st.YELLOW, st.BLACK)
+            self.draw_text_with_outline(self.__screen, "Player", self.__text_font, (st.SCREEN_WIDTH/4, header_y), st.YELLOW, st.BLACK)
+            self.draw_text_with_outline(self.__screen, "Score", self.__text_font, (st.SCREEN_WIDTH/2, header_y), st.YELLOW, st.BLACK)
+            self.draw_text_with_outline(self.__screen, "Date", self.__text_font, (st.SCREEN_WIDTH * 3/4, header_y), st.YELLOW, st.BLACK)
 
             # Draw scores
             visible_wins = scores_for_game[self.__scroll_offset : self.__scroll_offset + self.__visible_rows]
             for i, win in enumerate(visible_wins):
                 y_pos = 180 + i * 40
-                self.draw_text_with_outline(self.screen, win['player_name'], self.__text_font, (st.SCREEN_WIDTH/4, y_pos), st.WHITE, st.BLACK)
-                self.draw_text_with_outline(self.screen, str(win['score']), self.__text_font, (st.SCREEN_WIDTH/2, y_pos), st.GREEN, st.BLACK)
-                self.draw_text_with_outline(self.screen, win['date'], self.__text_font, (st.SCREEN_WIDTH * 3/4, y_pos), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self.__screen, win['player_name'], self.__text_font, (st.SCREEN_WIDTH/4, y_pos), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self.__screen, str(win['score']), self.__text_font, (st.SCREEN_WIDTH/2, y_pos), st.GREEN, st.BLACK)
+                self.draw_text_with_outline(self.__screen, win['date'], self.__text_font, (st.SCREEN_WIDTH * 3/4, y_pos), st.WHITE, st.BLACK)
 
 class BlackjackScreen(Screen): 
     """The View for the Blackjack game. It only draws what the Model tells it to.""" 
@@ -382,7 +559,71 @@ class BlackjackScreen(Screen):
         self.load_card_images() 
         self.__input_value = ''
         self.__amount = 0
-        
+    
+    @property
+    def game(self):
+        return self.__game
+
+    @game.setter
+    def game(self, game):
+        self.__game = game
+
+    @property
+    def current_action_phase(self):
+        return self.__current_action_phase
+
+    @current_action_phase.setter
+    def current_action_phase(self, current_action_phase):
+        self.__current_action_phase = current_action_phase
+
+    @property
+    def assets_folder(self):
+        return self.__assets_folder
+
+    @assets_folder.setter
+    def assets_folder(self, assets_folder):
+        self.__assets_folder = assets_folder
+
+    @property
+    def selected_opc(self):
+        return self.__selected_opc
+
+    @selected_opc.setter
+    def selected_opc(self, selected_opc):
+        self.__selected_opc = selected_opc
+
+    @property
+    def font(self):
+        return self.__font
+
+    @font.setter
+    def font(self, font):
+        self.__font = font
+
+    @property
+    def card_sprites(self):
+        return self.__card_sprites
+
+    @card_sprites.setter
+    def card_sprites(self, card_sprites):
+        self.__card_sprites = card_sprites
+
+    @property
+    def input_value(self):
+        return self.__input_value
+
+    @input_value.setter
+    def input_value(self, input_value):
+        self.__input_value = input_value
+
+    @property
+    def amount(self):
+        return self.__amount
+
+    @amount.setter
+    def amount(self, amount):
+        self.__amount = amount
+
     def load_card_images(self): 
         """Pre-loads all card images into a dictionary for quick access.""" 
         self.card_images = {} 
@@ -414,11 +655,11 @@ class BlackjackScreen(Screen):
         elif self.__game.state == "PLAYER_TURN": 
             if event.type == pygame.KEYDOWN: 
                 if event.key in (pygame.K_z, pygame.K_h): # 'Z' or 'H' to Hit 
-                    self.flip_card.play() 
+                    self.__flip_card.play() 
                     self.__game.player_hit() 
 
                 elif event.key in (pygame.K_x, pygame.K_s): # 'X' or 'S' to Stand 
-                    self.ok_sound.play() 
+                    self.__ok_sound.play() 
                     self.__game.player_stand() 
         
             """elif self.__game.state == "ROUND_OVER": 
@@ -429,19 +670,19 @@ class BlackjackScreen(Screen):
                             self.__game.state = "BET"
                             #self.__game.setBetAmount() # Play again 
                         else:
-                            self.next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu 
+                            self.__next_screen = "UPDATE_PLAYER_DATA" # Not enough points, exit to menu 
                     elif event.key in (pygame.K_x, pygame.K_ESCAPE):
-                        self.next_screen = "MENU" """
+                        self.__next_screen = "MENU" """
         
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_RIGHT, pygame.K_d):
-                    self.select_sound.play()
+                    self.__select_sound.play()
                     self.__selected_opc = (self.__selected_opc + 1) % len(buttons)
                 elif event.key in (pygame.K_LEFT, pygame.K_a):
-                    self.select_sound.play()
+                    self.__select_sound.play()
                     self.__selected_opc = (self.__selected_opc - 1) % len(buttons)
                 elif event.key in (pygame.K_z, pygame.K_RETURN):
                     # Player chose 'Quit' (index 1)
@@ -449,9 +690,9 @@ class BlackjackScreen(Screen):
                         # If the player won, return data to be logged
                         if "Win" in self.__game.result:
                             final_score = self.__game.player.points
-                            self.next_screen = ("LOG_WIN", final_score, "Blackjack")
+                            self.__next_screen = ("LOG_WIN", final_score, "Blackjack")
                         else: # If they lost or tied, just return to menu
-                            self.next_screen = "MENU"
+                            self.__next_screen = "MENU"
                     else: # Player chose to play again
                         if self.__game.player.points >= 10:
                             self.__game.state = "BET"
@@ -499,17 +740,17 @@ class BlackjackScreen(Screen):
                     self.__current_action_phase = None # Reset phase; game state will change
 
     def draw(self): 
-        self.screen.blit(self._background, (0, 0)) 
+        self.__screen.blit(self.__background, (0, 0)) 
         self.sync_sprites_with_model() 
-        self.__card_sprites.draw(self.screen) 
+        self.__card_sprites.draw(self.__screen) 
 
-        self.draw_text_with_outline(self.screen, f'{self.__game.player.points}$', self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) 
+        self.draw_text_with_outline(self.__screen, f'{self.__game.player.points}$', self.__font, (st.SCREEN_WIDTH*1/8, st.SCREEN_HEIGHT*1/12), st.GREEN, st.BLACK) 
         
         # Draw scores 
         dealer_score_text = f"Dealer's Hand: {self.__game.table.sumValues()}" 
         player_score_text = f"{self.__game.player.name}'s Hand: {self.__game.player.sumValues()}" 
-        self.draw_text_with_outline(self.screen, dealer_score_text, self.__font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) 
-        self.draw_text_with_outline(self.screen, player_score_text, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) 
+        self.draw_text_with_outline(self.__screen, dealer_score_text, self.__font, (st.SCREEN_WIDTH/2, 40), st.WHITE, st.BLACK) 
+        self.draw_text_with_outline(self.__screen, player_score_text, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*4/5+100), st.WHITE, st.BLACK) 
 
         
 
@@ -520,33 +761,33 @@ class BlackjackScreen(Screen):
             box_width = 450
             box_height = 150
             pos = pygame.Rect((st.SCREEN_WIDTH - box_width) / 2,(st.SCREEN_HEIGHT - box_height) / 2,box_width, box_height )
-            pygame.draw.rect(self.screen, st.BLACK, pos)  # fundo da caixa
-            pygame.draw.rect(self.screen, st.WHITE, pos, 2)  # borda branca
+            pygame.draw.rect(self.__screen, st.BLACK, pos)  # fundo da caixa
+            pygame.draw.rect(self.__screen, st.WHITE, pos, 2)  # borda branca
 
             # Renderiza o texto do prompt
             prompt_surface = self.__font.render("Enter the bet amount", True, st.WHITE)
             prompt_rect = prompt_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 - 40))
-            self.screen.blit(prompt_surface, prompt_rect)
+            self.__screen.blit(prompt_surface, prompt_rect)
 
             # Renderiza o valor digitado
             input_surface = self.__font.render(self.__input_value, True, st.GREEN)
             input_rect = input_surface.get_rect(center=(st.SCREEN_WIDTH / 2, st.SCREEN_HEIGHT / 2 + 10))
-            self.screen.blit(input_surface, input_rect)
+            self.__screen.blit(input_surface, input_rect)
     
         elif self.__game.state == "PLAYER_TURN": 
             prompt = "Z Hit" 
-            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) 
+            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12), st.GREEN, st.BLACK) 
             prompt = "X Stand" 
-            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) 
+            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH*7/8, st.SCREEN_HEIGHT*11/12-25), st.GREEN, st.BLACK) 
 
             """elif self.__game.state == "ROUND_OVER": 
             result_text = f"Result: {self.__game.result}" 
-            self.draw_text_with_outline(self.screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
+            self.draw_text_with_outline(self.__screen, result_text, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
             prompt = "Press [Z] to play again." if self.__game.player.points >= 10 else "Not enough points. Press [Z] to exit." 
-            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) 
+            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 280), st.WHITE, st.BLACK) 
             if self.__game.player.points >= 10:
                 prompt = "Or [X] to quit and save your score"
-                self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #  """
+                self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, 320), st.WHITE, st.BLACK) #  """
             
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
@@ -558,11 +799,11 @@ class BlackjackScreen(Screen):
                 button.set_selected(i == self.__selected_opc)
             color_sprite_group = pygame.sprite.Group(opc_buttons)
             color_sprite_group.update()
-            color_sprite_group.draw(self.screen)
-            self.draw_text_with_outline(self.screen, self.__game.result, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
-            self.draw_text_with_outline(self.screen, f'+{self.__game.win_value}$', pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 280), st.YELLOW, st.BLACK) 
+            color_sprite_group.draw(self.__screen)
+            self.draw_text_with_outline(self.__screen, self.__game.result, pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 240), st.MAGENTA, st.BLACK) 
+            self.draw_text_with_outline(self.__screen, f'+{self.__game.win_value}$', pygame.font.Font(st.text_font, 32), (st.SCREEN_WIDTH/2, 280), st.YELLOW, st.BLACK) 
             prompt = "Bet again? (Quit to save points)" if self.__game.player.points >= 10 else "Not enough points. Restart?"   
-            self.draw_text_with_outline(self.screen, prompt, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2 +50), st.WHITE, st.BLACK) # 
+            self.draw_text_with_outline(self.__screen, prompt, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2 +50), st.WHITE, st.BLACK) # 
             
 
     def get_player_data(self): 
@@ -583,6 +824,69 @@ class UnoScreen(Screen):
         self.__current_action_phase = None # To manage multi-step timed actions
         self.load_card_images()
 
+    @property
+    def game(self):
+        return self.__game
+
+    @game.setter
+    def game(self, game):
+        self.__game = game
+
+    @property
+    def assets_folder(self):
+        return self.__assets_folder
+
+    @assets_folder.setter
+    def assets_folder(self, assets_folder):
+        self.__assets_folder = assets_folder
+
+    @property
+    def selected_card(self):
+        return self.__selected_card
+
+    @selected_card.setter
+    def selected_card(self, selected_card):
+        self.__selected_card = selected_card
+
+    @property
+    def selected_color(self):
+        return self.__selected_color
+
+    @selected_color.setter
+    def selected_color(self, selected_color):
+        self.__selected_color = selected_color
+
+    @property
+    def selected_opc(self):
+        return self.__selected_opc
+
+    @selected_opc.setter
+    def selected_opc(self, selected_opc):
+        self.__selected_opc = selected_opc
+
+    @property
+    def card_sprites(self):
+        return self.__card_sprites
+
+    @card_sprites.setter
+    def card_sprites(self, card_sprites):
+        self.__card_sprites = card_sprites
+
+    @property
+    def action_timer(self):
+        return self.__action_timer
+
+    @action_timer.setter
+    def action_timer(self, action_timer):
+        self.__action_timer = action_timer
+
+    @property
+    def current_action_phase(self):
+        return self.__current_action_phase
+
+    @current_action_phase.setter
+    def current_action_phase(self, current_action_phase):
+        self.__current_action_phase = current_action_phase
 
     def load_card_images(self): 
         """Pre-loads all card images into a dictionary for quick access.""" 
@@ -647,9 +951,9 @@ class UnoScreen(Screen):
             self.__card_sprites.add(CardSprite(pos, self.card_images[image_key])) 
             
     def draw(self):
-        self.screen.blit(self._background, (0, 0))
+        self.__screen.blit(self.__background, (0, 0))
         self.sync_sprites_with_model()
-        self.__card_sprites.draw(self.screen)
+        self.__card_sprites.draw(self.__screen)
 
         #place the names
         for i in range(4):
@@ -667,25 +971,25 @@ class UnoScreen(Screen):
                 rotation = 90
             if i == self.__game.players.turn:
                 text_color = st.GREEN
-            self.draw_text_with_outline(self.screen, self.__game.players[i].name, pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
+            self.draw_text_with_outline(self.__screen, self.__game.players[i].name, pygame.font.Font(st.button_font, 20), (pos), text_color, st.BLACK, 2, rotation)
 
         #place de rotacion image        
         if self.__game.players.rotation == 1:
             rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
-            self.screen.blit(rotation_image, rect)
+            self.__screen.blit(rotation_image, rect)
         else:
             rotation_image = pygame.image.load(os.path.join(self.__assets_folder, "rotation.png")).convert_alpha()
             rotation_image = pygame.transform.flip(rotation_image, True, False)
             rect = rotation_image.get_rect(center=(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2))
-            self.screen.blit(rotation_image, rect)
+            self.__screen.blit(rotation_image, rect)
 
         if self.__game.state == "PLAYER_TURN":
             text_color = st.WHITE
             if self.__game.players.already_buy:
                 if self.__selected_card == -1:
                     text_color = st.GREEN
-                self.draw_text_with_outline(self.screen, "Skip", pygame.font.Font(st.button_font, 20), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*5/8), text_color, st.BLACK)
+                self.draw_text_with_outline(self.__screen, "Skip", pygame.font.Font(st.button_font, 20), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT*5/8), text_color, st.BLACK)
 
         elif self.__game.state == "PLAYER_SELEC_COLOR":
             colors = ['red','yellow','green','blue']
@@ -700,8 +1004,8 @@ class UnoScreen(Screen):
             color_sprite_group = pygame.sprite.Group(color_buttons)
             self.__game.disc_deck.topCard().color = colors[self.__selected_color]
             color_sprite_group.update()
-            color_sprite_group.draw(self.screen)
-            self.draw_text_with_outline(self.screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+            color_sprite_group.draw(self.__screen)
+            self.draw_text_with_outline(self.__screen, "Select a color", pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
         elif self.__game.state == "ROUND_OVER":
             buttons = ['yes', 'no']
@@ -713,11 +1017,11 @@ class UnoScreen(Screen):
                 button.set_selected(i == self.__selected_opc)
             color_sprite_group = pygame.sprite.Group(opc_buttons)
             color_sprite_group.update()
-            color_sprite_group.draw(self.screen)
+            color_sprite_group.draw(self.__screen)
             if self.__game.players.getCurrentPlayer() == self.__game.players.getHumanPlayer():
-                self.draw_text_with_outline(self.screen, f'{self.__game.players.getHumanPlayer().name} Win! with {self.__game.players.getHumanPlayer().points}', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self.__screen, f'{self.__game.players.getHumanPlayer().name} Win! with {self.__game.players.getHumanPlayer().points}', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
             else:
-                self.draw_text_with_outline(self.screen, f'You lose!', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self.__screen, f'You lose!', pygame.font.Font(st.button_font, 30), (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2-100), st.WHITE, st.BLACK)
 
             
 
@@ -755,15 +1059,15 @@ class UnoScreen(Screen):
 
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_LEFT, pygame.K_a):
-                    self.select_sound.play()
+                    self.__select_sound.play()
                     self.__selected_card = ((self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_RIGHT, pygame.K_d):
-                    self.select_sound.play()
+                    self.__select_sound.play()
                     self.__selected_card = ((self.__selected_card + 1) % (self.__game.players.getHumanPlayer().size()+1))
                 elif event.key in (pygame.K_z, pygame.K_RETURN):
                     if self.__selected_card >= 0:
                         self.__game.player_play_card(self.__selected_card) 
-                        self.flip_card.play()
+                        self.__flip_card.play()
                     elif self.__selected_card == -1:
                         if not self.__game.players.already_buy:
                             self.__selected_card = self.__game.player_draw_card(self.__game.players.getHumanPlayer())
@@ -782,10 +1086,10 @@ class UnoScreen(Screen):
 
             if event.type == pygame.KEYDOWN: 
                 if event.key in (pygame.K_RIGHT, pygame.K_d): 
-                    self.select_sound.play() 
+                    self.__select_sound.play() 
                     self.__selected_color = (self.__selected_color + 1) % len(colors) 
                 elif event.key in (pygame.K_LEFT, pygame.K_a): 
-                    self.select_sound.play() 
+                    self.__select_sound.play() 
                     self.__selected_color = (self.__selected_color - 1) % len(colors) 
                 elif event.key in (pygame.K_z, pygame.K_RETURN): 
                     self.__game.human_select_color(colors[self.__selected_color])       
@@ -798,16 +1102,16 @@ class UnoScreen(Screen):
 
             if event.type == pygame.KEYDOWN: 
                 if event.key in (pygame.K_RIGHT, pygame.K_d): 
-                    self.select_sound.play() 
+                    self.__select_sound.play() 
                     self.__selected_opc = (self.__selected_opc + 1) % len(buttons) 
                 elif event.key in (pygame.K_LEFT, pygame.K_a): 
-                    self.select_sound.play() 
+                    self.__select_sound.play() 
                     self.__selected_opc = (self.__selected_opc - 1) % len(buttons) 
                 elif event.key in (pygame.K_z, pygame.K_RETURN): 
                     if self.__selected_opc == 0:
                         self.__game.start_round()
                     else:
-                        self.next_screen = "MENU"
+                        self.__next_screen = "MENU"
 
         # BOT_TURN and ROUND_OVER logic is now handled in update() for timed delays
 
@@ -816,23 +1120,55 @@ class NotificationScreen(Screen):
     """A simple screen to display a message for a short time before transitioning.""" 
     def __init__(self, screen, message, next_screen, player_data=None): 
         super().__init__(screen, player_data) 
-        self.message = message 
-        self.next_screen_key = next_screen 
+        self.__message = message 
+        self.__next_screen_key = next_screen 
         self.__font = pygame.font.Font(st.button_font, st.title_size) 
         self.set_background(os.path.join(st.img_folder, "title.png")) 
-        self.entry_time = pygame.time.get_ticks() 
+        self.__entry_time = pygame.time.get_ticks() 
     
+    @property
+    def message(self):
+        return self.__message
+
+    @message.setter
+    def message(self, message):
+        self.__message = message
+
+    @property
+    def next_screen_key(self):
+        return self.__next_screen_key
+
+    @next_screen_key.setter
+    def next_screen_key(self, next_screen_key):
+        self.__next_screen_key = next_screen_key
+
+    @property
+    def font(self):
+        return self.__font
+
+    @font.setter
+    def font(self, font):
+        self.__font = font
+
+    @property
+    def entry_time(self):
+        return self.__entry_time
+
+    @entry_time.setter
+    def entry_time(self, entry_time):
+        self.__entry_time = entry_time
+
     def update(self):
         pass
 
     def handle_event(self, event): 
         # Transition on key press or after a delay 
-        if event.type == pygame.KEYDOWN or pygame.time.get_ticks() - self.entry_time > 2000: 
-            self.next_screen = self.next_screen_key 
+        if event.type == pygame.KEYDOWN or pygame.time.get_ticks() - self.__entry_time > 2000: 
+            self.__next_screen = self.__next_screen_key 
             
     def draw(self): 
-        self.screen.blit(self._background, (0,0)) 
-        self.draw_text_with_outline(self.screen, self.message, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) 
+        self.__screen.blit(self.__background, (0,0)) 
+        self.draw_text_with_outline(self.__screen, self.__message, self.__font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2), st.WHITE, st.BLACK) 
 
 # --- SPRITE CLASSES ---
 
@@ -840,22 +1176,101 @@ class Button(pygame.sprite.Sprite):
     def __init__(self, xy_pos, message, action, font_size=st.button_size): 
         super().__init__() 
         self.__message = message 
-        self.action = action 
+        self.__action = action 
         self.__font = pygame.font.Font(st.button_font, font_size) 
         self.__is_selected = False 
         self.__colors = [st.WHITE, st.GREEN] 
-        self.image = self.__font.render(self.__message, True, self.__colors[0]) 
-        self.rect = self.image.get_rect(center=xy_pos) 
+        self.__image = self.__font.render(self.__message, True, self.__colors[0]) 
+        self.__rect = self.__image.get_rect(center=xy_pos) 
     
+    @property
+    def message(self):
+        return self.__message
+
+    @message.setter
+    def message(self, message):
+        self.__message = message
+
+
+    @property
+    def action(self):
+        return self.__action
+
+    @action.setter
+    def action(self, action):
+        self.__action = action
+
+
+    @property
+    def font(self):
+        return self.__font
+
+    @font.setter
+    def font(self, font):
+        self.__font = font
+
+
+    @property
+    def is_selected(self):
+        return self.__is_selected
+
+    @is_selected.setter
+    def is_selected(self, is_selected):
+        self.__is_selected = is_selected
+
+
+    @property
+    def colors(self):
+        return self.__colors
+
+    @colors.setter
+    def colors(self, colors):
+        self.__colors = colors
+
+
+    @property
+    def image(self):
+        return self.__image
+
+    @image.setter
+    def image(self, image):
+        self.__image = image
+
+
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
+
     def set_selected(self, is_selected): 
         self.__is_selected = is_selected 
 
     def update(self): 
         color = self.__colors[1] if self.__is_selected else self.__colors[0] 
-        self.image = self.__font.render(self.__message, True, color) 
+        self.__image = self.__font.render(self.__message, True, color) 
 
 class CardSprite(pygame.sprite.Sprite): 
     def __init__(self, pos, image): 
         super().__init__() 
-        self.image = image 
-        self.rect = self.image.get_rect(center=pos) #
+        self.__image = image 
+        self.__rect = self.__image.get_rect(center=pos) #
+    
+    @property
+    def image(self):
+        return self.__image
+
+    @image.setter
+    def image(self, image):
+        self.__image = image
+
+
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
