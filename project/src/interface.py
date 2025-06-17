@@ -1013,7 +1013,7 @@ class UnoScreen(Screen):
             if self.__current_action_phase is None:
                 # Bot's turn begins, set a timer for "thinking"
                 self.__current_action_phase = "bot_thinking"
-                self.__action_timer = pygame.time.get_ticks() + 100 # 1.5-second delay
+                self.__action_timer = pygame.time.get_ticks() + 1000 # 1.5-second delay
             elif self.__current_action_phase == "bot_thinking":
                 if pygame.time.get_ticks() >= self.__action_timer:
                     self.__game.bot_play() # Bot performs its action
