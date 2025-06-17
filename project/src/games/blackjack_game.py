@@ -310,10 +310,10 @@ class BlackjackGame:
             self.__result = f"{self.__player.name} Wins." 
             self.__win_value = self.__betAmount * 2 # Return bet + winnings 
         elif player_score > dealer_score: 
-            self.__result = "f{self.__player.name} Wins!" 
+            self.__result = f"{self.__player.name} Wins!" 
             self.__win_value = self.__betAmount * 2
         elif dealer_score > player_score: 
-            self.__result = "{self.__player.name} Lose!." 
+            self.__result = f"{self.__player.name} Lose!." 
         else: # Push 
             self.__result = "Draw." 
             self.__win_value = self.__betAmount

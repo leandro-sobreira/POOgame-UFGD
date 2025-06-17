@@ -1021,7 +1021,7 @@ class UnoScreen(Screen):
         elif current_game_state == "ROUND_OVER" :
             if self.__current_action_phase is None:
                 self.__current_action_phase = "round_over"
-                self.__action_timer = pygame.time.get_ticks() + 2000 # 2-second delay
+                self.__action_timer = pygame.time.get_ticks() + 4000 # 4-second delay
             elif self.__current_action_phase == "round_over" and self.__game.players.getHumanPlayer().points > 0:
                 if pygame.time.get_ticks() >= self.__action_timer:
                     final_score = self.__game.players.getHumanPlayer().points
@@ -1058,6 +1058,8 @@ class UnoScreen(Screen):
                     if self.__selected_card >= 0:
                         self.__game.player_play_card(self.__selected_card) 
                         self._Screen__flip_card.play()
+                        if self.__game.players.getHumanPlayer().size() > 0:
+                            self.__selected_card = (self.__selected_card - 1) % (self.__game.players.getHumanPlayer().size())
                     elif self.__selected_card == -1:
                         if not self.__game.players.already_buy:
                             self.__selected_card = self.__game.player_draw_card(self.__game.players.getHumanPlayer())

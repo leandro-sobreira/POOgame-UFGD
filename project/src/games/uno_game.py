@@ -169,8 +169,7 @@ class UnoGame:
         for i in range(7):
             for player in self.__players:
                 player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
-                if player == self.__players.getHumanPlayer():
-                    player.sort()
+            self.__players.getHumanPlayer().sort()
 
         self.__disc_deck.add(self.__buy_deck.give())
 
@@ -188,7 +187,6 @@ class UnoGame:
         self.__players.setNextTurn()
         self.players.already_buy = False
         if self.__players.turn == self.players.getHumanTurn():
-            self.__players.getCurrentPlayer().sort()
             self.__state = 'PLAYER_TURN'
         else:
             self.__state = 'BOT_TURN'
@@ -206,6 +204,9 @@ class UnoGame:
             self.__disc_deck.add(self.__players.getCurrentPlayer().give(card))
             print(f'{self.__players.getCurrentPlayer().name}: played [{self.__disc_deck.topCard()}]')
             if self.__players.getCurrentPlayer().isEmpty():
+                for player in self.__players:
+                    player.sort()
+                    player.flipAll(True)
                 self.sumPoints()
                 self.state = 'ROUND_OVER'
             else:
@@ -286,6 +287,9 @@ class UnoGame:
         if self.__buy_deck.isEmpty():
             self.reshuffle_buy_deck()
         player.add(self.__buy_deck.give(player == self.__players.getHumanPlayer()))
+        if player == self.__players.getHumanPlayer():
+            player.sort()
+
 
     def player_draw_card(self, player):
         """
