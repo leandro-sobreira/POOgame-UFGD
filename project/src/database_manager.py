@@ -15,15 +15,15 @@ class ScoreEntry:
         """
         Initializes a new ScoreEntry object.
         """
-        self.player_name = player_name
-        self.score = score
-        self.game_name = game_name
-        self.timestamp = timestamp or datetime.now()
+        self.__player_name = player_name
+        self.__score = score
+        self.__game_name = game_name
+        self.__timestamp = timestamp or datetime.now()
 
     def __repr__(self) -> str:
         """Provides a clear textual representation of the object, useful for debugging."""
-        return (f"ScoreEntry(player='{self.player_name}', score={self.score}, "
-                f"game='{self.game_name}', date='{self.timestamp.strftime('%d/%m/%y - %H:%M')}')")
+        return (f"ScoreEntry(player='{self.__player_name}', score={self.__score}, "
+                f"game='{self.__game_name}', date='{self.__timestamp.strftime('%d/%m/%y - %H:%M')}')")
 
 class ScoreRepository:
     """
