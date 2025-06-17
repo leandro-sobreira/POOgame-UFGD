@@ -372,36 +372,32 @@ class GameSelectScreen(Screen):
 # In src/interface.py, replace the entire ScoresScreen class with this one.
 
 class ScoresScreen(Screen):
-    def __init__(self, screen):
+    def __init__(self, screen, scores: list):
         super().__init__(screen)
         self.set_background(os.path.join(st.img_folder, "title.png"))
         self.__title_font = pygame.font.Font(st.text_font, 42)
         self.__text_font = pygame.font.Font(st.text_font, 32)
         
         # --- Internal State ---
-        self.__page = "GAME_SELECT"  # Start on the game selection page
+        self.__page = "GAME_SELECT"
         self.__selected_game_index = 0
         self.__scroll_offset = 0
         self.__visible_rows = 12
         
-        # --- Data Loading and Processing ---
-        all_wins = db.get_all_wins()
-        # Create a dictionary to hold scores for each game
+        # --- Data processing on the provided list of ScoreEntry objects ---
         self.__game_scores = {
             "Blackjack": [],
             "Uno": []
         }
-        for win in all_wins:
-            game_name = win.get("game") # Get the game name from the win record
-            if game_name in self.__game_scores:
-                self.__game_scores[game_name].append(win)
+        for win_entry in scores:
+            if win_entry.game_name in self.__game_scores:
+                self.__game_scores[win_entry.game_name].append(win_entry)
 
-        # Sort scores for each game by score in descending order, for each game individually
+        # The repository already sorts, but re-sorting is safe
         for game in self.__game_scores:
-            self.__game_scores[game].sort(key=lambda x: x["score"], reverse=True)
+            self.__game_scores[game].sort(key=lambda x: x.score, reverse=True)
         
-        # Create a list of games that have at least one score recorded
-        self.__available_games = [game for game, scores in self.__game_scores.items() if scores]
+        self.__available_games = [game for game, score_list in self.__game_scores.items() if score_list]
 
     @property
     def title_font(self):
@@ -469,13 +465,11 @@ class ScoresScreen(Screen):
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
-            # --- Event Handling for GAME_SELECT page ---
             if self.__page == "GAME_SELECT":
                 if event.key in (pygame.K_x, pygame.K_ESCAPE):
                     self._Screen__ok_sound.play()
                     self._Screen__next_screen = "MENU"
                 
-                # Only allow navigation if there are games with scores
                 if self.__available_games:
                     if event.key in (pygame.K_UP, pygame.K_w):
                         self._Screen__select_sound.play()
@@ -485,16 +479,14 @@ class ScoresScreen(Screen):
                         self.__selected_game_index = (self.__selected_game_index + 1) % len(self.__available_games)
                     elif event.key in (pygame.K_z, pygame.K_RETURN):
                         self._Screen__ok_sound.play()
-                        self.__page = "SCORES"  # Switch to the scores page
-                        self.__scroll_offset = 0  # Reset scroll for the new list
+                        self.__page = "SCORES"
+                        self.__scroll_offset = 0
 
-            # --- Event Handling for SCORES page ---
             elif self.__page == "SCORES":
                 if event.key in (pygame.K_x, pygame.K_ESCAPE):
                     self._Screen__ok_sound.play()
-                    self.__page = "GAME_SELECT"  # Go back to the game selection page
+                    self.__page = "GAME_SELECT"
                 
-                # Scrolling logic for the scores list
                 selected_game = self.__available_games[self.__selected_game_index]
                 if self.__game_scores[selected_game]:
                     if event.key in (pygame.K_UP, pygame.K_w):
@@ -512,7 +504,6 @@ class ScoresScreen(Screen):
         self._Screen__screen.blit(self._Screen__background, (0, 0))
         self.draw_text_with_outline(self._Screen__screen, "Press ESC to go back", self.__text_font, (st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT - 40), st.WHITE, st.BLACK)
 
-        # --- Drawing logic for GAME_SELECT page ---
         if self.__page == "GAME_SELECT":
             self.draw_text_with_outline(self._Screen__screen, "Select a Game to View Scores", self.__title_font, (st.SCREEN_WIDTH/2, 80), st.WHITE, st.BLACK)
             
@@ -524,26 +515,23 @@ class ScoresScreen(Screen):
                     color = st.GREEN if i == self.__selected_game_index else st.WHITE
                     self.draw_text_with_outline(self._Screen__screen, game_name, self.__text_font, (st.SCREEN_WIDTH/2, y_pos), color, st.BLACK)
 
-        # --- Drawing logic for SCORES page ---
         elif self.__page == "SCORES":
             selected_game_name = self.__available_games[self.__selected_game_index]
             scores_for_game = self.__game_scores[selected_game_name]
             
             self.draw_text_with_outline(self._Screen__screen, f"{selected_game_name} Rankings", self.__title_font, (st.SCREEN_WIDTH/2, 60), st.WHITE, st.BLACK)
             
-            # Draw headers
             header_y = 120
             self.draw_text_with_outline(self._Screen__screen, "Player", self.__text_font, (st.SCREEN_WIDTH/4, header_y), st.YELLOW, st.BLACK)
             self.draw_text_with_outline(self._Screen__screen, "Score", self.__text_font, (st.SCREEN_WIDTH/2, header_y), st.YELLOW, st.BLACK)
             self.draw_text_with_outline(self._Screen__screen, "Date", self.__text_font, (st.SCREEN_WIDTH * 3/4, header_y), st.YELLOW, st.BLACK)
 
-            # Draw scores
             visible_wins = scores_for_game[self.__scroll_offset : self.__scroll_offset + self.__visible_rows]
             for i, win in enumerate(visible_wins):
                 y_pos = 180 + i * 40
-                self.draw_text_with_outline(self._Screen__screen, win['player_name'], self.__text_font, (st.SCREEN_WIDTH/4, y_pos), st.WHITE, st.BLACK)
-                self.draw_text_with_outline(self._Screen__screen, str(win['score']), self.__text_font, (st.SCREEN_WIDTH/2, y_pos), st.GREEN, st.BLACK)
-                self.draw_text_with_outline(self._Screen__screen, win['date'], self.__text_font, (st.SCREEN_WIDTH * 3/4, y_pos), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, win.player_name, self.__text_font, (st.SCREEN_WIDTH/4, y_pos), st.WHITE, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, str(win.score), self.__text_font, (st.SCREEN_WIDTH/2, y_pos), st.GREEN, st.BLACK)
+                self.draw_text_with_outline(self._Screen__screen, win.timestamp.strftime("%d/%m/%y"), self.__text_font, (st.SCREEN_WIDTH * 3/4, y_pos), st.WHITE, st.BLACK)
 
 class BlackjackScreen(Screen): 
     """The View for the Blackjack game. It only draws what the Model tells it to.""" 

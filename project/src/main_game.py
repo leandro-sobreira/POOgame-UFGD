@@ -1,4 +1,3 @@
-# Import necessary libraries
 import pygame
 import os
 import sys
@@ -8,54 +7,24 @@ from .games import uno_game as uno
 
 from . import setup as st
 from . import interface as it
-from . import database_manager as db
+# Import the new class instead of the old module alias
+from .database_manager import ScoreRepository
 
 class Game():
     """
-    Classe Game feita para ser a classe principal a ser utilizada para a inicialização do jogo como um todo
-
-    Atributos
-    ---------
-    Privados:
-        current_player_data : dict{key: str, key: int}
-        running : bool
-        screen_size : tuple(int, int)
-        screen : pygame.Surface
-        icon_path : str
-
-    Métodos
-    -------
-    player_name():
-        Getter de player_name
-    running():
-        Getter de running
-    screen_size():
-        Getter de screen_size
-    screen():
-        Getter de screen
-    icon_path():
-        Getter de icon_path
-    player_name():
-        Setter de player_name
-    running():
-        Setter de running
-    screen_size():
-        Setter de screen_size
-    screen():
-        Setter de screen
-    icon_path():
-        Setter de icon_path
-    mainLoop():
-        Realiza a execução do looping principal do jogo e também a finalização da execução
+    Main Game class, serves as the Controller to initialize and manage game flow.
     """
     def __init__(self):
         """
-        Construtor da classe Game responsável por inicializar os atributos de um objeto Game     
+        Game constructor. Initializes Pygame and the persistence repository.
         """
         # Pygame Initialization
         pygame.init()
         pygame.mixer.init()
         pygame.display.set_caption("CardGame HUB")
+
+        # Instantiate the repository here
+        self.score_repository = ScoreRepository()
 
         self.__player_name = "Player"
         self.__running = True
@@ -65,104 +34,42 @@ class Game():
 
     @property
     def player_name(self):
-        """
-        Getter de player_name
-
-        Returns:
-            player_name: str atual sendo utilizada para representar o nome do jogador em BlackjackGame
-        """
-
         return self.__player_name
 
     @property
     def running(self):
-        """
-        Getter de running
-
-        Returns:
-            bool: valor booleano atual sendo utilizado como running para definir estados do jogo
-        """
         return self.__running
     
     @property
     def screen_size(self):
-        """
-        Getter de screen_size
-
-        Returns:
-            tuple(int, int): tupla de inteiros atual sendo utilizada para definir o tamanho da tela utilizada
-        """
         return self.__screen_size
     
     @property
     def screen(self):
-        """
-        Getter de screen
-
-        Returns:
-            pygame.Surface: objeto pygame.Surface atual sendo utilizado como tela a ser renderizada
-        """
         return self.__screen
 
     @property
     def icon_path(self):
-        """
-        Getter de icon_path
-
-        Returns:
-            str: string atual sendo utilizada como path do arquivo de icon a ser renderizado
-        """
         return self.__icon_path
     
     @player_name.setter
     def player_name(self, player_name):
-        """
-        Setter de player_name
-
-        Argumentos:
-            player_name (str): str a ser utilizada para representar o nome do jogador em BlackjackGame
-        """
         self.__player_name = player_name
 
     @running.setter
     def running(self, running):
-        """
-        Setter de running
-
-        Argumentos:
-            running (bool): valor booleano a ser utilizado como running para definir estados do jogo
-        """
         self.__running = running
     
     @screen_size.setter
     def screen_size(self, screen_size):
-        """
-        Setter de screen_size
-
-        Argumentos:
-            screen_size (tuple(int, int)): tupla de inteiros a ser utilizada para definir o tamanho da tela utilizada
-        """
         self.__screen_size = screen_size
 
     @screen.setter
     def screen(self, screen):
-        """
-        Setter de screen
-
-        Argumentos:
-            screen (pygame.Surface): objeto pygame.Surface a ser utilizado como tela a ser renderizada
-        """
         self.__screen = screen
 
     @icon_path.setter
     def icon_path(self, icon_path):
-        """
-        Setter de icon_path
-
-        Argumentos:
-            icon_path (str): string a ser utilizada como path do arquivo de icon a ser renderizado
-        """
-
         old_path = self.__icon_path
         new_path = icon_path
 
@@ -176,19 +83,14 @@ class Game():
     
     def mainLoop(self):
         """
-        Método principal responsável por inicializar o jogo e também encerrá-lo conforme fluxo decidido
-        pela equipe
+        Main method responsible for running the game loop and handling screen transitions.
         """
-        # Screen Manager
-        # The first screen is now for entering the player's name.
         current_screen = it.PlayerNameScreen(self.__screen)
 
-        if current_screen == None:
+        if current_screen is None:
             raise Exception("No screen has been configured for rendering!")
         
         while self.__running:
-            # Each screen's loop method now returns the key for the next screen to be displayed,
-            # or None/QUIT to exit the game.
             next_screen_key = current_screen.loop()
 
             if next_screen_key == "QUIT":
@@ -198,7 +100,6 @@ class Game():
                 player_name = current_screen.player_name
                 if not player_name:
                     player_name = "Player 1"
-                # Just stores the name, without calling the database
                 self.__player_name = player_name 
                 current_screen = it.MenuScreen(self.__screen, self.__player_name)
 
@@ -209,31 +110,32 @@ class Game():
                 current_screen = it.GameSelectScreen(self.__screen, self.__player_name)
 
             elif next_screen_key == "SCORES":
-                # The scores screen now loads data directly from the DB
-                current_screen = it.ScoresScreen(self.__screen) 
+                # The Controller now fetches the data and passes it to the View (ScoresScreen)
+                all_scores = self.score_repository.get_all_scores()
+                current_screen = it.ScoresScreen(self.__screen, all_scores) 
             
             elif next_screen_key == "ERASE_DATA":
-                db.erase_data()
+                # The erase logic is now called through the repository object
+                self.score_repository.clear_all()
                 current_screen = it.NotificationScreen(self.__screen, "Player data erased!", "MENU", self.__player_name)
 
             elif next_screen_key == "BLACKJACK":
-                # Instantiates the game passing only the name
                 blackjack_instance = blackjack.BlackjackGame(self.__player_name)
                 current_screen = it.BlackjackScreen(self.__screen, blackjack_instance)
 
             elif next_screen_key == "UNO":
-                # Assuming UnoGame is adjusted to take player_name
                 uno_instance = uno.UnoGame(self.__player_name) 
                 current_screen = it.UnoScreen(self.__screen, uno_instance)
             
-            # NEW STATE TO LOG WINS
+            # MODIFIED LOG_WIN logic
             elif isinstance(next_screen_key, tuple) and next_screen_key[0] == "LOG_WIN":
-                # The screen will return a tuple: ("LOG_WIN", score, game_name)
                 _, final_score, game_name = next_screen_key
-                db.log_win(self.__player_name, final_score, game_name)
+                
+                # The controller uses the repository's method to add the score
+                self.score_repository.add_score(self.__player_name, final_score, game_name)
                 
                 message = "Win registered!"
-                current_screen = it.NotificationScreen(self.__screen, message, "MENU") # No player data needed here
+                current_screen = it.NotificationScreen(self.__screen, message, "MENU")
 
             else: # Fallback for unknown screen keys or unimplemented features
                 message = f"Feature '{next_screen_key}' not implemented yet!"

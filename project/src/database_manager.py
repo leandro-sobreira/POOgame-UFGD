@@ -1,87 +1,128 @@
 import pickle
 import os
-from datetime import datetime # Import datetime to record the date
+from datetime import datetime
+from typing import List
 
-# Define the path for the database file within the 'src' directory.
+# The path to the data file remains defined here.
 DB_FILE = os.path.join(os.path.dirname(__file__), 'gamedata.dat')
 
-def load_data():
+class ScoreEntry:
     """
-    Carrega os dados de um arquivo de dados. Se o arquivo não existir ou
-    tiver corrompido, retornar por padrão, um arquivo de wins vazio
+    Represents a single win record, encapsulating the data from a
+    completed game. This class replaces the use of dictionaries for score data.
+    """
+    def __init__(self, player_name: str, score: int, game_name: str, timestamp: datetime = None):
+        """
+        Initializes a new ScoreEntry object.
+        """
+        self.player_name = player_name
+        self.score = score
+        self.game_name = game_name
+        self.timestamp = timestamp or datetime.now()
 
-    Returns:
-        dict {key: list[int]} : dict representando o arquivo de banco de dados de wins
+    def __repr__(self) -> str:
+        """Provides a clear textual representation of the object, useful for debugging."""
+        return (f"ScoreEntry(player='{self.player_name}', score={self.score}, "
+                f"game='{self.game_name}', date='{self.timestamp.strftime('%d/%m/%y - %H:%M')}')")
+
+class ScoreRepository:
     """
-    if os.path.exists(DB_FILE):
+    Manages the loading and saving of score records, abstracting the
+    file persistence logic. This class replaces the previous procedural functions.
+    """
+    def __init__(self, file_path: str = DB_FILE):
+        self._file_path = file_path
+        self._scores: List[ScoreEntry] = self._load_scores()
+
+    def _load_scores(self) -> List[ScoreEntry]:
+        """
+        Loads score records from the file. If the data is in an old format
+        (list of dicts, or dict containing a 'wins' list), it migrates
+        it to a list of ScoreEntry objects.
+        """
+        if not os.path.exists(self._file_path):
+            return []
+
         try:
-            with open(DB_FILE, 'rb') as file:  # 'rb' stands for 'read binary'
-                return pickle.load(file)
-        except (pickle.UnpicklingError, EOFError):
-            # If the file is corrupted or empty, return the default structure.
-            return {"wins": []}
-    else:
-        # The initial data structure if the file does not exist.
-        return {"wins": []}
-    
-def save_data(data):
-    """
-    Salva os dados obtidos e estruturados em um arquivo pickle
+            with open(self._file_path, 'rb') as f:
+                data = pickle.load(f)
 
-    Argumentos:
-        data (dict {key: list[int]}) : Dados estruturados a serem salvos e atualizados no banco 
-                                       de dados não estruturado
-    """
-    with open(DB_FILE, 'wb') as file:  # 'wb' stands for 'write binary'
-        pickle.dump(data, file)
+            # --- ROBUST DATA MIGRATION LOGIC ---
+            
+            list_to_process = []
+            # 1. Handle original format: {'wins': [...]}
+            if isinstance(data, dict) and 'wins' in data:
+                list_to_process = data['wins']
+            # 2. Handle list format (could be old list of dicts or new list of objects)
+            elif isinstance(data, list):
+                list_to_process = data
+            else:
+                # Unrecognized format, start fresh
+                return []
+            
+            if not list_to_process:
+                return []
 
-def log_win(player_name, final_score, game_name):
-    """
-    Realiza o log da vitória obtida 
+            # 3. Check if migration is needed (is the first item a dict?)
+            if isinstance(list_to_process[0], dict):
+                migrated_scores = []
+                for old_entry in list_to_process:
+                    try:
+                        timestamp = datetime.strptime(old_entry.get('date'), "%d/%m/%y - %H:%M")
+                    except (ValueError, TypeError, KeyError):
+                        timestamp = datetime.now()
+                    
+                    migrated_scores.append(ScoreEntry(
+                        player_name=old_entry.get('player_name', 'Unknown'),
+                        score=int(old_entry.get('score', 0)),
+                        game_name=old_entry.get('game', 'Unknown'),
+                        timestamp=timestamp
+                    ))
+                
+                self._scores = migrated_scores
+                self._save_scores()  # Overwrite the old file with the new format
+                return self._scores
 
-    Argumentos:
-        player_name (str) : string representando o nome do jogador a ser registrado
-        final_score (int) : string representando a pontuação final do jogador a ser registrada
-        game_name (str) : string representando o nome do jogo que foi jogado a ser registrado
-    """
-    data = load_data()  # Load existing data
+            # 4. If the first item is a ScoreEntry, assume the data is already in the correct format
+            if isinstance(list_to_process[0], ScoreEntry):
+                return list_to_process
 
-    new_win = {
-        "player_name": player_name,
-        "score": final_score,
-        "game": game_name,
-        "date": datetime.now().strftime("%d/%m/%y - %H:%M")
-    }
-    
-    # Ensure the 'wins' key exists
-    if "wins" not in data:
-        data["wins"] = []
+        except (pickle.UnpicklingError, EOFError, IndexError, AttributeError):
+            # Return an empty list if the file is corrupt, empty, or fails inspection
+            return []
 
-    data["wins"].append(new_win)
-    save_data(data)
-    print(f"Win for {player_name} won {final_score} points in {game_name}.")
+        # Fallback for any other unexpected data structure
+        return []
 
-def get_all_wins():
-    """
-    Obtém todas as vitórias registradas no banco de dados
+    def _save_scores(self):
+        """
+        Saves the current list of ScoreEntry objects to the file.
+        """
+        with open(self._file_path, 'wb') as f:
+            pickle.dump(self._scores, f)
 
-    Returns:
-        list[int] : lista de todas as vitórias obtidas com as determinadas pontuações   
-    """
-    data = load_data()
-    all_wins = data.get("wins", [])
+    def add_score(self, player_name: str, final_score: int, game_name: str):
+        """
+        Creates a new ScoreEntry, adds it to the list, and saves.
+        """
+        entry = ScoreEntry(player_name, final_score, game_name)
+        self._scores.append(entry)
+        self._save_scores()
+        print(f"Win for {player_name} with a score of {final_score} in {game_name} has been logged.")
 
-    """	# Sort wins by score in descending order.
-    all_wins.sort(key=lambda x: x["score"], reverse=True) """
+    def get_all_scores(self) -> List[ScoreEntry]:
+        """
+        Returns all score records, sorted from highest to lowest score.
+        """
+        return sorted(self._scores, key=lambda entry: entry.score, reverse=True)
 
-    return all_wins
-
-def erase_data(): 
-    """
-    Deleta o arquivo de database e reseta todas as pontuações obtidas e registradas no banco de dados
-    """ 
-    if os.path.exists(DB_FILE): 
-        os.remove(DB_FILE) 
-        print("Data file has been erased successfully.") 
-    else:
-        print("No data file to erase.") #
+    def clear_all(self):
+        """
+        Deletes all score records and removes the data file.
+        """
+        self._scores = []
+        if os.path.exists(self._file_path):
+            os.remove(self._file_path)
+            print("Data file has been erased successfully.")
+        else:
+            print("No data file to erase.")

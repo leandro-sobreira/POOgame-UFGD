@@ -1,41 +1,36 @@
-# UFGD Online Casino
+# UFGD Card Game Hub
 
-![Gameplay GIF](Menu.gif)
-
-A suite of card games developed in Pygame as a final project for an Object-Oriented Programming course at UFGD. The project showcases OOP principles, a Model-View-Controller (MVC) architecture, and a refactored data persistence system.
+![Gameplay GIF of the Main Menu](https://i.imgur.com/your-menu-gif-url.gif) A suite of classic card games developed in Pygame as a final project for an Object-Oriented Programming course. This project showcases key OOP principles through a Model-View-Controller (MVC) architecture and features a robust, object-oriented data persistence system.
 
 ---
 
 ## ✨ Features
 
--   **MVC Architecture:** A clean separation between game logic (Model), the graphical interface (View), and flow control (Controller).
 -   **Two Complete Games:**
-    -   **Blackjack:** Play against the house with a betting system in a faithful implementation of the classic game.
-       
-        ![Gameplay GIF](BlackJack.gif)
-
-        
-    -   **UNO:** A full UNO match against three computer-controlled opponents.
-      
-        ![Gameplay GIF](uno.gif)
--   **Win-Log Persistence:** Instead of player profiles, the game now saves a log of every win to `gamedata.dat`. Each record includes the player's name, score, the game, and the date/time of the victory.
--   **Dynamic Leaderboard:** A scores screen that allows filtering victories by game and sorts them from the highest to the lowest score.
--   **UI and Sound Effects:** Navigable menus, background music, and sound effects for a more immersive experience.
+    -   **Blackjack:** Play against the house with a betting system in a faithful implementation of the classic game of 21.
+    -   **UNO:** A full UNO match against three computer-controlled opponents, featuring all the special cards and rules.
+-   **Object-Oriented Design:** The entire project is built on OOP principles, with classes for game logic, UI elements, and data models.
+-   **MVC Architecture:** A clean separation between game logic (Model), the graphical interface (View), and application flow (Controller) makes the codebase modular and scalable.
+-   **Robust Data Persistence:**
+    -   Game wins are saved to `gamedata.dat` using a class-based repository pattern.
+    -   The system includes automatic data migration to handle legacy data formats, ensuring stability.
+-   **Dynamic Leaderboard:** A scores screen allows filtering victories by game and sorts them from highest to lowest score.
+-   **Immersive UI:** Features navigable menus, background music, and sound effects for an engaging player experience.
 
 ---
 
 ## 🏗️ Architectural Pattern: MVC
 
-The project follows the Model-View-Controller pattern to promote a clean separation of concerns, making the codebase more modular and scalable.
+The project strictly follows the Model-View-Controller pattern to promote a clean separation of concerns.
 
 -   **Model:** (`src/games/`, `src/classes/`)
-    -   Contains the "brains" of the application. It manages the rules, state, and logic of the games (`BlackjackGame`, `UnoGame`). It is completely independent of the user interface.
+    -   Contains the "brains" of the application. It manages the rules, state, and logic of each game (`BlackjackGame`, `UnoGame`). It is completely independent of the user interface.
 
 -   **View:** (`src/interface.py`)
     -   Responsible for all things visual. It renders the user interface, the game board, and cards based on data from the Model. It captures user input and informs the Controller of the user's intentions.
 
 -   **Controller:** (`src/main_game.py`)
-    -   Acts as the orchestrator. It initializes the game, decides which screen to display next, instantiates the Models, and injects them into the Views when a game starts. It also coordinates saving wins with the `database_manager`.
+    -   Acts as the orchestrator. It initializes the game, decides which screen to display, instantiates the Models, and injects data into the Views. It also coordinates with the `ScoreRepository` for data persistence.
 
 ---
 
@@ -46,7 +41,7 @@ The project follows the Model-View-Controller pattern to promote a clean separat
     -   Pygame library (`pip install pygame`)
 
 2.  **Execution:**
-    -   Navigate to the project's root directory and run:
+    -   Navigate to the project's root directory (`POOgame-UFGD/project/`) and run:
         ```bash
         python main.py
         ```
@@ -58,21 +53,37 @@ The project follows the Model-View-Controller pattern to promote a clean separat
 -   **Arrow Keys:** Navigate through menus and in-game options.
 -   **Z / Enter:** Confirm a selection.
 -   **X / Escape:** Go back or exit a submenu/screen.
--   **Blackjack - Hit:** Press `Z` or `H`.
--   **Blackjack - Stand:** Press `X` or `S`.
--   **UNO - Play/Draw Card:** Navigate with arrow keys and press `Z` to confirm.
+
+#### **Blackjack**
+-   **Hit:** Press `Z` or `H`.
+-   **Stand:** Press `X` or `S`.
+
+#### **UNO**
+-   **Navigate Cards:** Use the arrow keys.
+-   **Play/Draw Card:** Press `Z` or `Enter` to confirm your selection.
 
 ---
 
-## Documentation
+## 📚 Documentation
 
-- To get more information about the project, acess the documentation in ```cd docs/_build/html/index.html``` 
+For detailed information about the project's classes and methods, you can build and view the Sphinx documentation located in the `docs/` directory.
+
+1.  Install Sphinx and the theme:
+    ```bash
+    pip install sphinx sphinx_rtd_theme
+    ```
+2.  Navigate to the `docs/` directory and build the HTML:
+    ```bash
+    make html
+    ```
+3.  Open `docs/_build/html/index.html` in your web browser.
+
 ---
 
 ## 🧑‍💻 Authors
 
-Developed with dedication by:
-- **Abner Lucas Pereira Cardoso Vera**
-- **Eduardo Rodrigues Rizzi**
-- **Leandro Peres Sobreira**
-- **Marcos Henrique Almeida Lima**
+This project was developed with dedication by:
+-   **Abner Lucas Pereira Cardoso Vera**
+-   **Eduardo Rodrigues Rizzi**
+-   **Leandro Peres Sobreira**
+-   **Marcos Henrique Almeida Lima**
